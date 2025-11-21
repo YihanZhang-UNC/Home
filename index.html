@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's Wonder World</title>
+    <title>Yihan Zhang's World</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -850,14 +850,15 @@
         const UNCSection = () => (
             <section className="bg-white pb-24">
                 {/* 1. Hero Banner with Full-Width Blurred Background */}
-                <div className="relative w-full h-[120vh] md:h-[80vh] flex items-center justify-center mb-24 overflow-hidden">
+                {/* Height to 120vh and added pt-20 to prevent navbar occlusion */}
+                <div className="relative w-full h-[120vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
 
                     {/* Background Image */}
                     <div className="absolute inset-0 z-0 overflow-hidden">
                         <img
                             src="UNC_Landscape.jpg"
                             alt="UNC Campus Landscape"
-                            className="w-full h-full object-cover object-top blur-md scale-120"
+                            className="w-full h-full object-cover object-top blur-md scale-110"
                         />
                         {/* Overlay to ensure text readability */}
                         <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
