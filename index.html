@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's World an</title>
+    <title>Yihan Zhang | Researcher & Builder</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -391,7 +391,7 @@
                         >
                             <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
                                 <img
-                                    src="Yihan.png"
+                                    src="Yihan.jpg"
                                     alt="Yihan Zhang"
                                     className="w-full h-full object-cover object-top"
                                     onError={(e) => {
@@ -702,7 +702,7 @@
             );
         };
 
-        // 7. MoMA Style Art Gallery (Black, White, Red)
+        // 7. MoMA Style Art Gallery (Updated to 8 items)
         const ArtGallery = () => (
             <section className="py-16 md:py-32 bg-black text-white">
                 <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
@@ -780,9 +780,70 @@
                                 <span className="text-moma-red text-xs font-bold">04</span>
                             </div>
                         </div>
+
+                        {/* Artwork 5 - NEW */}
+                        <div className="md:col-span-4 flex flex-col gap-3">
+                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
+                                <img src="Apple_Study.png" alt="Apple Study" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Apple_Study.jpg</span>' }} />
+                            </div>
+                            <div className="border-t border-gray-800 pt-2 flex justify-between">
+                                <div>
+                                    <h4 className="text-sm font-bold text-white">Apple Study</h4>
+                                    <p className="text-xs text-gray-500 font-mono">Graphite on Paper</p>
+                                </div>
+                                <span className="text-moma-red text-xs font-bold">05</span>
+                            </div>
+                        </div>
+
+                        {/* Artwork 6 - NEW */}
+                        <div className="md:col-span-4 flex flex-col gap-3">
+                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
+                                <img src="Conan_Fanart.png" alt="Conan Fanart" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Conan_Fanart.jpg</span>' }} />
+                            </div>
+                            <div className="border-t border-gray-800 pt-2 flex justify-between">
+                                <div>
+                                    <h4 className="text-sm font-bold text-white">Emotional Encounter</h4>
+                                    <p className="text-xs text-gray-500 font-mono">Fanart - Pencil</p>
+                                </div>
+                                <span className="text-moma-red text-xs font-bold">06</span>
+                            </div>
+                        </div>
+
+                        {/* Artwork 7 - NEW */}
+                        <div className="md:col-span-4 flex flex-col gap-3">
+                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
+                                <img src="Crumpled_Silence.png" alt="Crumpled Silence" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Crumpled_Silence.jpg</span>' }} />
+                            </div>
+                            <div className="border-t border-gray-800 pt-2 flex justify-between">
+                                <div>
+                                    <h4 className="text-sm font-bold text-white">Crumpled Silence</h4>
+                                    <p className="text-xs text-gray-500 font-mono">Graphite - Texture Study</p>
+                                </div>
+                                <span className="text-moma-red text-xs font-bold">07</span>
+                            </div>
+                        </div>
+
+                        {/* Artwork 8 - NEW - Featured Wide */}
+                        <div className="md:col-span-12 flex flex-col gap-3">
+                            <div className="w-full aspect-[21/9] bg-[#111] border-none group overflow-hidden">
+                                {/* Placeholder for a wide landscape or compilation image */}
+                                <div className="w-full h-full bg-neutral-900 flex items-center justify-center text-gray-600 font-mono text-xs">
+                                    [ Wide Feature: e.g. Landscape_Compilation.jpg ]
+                                </div>
+                            </div>
+                            <div className="border-t border-gray-800 pt-2 flex justify-between">
+                                <div>
+                                    <h4 className="text-sm font-bold text-white">Visual Anthology</h4>
+                                    <p className="text-xs text-gray-500 font-mono">Selected Works Compilation, 2022-2025</p>
+                                </div>
+                                <span className="text-moma-red text-xs font-bold">08</span>
+                            </div>
+                        </div>
                     </div>
+
+                    <div className="mt-16 md:mt-24 border-b border-white"></div>
                 </div>
-            </section >
+            </section>
         );
 
         // 8. UNC Section (UPDATED: Campus Context with Actual Image & Logo)
@@ -839,7 +900,8 @@
                         </h2>
 
                         <p className="text-lg md:text-2xl text-gray-800 font-light max-w-2xl mx-auto leading-relaxed">
-                            Ranking No. 1 public university in the South.
+                            Ranking No. 1 public university in the South.<br />
+                            USNEWS 2024 #22 National University
                         </p>
                     </div>
                 </div>
