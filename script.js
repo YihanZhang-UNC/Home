@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Add scroll effect to navigation
-    let lastScroll = 0;
     const nav = document.querySelector('.nav');
 
     window.addEventListener('scroll', function() {
@@ -54,8 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             nav.style.boxShadow = 'none';
         }
-        
-        lastScroll = currentScroll;
     });
 
     // Intersection Observer for fade-in animations
