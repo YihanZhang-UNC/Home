@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's Home and World</title>
+    <title>Yihan Zhang | Researcher & Builder</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -30,6 +30,11 @@
                             black: '#000000',
                             white: '#FFFFFF'
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     }
                 }
             }
@@ -92,13 +97,12 @@
             background: #9ca3af;
         }
 
-        /* PDF Container */
-        .pdf-viewer {
-            height: 85vh;
+        /* PDF Viewer Styling - Maximized */
+        .pdf-frame {
             width: 100%;
+            height: 100%;
             border: none;
-            background: #525659;
-            /* Standard PDF Viewer Grey */
+            display: block;
         }
 
         /* Image Placeholder Styling */
@@ -174,6 +178,12 @@
         .animation-delay-2000 {
             animation-delay: 2s;
         }
+
+        /* PDF Viewer Container */
+        .viewer-container {
+            height: calc(100vh - 64px);
+            /* Full height minus toolbar */
+        }
     </style>
 </head>
 
@@ -186,10 +196,10 @@
 
         // --- ANIMATION VARIANTS ---
         const pageVariants = {
-            initial: { opacity: 0, y: 20 },
+            initial: { opacity: 0, y: 10 },
             animate: { opacity: 1, y: 0 },
-            exit: { opacity: 0, y: -20 },
-            transition: { duration: 0.3, ease: "easeInOut" }
+            exit: { opacity: 0, y: -10 },
+            transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } // Apple-like easing
         };
 
         // --- COMPONENTS ---
@@ -198,15 +208,15 @@
         const Navbar = ({ activeSection, setActiveSection }) => {
             const navItems = [
                 { id: 'home', label: 'Overview' },
-                { id: 'news', label: 'News' },
+                { id: 'news', label: 'Academic News' },
                 { id: 'research', label: 'Research' },
-                { id: 'projects', label: 'Projects' },
+                { id: 'projects', label: 'Artifacts' }, // Renamed for professionalism
                 { id: 'art', label: 'Gallery' },
                 { id: 'contact', label: 'Contact' },
             ];
 
             return (
-                <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
+                <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
                     <div className="max-w-7xl mx-auto px-6 lg:px-8">
                         <div className="flex justify-between items-center h-20">
                             <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}>
@@ -236,10 +246,10 @@
                             </div>
 
                             <div className="flex gap-4">
-                                <button onClick={() => setActiveSection('cv')} className="hidden sm:flex items-center gap-2 text-xs font-medium text-gray-900 border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 hover:border-unc/30 transition">
-                                    <i data-lucide="file-text" className="w-3 h-3"></i> View CV
+                                <button onClick={() => setActiveSection('cv')} className="hidden sm:flex items-center gap-2 text-xs font-medium text-gray-900 border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 hover:border-unc/30 transition shadow-sm">
+                                    <i data-lucide="file-text" className="w-3 h-3"></i> Curriculum Vitae
                                 </button>
-                                <button onClick={() => setActiveSection('contact')} className="bg-black text-white px-5 py-2 rounded-full text-xs font-medium hover:bg-unc transition-all">
+                                <button onClick={() => setActiveSection('contact')} className="bg-black text-white px-5 py-2 rounded-full text-xs font-medium hover:bg-unc transition-all shadow-md">
                                     Get in Touch
                                 </button>
                             </div>
@@ -253,8 +263,8 @@
         const Hero = ({ setActiveSection }) => (
             <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-20 bg-white">
                 {/* Carolina Blue Blobs */}
-                <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-unc/10 rounded-full mix-blend-multiply filter blur-[128px] opacity-70 animate-blob"></div>
-                <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-blue-50 rounded-full mix-blend-multiply filter blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
+                <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-unc/5 rounded-full mix-blend-multiply filter blur-[128px] opacity-70 animate-blob"></div>
+                <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-50 rounded-full mix-blend-multiply filter blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
 
                 <div className="max-w-6xl mx-auto px-6 z-10 relative grid md:grid-cols-12 gap-16 items-center">
                     <div className="md:col-span-7">
@@ -279,23 +289,25 @@
 
                         <motion.p
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                            className="text-lg text-gray-600 max-w-xl leading-relaxed font-light mb-4"
+                            className="text-lg text-gray-600 max-w-xl leading-relaxed font-light mb-8"
                         >
-                            Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong>.
+                            Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong> to build Human-Centered Intelligent Systems.
                         </motion.p>
 
-                        {/* UNC Identity Block */}
+                        {/* UNC Identity Block - Refined */}
                         <motion.div
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                            className="flex items-center gap-4 mb-10 p-4 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-lg max-w-md shadow-sm hover:shadow-md transition-shadow cursor-default"
+                            className="flex items-center gap-5 mb-12 p-5 bg-white border border-gray-100 rounded-xl max-w-md shadow-sm hover:shadow-md transition-shadow cursor-default group"
                         >
-                            {/* School Logo Placeholder */}
-                            <div className="w-12 h-12 bg-white rounded-full border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                                <div className="text-[8px] font-bold text-unc text-center leading-none">UNC<br />Logo</div>
+                            {/* CSS-Only UNC Seal Approximation */}
+                            <div className="w-14 h-14 bg-unc/10 rounded-full border-2 border-unc/30 flex items-center justify-center flex-shrink-0 group-hover:border-unc transition-colors">
+                                <div className="w-10 h-10 border border-unc rounded-full flex items-center justify-center">
+                                    <span className="font-serif text-unc font-bold text-sm">UNC</span>
+                                </div>
                             </div>
                             <div>
-                                <p className="text-xs text-gray-400 uppercase tracking-wide font-bold">Researcher</p>
-                                <p className="text-sm font-serif text-gray-900">University of North Carolina at Chapel Hill</p>
+                                <p className="text-xs text-gray-400 uppercase tracking-wide font-bold">Academic Affiliation</p>
+                                <p className="text-base font-serif text-gray-900 leading-tight">University of North Carolina<br />at Chapel Hill</p>
                             </div>
                         </motion.div>
 
@@ -319,7 +331,7 @@
                             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}
                             className="aspect-[4/5] bg-white border border-gray-100 p-3 rounded-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
                         >
-                            <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
+                            <div className="w-full h-full bg-gray-50 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
                                 {/* Subtle UNC Grid Pattern Background */}
                                 <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#4B9CD3 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                                 <i data-lucide="user" className="w-12 h-12 mb-2 text-unc/50"></i>
@@ -340,7 +352,7 @@
                     {[
                         { val: "¥40B", label: "Indus. R&D Context" },
                         { val: "2", label: "Granted Patents" },
-                        { val: "Information Science & Studio Arts & Geography", label: "My Majors" },
+                        { val: "4.0", label: "Recent Term GPA" },
                         { val: "Top 2", label: "UNC MakerFest" }
                     ].map((stat, i) => (
                         <motion.div
@@ -358,27 +370,27 @@
             </div>
         );
 
-        // 4. News Section
+        // 4. News Section (Timeline Style)
         const NewsSection = () => (
             <section className="py-24 bg-white border-t border-gray-100">
                 <div className="max-w-4xl mx-auto px-6">
                     <div className="flex items-baseline gap-4 mb-12">
-                        <h2 className="text-xl font-serif font-bold text-black">News & Updates</h2>
+                        <h2 className="text-2xl font-serif font-bold text-black">Academic Updates</h2>
                         <div className="h-px bg-gray-200 flex-1"></div>
                     </div>
 
-                    <div className="space-y-10 border-l border-gray-200 pl-8 ml-3">
+                    <div className="space-y-12 border-l border-gray-200 pl-8 ml-3">
                         {[
-                            { date: "May 2025", title: "Selected Exhibitor @ UNC Smart Design Showcase", desc: "Presented 'Chill by U' laptop stand." },
-                            { date: "Spring 2025", title: "Academic Achievement", desc: "Achieved 4.00 GPA with maximum course load (18 credits)." },
-                            { date: "2024", title: "Award Winner @ UNC MakerFest", desc: "Won 2nd Most Creative Prize for innovative hardware design." },
-                            { date: "2022", title: "Competition Winner", desc: "3rd Prize in Sustainable Campus Design Competition." }
+                            { date: "May 2025", title: "Selected Exhibitor", subtitle: "UNC Smart Design Showcase", desc: "Showcased 'Chill by U' laptop stand prototype to engineering faculty." },
+                            { date: "Spring 2025", title: "Academic Excellence", subtitle: "UNC Chapel Hill", desc: "Achieved 4.00 GPA with maximum course load (18 credits), demonstrating resilience and academic rigor." },
+                            { date: "2024", title: "Award Winner", subtitle: "UNC MakerFest", desc: "Won 2nd Most Creative Prize for innovative hardware design." },
+                            { date: "2022", title: "Competition Winner", subtitle: "Sustainable Campus Design", desc: "3rd Prize in 'Let's Charrette' competition for urban sustainability concepts." }
                         ].map((item, i) => (
                             <div key={i} className="relative group">
-                                <div className="absolute -left-[38px] top-1.5 w-5 h-5 bg-white border border-gray-300 rounded-full group-hover:border-unc group-hover:bg-unc transition-all"></div>
-                                <span className="text-xs font-mono text-unc mb-1 block uppercase tracking-wider">{item.date}</span>
-                                <h3 className="text-base font-medium text-gray-900 group-hover:translate-x-1 transition-transform">{item.title}</h3>
-                                <p className="text-sm text-gray-500 mt-1 font-light">{item.desc}</p>
+                                <div className="absolute -left-[39px] top-1.5 w-5 h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-unc group-hover:scale-110 transition-all duration-300"></div>
+                                <span className="text-xs font-mono text-unc mb-1 block uppercase tracking-wider font-bold">{item.date}</span>
+                                <h3 className="text-lg font-medium text-gray-900">{item.title} <span className="text-gray-400 font-light">| {item.subtitle}</span></h3>
+                                <p className="text-sm text-gray-600 mt-2 leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -393,8 +405,7 @@
                     <div className="mb-16">
                         <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">Research Framework</h2>
                         <p className="text-gray-600 max-w-3xl text-lg font-light leading-relaxed">
-                            My work focuses on the <strong>"Intelligent Design Framework for Urban Micro-Interaction Systems"</strong>.
-                            I build systems that are <strong>Deployable</strong> (real-world hardware), <strong>Measurable</strong> (collecting behavioral data), and <strong>Publishable</strong>.
+                            Proposing an <strong>"Intelligent Design Framework for Urban Micro-Interaction Systems"</strong> centered on the triad of <strong>Deployable, Measurable, and Publishable</strong> outcomes.
                         </p>
                     </div>
 
@@ -433,7 +444,7 @@
                         {/* Column 2: Patents & Framework */}
                         <div className="space-y-6">
                             {/* Diagram Placeholder */}
-                            <div className="w-full aspect-[16/9] img-placeholder bg-white rounded-sm">
+                            <div className="w-full aspect-[16/9] img-placeholder bg-white rounded-sm border border-gray-200">
                                 <i data-lucide="network" className="w-8 h-8 mb-3 text-gray-300"></i>
                                 <span>[Image: Research Framework Diagram]</span>
                                 <span className="text-xs mt-1 text-gray-400">Visualizing the Perception-Decision-Execution Loop</span>
@@ -466,7 +477,7 @@
             </section>
         );
 
-        // 6. Projects Section
+        // 6. Projects Section (Research Artifacts)
         const Projects = () => {
             const works = [
                 {
@@ -522,8 +533,11 @@
             return (
                 <section className="py-32 bg-white">
                     <div className="max-w-7xl mx-auto px-6">
-                        <div className="mb-16">
-                            <h2 className="text-3xl font-serif font-bold text-gray-900">Selected Projects</h2>
+                        <div className="mb-16 flex justify-between items-end">
+                            <div>
+                                <h2 className="text-3xl font-serif font-bold text-gray-900">Research Artifacts</h2>
+                                <p className="text-gray-500 mt-2">Selected prototypes and analytical projects.</p>
+                            </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
@@ -647,37 +661,39 @@
             </section>
         );
 
-        // 8. CV Viewer Component (NEW SEPARATE PAGE FEEL)
+        // 8. CV Viewer Component (FULLSCREEN IMMERSIVE)
         const CVViewer = ({ setActiveSection }) => (
             <motion.div
-                className="min-h-screen bg-[#1a1a1a] text-white flex flex-col"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col"
+                initial={{ opacity: 0, y: '100%' }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: '100%' }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
                 {/* Toolbar */}
-                <div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-6">
+                <div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-6 flex-shrink-0">
                     <div className="flex items-center gap-4">
-                        <button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors">
-                            <i data-lucide="arrow-left" className="w-5 h-5"></i>
+                        <button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                            <i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="text-sm font-medium">Back to Portfolio</span>
                         </button>
-                        <span className="font-medium">Yihan Zhang_CV.pdf</span>
+                        <div className="h-6 w-px bg-gray-700 mx-2"></div>
+                        <span className="font-mono text-sm text-gray-300">Yihan Zhang_CV.pdf</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-2">
-                            <i data-lucide="download" className="w-4 h-4"></i> Download
+                        <a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20">
+                            <i data-lucide="download" className="w-4 h-4"></i> Download Original
                         </a>
                     </div>
                 </div>
 
-                {/* PDF View Area */}
-                <div className="flex-grow bg-[#2a2a2a] p-4 md:p-8 flex justify-center overflow-hidden relative">
-                    <div className="w-full max-w-5xl h-full bg-white shadow-2xl rounded overflow-hidden">
-                        <iframe src="04_Yihan Zhang_CV.pdf" className="w-full h-full" title="CV">
-                            <div className="flex flex-col items-center justify-center h-full text-black p-10 text-center">
-                                <p className="mb-4">Your browser cannot display this PDF directly.</p>
-                                <a href="04_Yihan Zhang_CV.pdf" className="text-unc underline font-bold">Click here to download it.</a>
-                            </div>
-                        </iframe>
-                    </div>
+                {/* PDF View Area - MAXIMIZED */}
+                <div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full">
+                    <iframe src="04_Yihan Zhang_CV.pdf" className="pdf-frame" title="CV">
+                        <div className="flex flex-col items-center justify-center h-full text-white p-10 text-center">
+                            <p className="mb-4">PDF preview not available.</p>
+                            <a href="04_Yihan Zhang_CV.pdf" className="text-unc underline font-bold">Download PDF</a>
+                        </div>
+                    </iframe>
                 </div>
             </motion.div>
         );
@@ -881,9 +897,7 @@
                                 </motion.div>
                             )}
                             {activeSection === 'cv' && (
-                                <motion.div key="cv" className="fixed inset-0 z-[60]" initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ duration: 0.4, ease: "circOut" }}>
-                                    <CVViewer setActiveSection={setActiveSection} />
-                                </motion.div>
+                                <CVViewer setActiveSection={setActiveSection} />
                             )}
                         </AnimatePresence>
                     </main>
