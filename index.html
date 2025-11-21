@@ -770,7 +770,7 @@
                         {/* Artwork 4 */}
                         <div className="md:col-span-8 flex flex-col gap-3">
                             <div className="w-full aspect-[16/9] bg-[#111] border-none group overflow-hidden">
-                                <img src="Cultural_Stitch.jpg" alt="Cultural Stitch" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Cultural_Stitch.jpg</span>' }} />
+                                <img src="Cultural_Stitch.png" alt="Cultural Stitch" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Cultural_Stitch.jpg</span>' }} />
                             </div>
                             <div className="border-t border-gray-800 pt-2 flex justify-between">
                                 <div>
@@ -782,9 +782,38 @@
                         </div>
                     </div>
 
-                    <div className="mt-16 md:mt-24 border-b border-white"></div>
+                    {/* Artwork 5 */}
+                    <div className="md:col-span-4 flex flex-col gap-3">
+                        <div className="w-full aspect-square bg-[#111] border-none group overflow-hidden">
+                            <img src="Structure_8.png" alt="Structure 8" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Structure_8.jpg</span>' }} />
+                        </div>
+                        <div className="border-t border-gray-800 pt-2 flex justify-between">
+                            <div>
+                                <h4 className="text-sm font-bold text-white">Structure 8</h4>
+                                <p className="text-xs text-gray-500 font-mono">Charcoal Study</p>
+                            </div>
+                            <span className="text-moma-red text-xs font-bold">05</span>
+                        </div>
+                    </div>
+
+                    {/* Artwork 6 */}
+                    <div className="md:col-span-8 flex flex-col gap-3">
+                        <div className="w-full aspect-[16/9] bg-[#111] border-none group overflow-hidden">
+                            <img src="Cultural_Stitch.png" alt="Cultural Stitch" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Cultural_Stitch.jpg</span>' }} />
+                        </div>
+                        <div className="border-t border-gray-800 pt-2 flex justify-between">
+                            <div>
+                                <h4 className="text-sm font-bold text-white">Cultural Stitch</h4>
+                                <p className="text-xs text-gray-500 font-mono">Graphite & Ink, 18x24"</p>
+                            </div>
+                            <span className="text-moma-red text-xs font-bold">06</span>
+                        </div>
+                    </div>
                 </div>
-            </section>
+
+                <div className="mt-16 md:mt-24 border-b border-white"></div>
+            </div>
+            </section >
         );
 
         // 8. UNC Section (UPDATED: Campus Context with Actual Image & Logo)
