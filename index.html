@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yihan Zhang | Researcher & Builder</title>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Framer Motion (for React animations) -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <!-- Marked for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* PDF Container */
+        .pdf-container {
+            height: 800px;
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animated Blobs */
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 10s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        // --- COMPONENTS ---
+
+        // 1. Navigation
+        const Navbar = ({ activeSection, setActiveSection }) => {
+            const navItems = [
+                { id: 'home', label: 'Home' },
+                { id: 'philosophy', label: 'Philosophy' },
+                { id: 'patents', label: 'Patents (Ace)' },
+                { id: 'projects', label: 'Portfolio' },
+                { id: 'cv', label: 'CV / Resume' }, // Explicit CV link
+            ];
+
+            return (
+                <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50 transition-all duration-300">
+                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-20">
+                            <a href="#" onClick={() => setActiveSection('home')} className="text-xl font-serif italic font-bold tracking-tight z-50 relative group cursor-pointer">
+                                Y. Zhang
+                            </a>
+
+                            <div className="hidden md:flex space-x-8 text-sm font-medium text-gray-500">
+                                {navItems.map((item) => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => setActiveSection(item.id)}
+                                        className={`nav-btn transition-colors hover:text-black ${activeSection === item.id ? 'text-black font-semibold' : ''}`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <a href="mailto:zhayihan@unc.edu" className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition-all transform hover:scale-105 shadow-lg">
+                                Contact
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        // 2. Hero Section
+        const Hero = ({ setActiveSection }) => (
+            <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+                {/* Abstract Background Blobs */}
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"></div>
+                <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob animation-delay-2000"></div>
+
+                <div className="max-w-5xl mx-auto px-6 text-center z-10 relative">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-md border border-white/20 mb-8 shadow-sm"
+                    >
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span className="text-xs font-semibold text-gray-700 tracking-wide">AI Digital Twin Available</span>
+                    </motion.div>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                        className="text-xs md:text-sm font-bold text-gray-400 tracking-[0.3em] uppercase mb-6"
+                    >
+                        Researcher · Engineer · Builder
+                    </motion.p>
+
+                    <motion.h1
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                        className="text-6xl md:text-8xl font-medium tracking-tight mb-8 leading-[1.1]"
+                    >
+                        The Pragmatic <br />
+                        <span className="serif italic text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900">Idealist.</span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                        className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light"
+                    >
+                        Building <strong>Human-Centered Intelligent Systems</strong> by bridging Industrial Hardware, Full-Stack Prototyping, and Data Science.
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+                        className="mt-12 flex flex-col sm:flex-row justify-center gap-6"
+                    >
+                        <button onClick={() => setActiveSection('projects')} className="group relative inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-black rounded-full overflow-hidden transition-all hover:bg-gray-800 hover:scale-105 hover:shadow-xl cursor-pointer">
+                            <span className="mr-2">View Selected Works</span>
+                            <i data-lucide="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+
+                        <button onClick={() => setActiveSection('cv')} className="group inline-flex items-center justify-center px-8 py-3 text-base font-medium text-gray-700 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all hover:border-gray-300 cursor-pointer">
+                            <i data-lucide="file-text" className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors"></i>
+                            View CV
+                        </button>
+                    </motion.div>
+                </div>
+            </section>
+        );
+
+        // 3. Stats Bar
+        const Stats = () => (
+            <div className="bg-white/50 backdrop-blur-sm border-t border-gray-200 py-16">
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                    {[
+                        { val: "¥40B", label: "Company R&D Background" },
+                        { val: "2", label: "Granted Patents" },
+                        { val: "4.0", label: "Recent Term GPA" },
+                        { val: "Top 2", label: "UNC MakerFest Prize" }
+                    ].map((stat, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                        >
+                            <div className="text-4xl font-serif font-bold text-gray-900">{stat.val}</div>
+                            <div className="text-xs text-gray-500 font-semibold uppercase tracking-widest mt-2">{stat.label}</div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        // 4. Philosophy Section
+        const Philosophy = () => (
+            <section className="py-32 bg-white min-h-screen">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="grid md:grid-cols-2 gap-20 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="space-y-10"
+                        >
+                            <h2 className="text-5xl font-medium leading-tight">
+                                Not just thinking.<br />
+                                <span className="serif italic text-gray-400">Building.</span>
+                            </h2>
+                            <div className="space-y-6 text-gray-600 text-lg font-light leading-relaxed">
+                                <p>
+                                    My research trajectory is defined by a commitment to <strong>tangible impact</strong>. As outlined in my <a href="#" className="text-blue-600 underline decoration-blue-200 hover:decoration-blue-600 transition">Research Statement</a>, I work end-to-end: from <strong>hardware fabrication</strong> to <strong>data analysis</strong> and <strong>HCI evaluation</strong>.
+                                </p>
+                                <p>
+                                    My journey began in an industrial R&D center at a <strong>¥40B listed company (Weiming Group)</strong>, where I led the design of patented hardware solutions before starting my university studies. At UNC-Chapel Hill (SILS), I translate this engineering rigor into academic research.
+                                </p>
+                            </div>
+
+                            <div className="pt-6 border-t border-gray-100">
+                                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-6">Technical Arsenal</h3>
+                                <div className="flex flex-wrap gap-3">
+                                    {["Arduino/IoT", "3D Printing", "R (Spatial)", "Python", "ArcGIS", "Figma"].map(skill => (
+                                        <span key={skill} className="px-4 py-2 bg-gray-50 border border-gray-200 text-gray-700 rounded-md text-sm font-mono">{skill}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="relative group"
+                        >
+                            <div className="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden relative shadow-2xl rotate-2 group-hover:rotate-0 transition-transform duration-700 ease-out">
+                                {/* Placeholder Image - Use an abstract or hardware image */}
+                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <span className="text-gray-400 font-serif italic text-2xl">Hardware Prototype Img</span>
+                                </div>
+                                <div className="absolute bottom-8 left-8 text-white z-10">
+                                    <p className="font-mono text-xs uppercase tracking-widest mb-2 opacity-80 text-black bg-white/80 px-2 py-1 inline-block rounded">Methodology</p>
+                                    <p className="font-serif italic text-2xl text-black bg-white/80 px-2 py-1 inline-block rounded">"Research through Design"</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 5. Patents Section (The Ace)
+        const Patents = () => (
+            <section className="py-32 bg-[#0a0a0a] text-white min-h-screen">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-gray-800 pb-8">
+                        <div>
+                            <p className="text-xs text-gray-400 uppercase tracking-[0.3em] mb-4">Proven Output</p>
+                            <h2 className="text-5xl md:text-7xl font-serif text-white">Intellectual<br />Property</h2>
+                        </div>
+                        <div className="mt-8 md:mt-0 text-right">
+                            <p className="text-gray-400 font-light text-sm leading-relaxed">
+                                Engineering capability validated by industry.<br />
+                                Core R&D at <span className="text-white font-medium">Weiming Group</span> (A-Share Listed).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-16">
+                        <motion.div
+                            whileHover={{ y: -10 }}
+                            className="group"
+                        >
+                            <div className="border-t border-gray-700 pt-6 group-hover:border-white transition-colors duration-500">
+                                <div className="flex justify-between items-start mb-6">
+                                    <span className="text-6xl font-thin text-gray-800 group-hover:text-white transition-colors duration-500">01</span>
+                                    <span className="bg-white text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">First Inventor</span>
+                                </div>
+                                <h3 className="text-2xl font-medium mb-4 group-hover:text-blue-400 transition-colors">Disc-Tube Reverse Osmosis Apparatus</h3>
+                                <p className="text-gray-500 text-xs font-mono mb-6 uppercase tracking-wider">CN209791046U | Granted 2019</p>
+                                <p className="text-gray-400 leading-relaxed font-light text-lg">
+                                    Solved a critical maintenance bottleneck ("welded pipes difficult to clean") by designing a novel <strong>detachable filter mesh structure</strong>. A direct application of human-centered thinking to heavy industrial machinery.
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            whileHover={{ y: -10 }}
+                            className="group"
+                        >
+                            <div className="border-t border-gray-700 pt-6 group-hover:border-white transition-colors duration-500">
+                                <div className="flex justify-between items-start mb-6">
+                                    <span className="text-6xl font-thin text-gray-800 group-hover:text-white transition-colors duration-500">02</span>
+                                    <span className="border border-gray-700 text-gray-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest group-hover:border-white group-hover:text-white transition-all">Second Inventor</span>
+                                </div>
+                                <h3 className="text-2xl font-medium mb-4 group-hover:text-blue-400 transition-colors">Kitchen Waste Extraction Device</h3>
+                                <p class="text-gray-500 text-xs font-mono mb-6 uppercase tracking-wider">CN215209304U | Granted 2021</p>
+                                <p class="text-gray-400 leading-relaxed font-light text-lg">
+                                    Co-designed a complex mechanical apparatus integrating a pressing tank and multi-stage slag discharge system. Proved capability to collaborate within professional engineering teams.
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 6. Projects (Gallery)
+        const Projects = () => {
+            const projectData = [
+                {
+                    id: 'offline',
+                    title: 'Offline Oracle & UMIS',
+                    subtitle: 'PhD Proposal · Health IT',
+                    desc: 'A hybrid physical-digital framework to diagnose and fulfill "True Needs" behind digital overuse.',
+                    tags: ['IoT', 'Gamification', 'Behavior'],
+                    img: 'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?q=80&w=2070&auto=format&fit=crop',
+                    color: 'blue',
+                    link: '01_PhD Proposal.pdf', // Keep PDF link for download
+                    linkText: 'Download Proposal'
+                },
+                {
+                    id: 'tempest',
+                    title: 'TEMPEST: Autonomous Robot',
+                    subtitle: 'Flagship Engineering · Robotics',
+                    desc: 'A low-cost, autonomous surface vessel for urban waterways. Tackled core challenges: Perception and Navigation.',
+                    tags: ['Robotics', 'Computer Vision', 'System Integration'],
+                    img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070&auto=format&fit=crop',
+                    color: 'indigo',
+                    link: 'RP_Cleaning Robot.pdf',
+                    linkText: 'Download Report'
+                },
+                {
+                    id: 'capstone',
+                    title: 'Ctrl+Alt+Offline',
+                    subtitle: 'Senior Capstone',
+                    desc: 'Smart Charger + Social App for digital wellbeing. System Architect Role.',
+                    tags: ['HCI', 'Architecture', 'Team Lead'],
+                    img: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2101&auto=format&fit=crop',
+                    color: 'teal',
+                    link: 'INLS 697 Group2 (1).pdf',
+                    linkText: 'Download Project'
+                }
+            ];
+
+            return (
+                <section className="py-32 bg-[#f5f5f7] min-h-screen">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="flex justify-between items-end mb-20 border-b border-gray-300 pb-6">
+                            <div>
+                                <h2 className="text-4xl font-medium text-gray-900">Selected Works</h2>
+                                <p className="text-gray-500 mt-2">From Autonomous Systems to Urban Computing.</p>
+                            </div>
+                            <a href="03_Research-portfolio_Yihan.pdf" target="_blank" className="hidden md:flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors">
+                                <i data-lucide="download" className="w-4 h-4"></i> Download Full Portfolio PDF
+                            </a>
+                        </div>
+
+                        <div className="space-y-32">
+                            {projectData.map((p, i) => (
+                                <motion.div
+                                    key={p.id}
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8 }}
+                                    className={`group grid md:grid-cols-12 gap-0 items-center`}
+                                >
+                                    <div className={`md:col-span-7 relative aspect-[16/10] overflow-hidden rounded-lg shadow-xl ${i % 2 === 1 ? 'order-1 md:order-2' : ''}`}>
+                                        <img src={p.img} alt={p.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000" />
+                                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
+                                    </div>
+                                    <div className={`md:col-span-5 ${i % 2 === 1 ? 'md:-mr-12 z-10 mb-6 md:mb-0 order-2 md:order-1 relative' : 'md:-ml-12 z-10 mt-6 md:mt-0 relative'}`}>
+                                        <div className={`bg-white p-10 shadow-2xl border-l-4 border-${p.color}-600 ${i % 2 === 1 ? 'rounded-l-lg' : 'rounded-r-lg'}`}>
+                                            <p className={`text-xs font-bold text-${p.color}-600 tracking-widest uppercase mb-3`}>{p.subtitle}</p>
+                                            <h3 className="text-3xl font-serif mb-4">{p.title}</h3>
+                                            <p className="text-gray-600 mb-6 leading-relaxed font-light">{p.desc}</p>
+                                            <div className="flex gap-2 flex-wrap mb-6">
+                                                {p.tags.map(tag => (
+                                                    <span key={tag} className="px-2 py-1 bg-gray-100 text-xs rounded text-gray-600 font-mono">{tag}</span>
+                                                ))}
+                                            </div>
+                                            <a href={p.link} target="_blank" className={`text-sm font-medium text-${p.color}-600 hover:underline flex items-center gap-1`}>
+                                                {p.linkText} <i data-lucide="arrow-right" className="w-3 h-3"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // 7. CV Section (Embedded PDF)
+        const CVSection = () => (
+            <section className="py-32 bg-white min-h-screen">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
+                        <h2 className="text-3xl font-serif font-bold text-gray-900">Curriculum Vitae</h2>
+                        <a href="04_Yihan Zhang_CV.pdf" target="_blank" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-md hover:shadow-lg">
+                            <i data-lucide="download" className="w-4 h-4"></i> Download PDF
+                        </a>
+                    </div>
+
+                    {/* PDF Embed */}
+                    <div className="pdf-container bg-gray-100">
+                        <object data="04_Yihan Zhang_CV.pdf" type="application/pdf" width="100%" height="100%">
+                            <p className="p-8 text-center text-gray-500">It appears you don't have a PDF plugin for this browser. <a href="04_Yihan Zhang_CV.pdf" className="text-blue-600 underline">Click here to download the PDF file.</a></p>
+                        </object>
+                    </div>
+
+                    <div className="md:hidden text-center mt-4 text-sm text-gray-500">
+                        <p>Tap the button above if the PDF doesn't load on your device.</p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 8. Journey (Resilience)
+        const Journey = () => (
+            <section className="py-32 bg-white min-h-screen">
+                <div className="max-w-4xl mx-auto px-6">
+                    <div className="text-center mb-20">
+                        <h2 className="text-3xl font-medium mb-4">The Path of Resilience</h2>
+                        <p class="text-gray-500 font-light">A visual history of growth through pressure.</p>
+                    </div>
+
+                    <div className="relative border-l border-gray-200 ml-8 md:ml-0 md:pl-12 space-y-20">
+                        <div className="relative pl-8 group">
+                            <div className="absolute -left-[5px] top-2 w-3 h-3 bg-gray-300 rounded-full border-4 border-white shadow-sm box-content group-hover:scale-125 transition-transform"></div>
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Fall 2024</span>
+                            <h3 className="text-xl font-bold mt-1 text-gray-900">The "Directional Misjudgment"</h3>
+                            <p className="text-gray-600 mt-2 text-sm leading-relaxed max-w-lg font-light">
+                                An intentional exploration into pure theoretical CS that proved to be a poor fit. A difficult semester (1.8 GPA) that became a pivotal moment of clarity.
+                            </p>
+                        </div>
+
+                        <div className="relative pl-8 group">
+                            <div className="absolute -left-[5px] top-2 w-3 h-3 bg-blue-600 rounded-full border-4 border-white shadow-lg ring-4 ring-blue-50 box-content group-hover:scale-125 transition-transform"></div>
+                            <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Spring 2025</span>
+                            <h3 className="text-3xl font-serif italic font-bold mt-2 text-blue-600">The V-Shaped Rebound</h3>
+                            <p className="text-gray-600 mt-4 text-base leading-relaxed max-w-lg">
+                                Immediate response: Retook failed courses + 4 new courses (18-credit max load).<br />
+                                Result: <span className="font-semibold text-black bg-blue-100 px-1">4.000 Term GPA (Full Marks)</span>. <br />
+                                <span className="text-sm text-gray-500 mt-2 block font-light">Proved academic resilience and capacity for high-pressure execution.</span>
+                            </p>
+                        </div>
+
+                        <div className="relative pl-8 group">
+                            <div className="absolute -left-[5px] top-2 w-3 h-3 bg-black rounded-full border-4 border-white shadow-sm box-content group-hover:scale-125 transition-transform"></div>
+                            <span class="text-xs font-bold text-black uppercase tracking-widest">Fall 2025 (Current)</span>
+                            <h3 class="text-xl font-bold mt-1 text-gray-900">Sustained Excellence</h3>
+                            <p class="text-gray-600 mt-2 text-sm leading-relaxed max-w-lg font-light">
+                                Managing 18 credits (including graduate-level studio) + PhD applications. <br />
+                                Expected GPA: <strong>~3.95</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 9. Chat Widget (AI Twin)
+        const ChatWidget = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [messages, setMessages] = useState([{
+                role: 'ai',
+                text: "Hello! I am Yihan's digital twin. I can tell you about his **Industrial Patents**, his **V-shaped Academic Rebound**, or his flagship projects like **TEMPEST**. How can I help?"
+            }]);
+            const [input, setInput] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+            useEffect(scrollToBottom, [messages]);
+
+            const handleSend = async (text = input) => {
+                if (!text.trim()) return;
+
+                const userMsg = { role: 'user', text };
+                setMessages(prev => [...prev, userMsg]);
+                setInput('');
+                setLoading(true);
+
+                // Gemini API Logic
+                const systemPrompt = `You are the "Digital Twin" AI assistant for Yihan Zhang. Your goal is to impress professors and recruiters with Yihan's "Ace" qualifications.
+                KEY FACTS:
+                1. Identity: Yihan is a "Pragmatic Idealist" and "Full-Stack Builder" (Hardware + HCI + Data Science).
+                2. The "Ace" (Patents): First Inventor on a hardware patent (CN209791046U) from a ¥40B listed company (Weiming Group).
+                3. Resilience: V-shaped academic trajectory. Rebounded from a difficult Fall 2024 to a 4.000 Term GPA in Spring 2025 under max load.
+                4. Projects: TEMPEST (Autonomous Robot), Offline Oracle (Health IT IoT), Spatial Analysis (R/GIS).
+                Keep answers professional, concise, and academic.`;
+
+                const apiKey = ""; // Insert API Key here
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\nUser Query: " + text }] }]
+                        })
+                    });
+
+                    const data = await response.json();
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
+                } catch (e) {
+                    setMessages(prev => [...prev, { role: 'ai', text: "I'm currently offline (API Key missing in code). Please check Yihan's CV for details!" }]);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="fixed bottom-8 right-8 z-50 font-sans">
+                    <AnimatePresence>
+                        {isOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                className="absolute bottom-20 right-0 w-[380px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col"
+                            >
+                                <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                                    <div>
+                                        <h3 className="font-bold text-sm">✨ Yihan's AI Twin</h3>
+                                        <p className="text-xs text-gray-500">Powered by Gemini</p>
+                                    </div>
+                                    <button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+                                    {messages.map((m, i) => (
+                                        <div key={i} className={`p-3 rounded-xl text-sm ${m.role === 'ai' ? 'bg-gray-100 text-gray-800 rounded-tl-none' : 'bg-black text-white ml-auto rounded-tr-none max-w-[80%]'}`}>
+                                            {m.role === 'ai' ? <div dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} /> : m.text}
+                                        </div>
+                                    ))}
+                                    {loading && <div className="text-xs text-gray-400 animate-pulse">Thinking...</div>}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                                <div className="p-3 border-t border-gray-100">
+                                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-2">
+                                        {['📜 Patents', '📈 Resilience', '🤖 Robotics'].map(q => (
+                                            <button key={q} onClick={() => handleSend(q)} className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full whitespace-nowrap transition">{q}</button>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <input
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                                            placeholder="Ask anything..."
+                                            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                                        />
+                                        <button onClick={() => handleSend()} className="bg-black text-white p-2 rounded-full"><i data-lucide="arrow-up" className="w-4 h-4"></i></button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="bg-black text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform flex items-center justify-center"
+                    >
+                        <i data-lucide="sparkles" className="w-6 h-6"></i>
+                    </button>
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+        const App = () => {
+            const [activeSection, setActiveSection] = useState('home');
+
+            // Initialize Icons
+            useEffect(() => {
+                lucide.createIcons();
+            }, [activeSection]);
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+
+                    <main className="flex-grow">
+                        {activeSection === 'home' && <Hero setActiveSection={setActiveSection} />}
+                        {activeSection === 'home' && <Stats />}
+
+                        {(activeSection === 'philosophy') && <Philosophy />}
+                        {(activeSection === 'patents') && <Patents />}
+                        {(activeSection === 'projects') && <Projects />}
+                        {(activeSection === 'cv') && <CVSection />}
+                        {(activeSection === 'journey') && <Journey />}
+                    </main>
+
+                    <ChatWidget />
+
+                    <footer className="bg-[#1d1d1f] text-white py-24 mt-auto">
+                        <div className="max-w-5xl mx-auto px-6 text-center">
+                            <h2 className="text-4xl md:text-6xl font-serif mb-8">Ready to Build.</h2>
+                            <p className="text-gray-400 max-w-xl mx-auto mb-12 font-light text-lg">
+                                Seeking PhD opportunities to contribute to the future of Human-Centered Intelligent Systems.
+                            </p>
+                            <a href="mailto:zhayihan@unc.edu" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-gray-200 transition-all">
+                                zhayihan@unc.edu
+                            </a>
+                            <div className="mt-24 pt-8 border-t border-gray-800 text-xs text-gray-600 flex justify-between items-center">
+                                <span>&copy; 2025 Yihan Zhang.</span>
+                                <span className="font-mono">CHAPEL HILL • WENZHOU</span>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
