@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's World</title>
+    <title>Yihan Zhang | Researcher & Builder</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -769,7 +769,7 @@
             </section>
         );
 
-        // 8. UNC Section (UPDATED: Campus Context)
+        // 8. UNC Section (UPDATED: Campus Context with Actual Image)
         const UNCSection = () => (
             <section className="bg-white pb-24">
                 {/* 1. Hero Banner with Full-Width Blurred Background */}
@@ -941,73 +941,7 @@
             </motion.div>
         );
 
-        // 10. Contact Section (RESTORED)
-        const Contact = () => (
-            <section className="py-16 md:py-32 bg-white min-h-screen flex items-center relative overflow-hidden">
-                {/* Abstract Old Well Background Graphic */}
-                <div className="absolute right-[-10%] top-1/4 opacity-[0.03] pointer-events-none">
-                    <svg width="800" height="800" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 20L180 60V140L100 180L20 140V60L100 20Z" stroke="black" strokeWidth="1" />
-                        <circle cx="100" cy="100" r="60" stroke="black" strokeWidth="1" />
-                        <path d="M100 40V160M40 100H160" stroke="black" strokeWidth="1" />
-                    </svg>
-                </div>
-
-                <div className="max-w-5xl mx-auto px-6 w-full z-10">
-                    <div className="grid md:grid-cols-2 gap-12 md:gap-20">
-                        <div>
-                            <h2 className="text-4xl md:text-7xl font-serif font-bold text-gray-900 mb-6 md:mb-8 leading-none">
-                                Let's<br /><span className="text-unc italic">Connect.</span>
-                            </h2>
-                            <p className="text-lg md:text-xl text-gray-600 font-light mb-8 md:mb-12 max-w-sm">
-                                Open to PhD opportunities, research collaborations, and technical discussions.
-                            </p>
-
-                            <div className="space-y-6 md:space-y-8">
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email</h3>
-                                    <a href="mailto:zhayihan@unc.edu" className="text-xl md:text-2xl font-mono hover:text-unc transition-colors border-b border-gray-200 hover:border-unc pb-1 break-all">zhayihan@unc.edu</a>
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institution</h3>
-                                    <p className="text-base md:text-lg text-gray-800">University of North Carolina<br />at Chapel Hill</p>
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Social</h3>
-                                    <div className="flex gap-4">
-                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-unc hover:text-white hover:border-unc transition-all"><i data-lucide="linkedin" className="w-4 h-4"></i></a>
-                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all"><i data-lucide="github" className="w-4 h-4"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-gray-50 p-6 md:p-8 rounded-lg border border-gray-100 shadow-sm">
-                            <h3 className="text-lg font-bold mb-6">Send a Message</h3>
-                            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Name</label>
-                                    <input type="text" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="Your Name" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Email</label>
-                                    <input type="email" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="your@email.com" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Message</label>
-                                    <textarea rows="4" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="Hello Yihan..."></textarea>
-                                </div>
-                                <button className="w-full bg-black text-white py-3 rounded font-medium hover:bg-unc transition-colors flex items-center justify-center gap-2">
-                                    Send Message <i data-lucide="send" className="w-4 h-4"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        );
-
-        // 11. Footer (Optimized)
+        // 10. Footer (Optimized)
         const Footer = ({ activeSection }) => {
             if (activeSection === 'cv' || activeSection === 'contact') return null;
 
@@ -1054,7 +988,7 @@
             );
         };
 
-        // 12. Chat Widget
+        // 11. Chat Widget (Double Mode: Gemini Default + Custom Switch)
         const ChatWidget = () => {
             const [isOpen, setIsOpen] = useState(false);
             const [messages, setMessages] = useState([{
@@ -1076,7 +1010,42 @@
                 setInput('');
                 setLoading(true);
 
-                const Key = "AIzaSyAzNoCc868wSOcfPJK_lb39Zv052X4-1Mg";
+                // ==========================================
+                // CONFIGURATION: Custom API vs Default Gemini
+                // ==========================================
+                const USE_CUSTOM_API = false; // Set to true to use your custom API logic below
+
+                if (USE_CUSTOM_API) {
+                    // CUSTOM API LOGIC (Based on your cURL)
+                    // Note: This requires a valid API Key and might be blocked by CORS in browser preview.
+                    // Best used when deployed to a domain you control or a local environment.
+                    try {
+                        const response = await fetch('https://api.openai.com/v1/responses', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer sk-proj-...' // REPLACE WITH YOUR FULL KEY
+                            },
+                            body: JSON.stringify({
+                                model: 'gpt-5-nano',
+                                input: text,
+                                store: true
+                            })
+                        });
+                        const data = await response.json();
+                        // Adjust response parsing based on your actual API response structure
+                        const aiText = data.choices?.[0]?.message?.content || JSON.stringify(data);
+                        setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
+                    } catch (e) {
+                        setMessages(prev => [...prev, { role: 'ai', text: "Error connecting to custom API. Please check console." }]);
+                        console.error(e);
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                // DEFAULT: GEMINI API (Works in Preview)
+                const apiKey = "";
                 const systemPrompt = `You are Yihan Zhang's academic AI assistant. He is a researcher at UNC Chapel Hill. Highlight his "Deployable, Measurable, Publishable" framework, his patents (CN209791046U), and his art (MoMA style gallery).`;
 
                 try {
