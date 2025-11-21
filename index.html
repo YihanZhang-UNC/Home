@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's World</title>
+    <title>Yihan Zhang | Researcher & Builder</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -775,19 +775,13 @@
                 {/* 1. Hero Banner with Full-Width Blurred Background */}
                 <div className="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center mb-24 overflow-hidden">
 
-                    {/* Background Image Placeholder */}
+                    {/* Background Image */}
                     <div className="absolute inset-0 z-0 overflow-hidden">
-                        {/* Placeholder for School Landscape - Full Size, Not Centered (Top Aligned), Blurred */}
-                        <div className="w-full h-full bg-gray-300 relative transform scale-110">
-                            {/* scale-110 to hide blur edges */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-gray-400/50 to-gray-600/50 filter blur-lg"></div>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-white/50 font-bold text-2xl tracking-[1em] uppercase transform -rotate-12">UNC Campus Landscape</span>
-                            </div>
-                            <div className="absolute bottom-4 right-4 text-xs text-white/70 font-mono bg-black/20 px-2 py-1 rounded">
-                                [Image: UNC_Landscape.jpg] w-full h-full object-cover object-top blur-md
-                            </div>
-                        </div>
+                        <img
+                            src="UNC_Landscape.jpg"
+                            alt="UNC Campus Landscape"
+                            className="w-full h-full object-cover object-top blur-md scale-110"
+                        />
                         {/* Overlay to ensure text readability */}
                         <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
                         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
