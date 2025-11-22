@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's World | UNC</title>
+    <title>Yihan Zhang's World</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -647,6 +647,32 @@
                     img: 'SmartCan.png'
                 },
                 {
+                    id: 'PRJ-07',
+                    title: 'Cognitive Clinical Dashboard',
+                    cat: 'UI/UX & MedTech',
+                    filterType: 'UI_DESIGN',
+                    status: 'Prototyped',
+                    year: '2024',
+                    desc: 'High-fidelity interface design for real-time patient monitoring. Focuses on cognitive load reduction for emergency responders via heuristic evaluation principles.',
+                    tech: ['Figma', 'React', 'D3.js', 'Cog. Psych'],
+                    role: 'Lead Designer',
+                    link: '03_Research-portfolio_Yihan.pdf',
+                    img: 'Clinical_Dashboard.png'
+                },
+                {
+                    id: 'PRJ-08',
+                    title: 'Agri-Drone HMI Controller',
+                    cat: 'HMI & Systems Design',
+                    filterType: 'UI_DESIGN',
+                    status: 'Concept v3',
+                    year: '2025',
+                    desc: 'Human-Machine Interface (HMI) for managing autonomous agricultural drone swarms. Features gaze-tracking assisted navigation and adaptive dark mode for field use.',
+                    tech: ['Adobe XD', 'Principle', 'WebGazer API'],
+                    role: 'UX Researcher',
+                    link: '03_Research-portfolio_Yihan.pdf',
+                    img: 'Drone_HMI.png'
+                },
+                {
                     id: 'PRJ-04',
                     title: 'Chill by "U"',
                     cat: 'Fabrication & Thermal Eng',
@@ -731,14 +757,15 @@
                                 { id: 'ALL', label: 'ALL_ENTRIES' },
                                 { id: 'HARDWARE', label: 'HARDWARE_SYSTEMS' },
                                 { id: 'SOFTWARE', label: 'SOFTWARE_COMPUTING' },
+                                { id: 'UI_DESIGN', label: 'INTERFACE_DESIGN' },
                                 { id: 'DATA_SCI', label: 'DATA_ANALYSIS' }
                             ].map((filter) => (
                                 <button
                                     key={filter.id}
                                     onClick={() => setActiveFilter(filter.id)}
                                     className={`px-4 py-2 border transition-all duration-300 uppercase tracking-wider ${activeFilter === filter.id
-                                        ? 'bg-black text-white border-black shadow-lg'
-                                        : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black'
+                                            ? 'bg-black text-white border-black shadow-lg'
+                                            : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black'
                                         }`}
                                 >
                                     {filter.label}
@@ -755,10 +782,15 @@
                                 {filteredWorks.map((work) => (
                                     <motion.div
                                         layout
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ duration: 0.3 }}
+                                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 30,
+                                            opacity: { duration: 0.2 }
+                                        }}
                                         key={work.id}
                                         className="group bg-white border border-gray-200 hover:border-black transition-all duration-500 flex flex-col h-full shadow-sm hover:shadow-2xl relative overflow-hidden"
                                     >
