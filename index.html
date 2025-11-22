@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's wonder World</title>
+    <title>Yihan Zhang's World</title>
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -196,7 +196,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useMemo } = React;
         const { motion, AnimatePresence } = window.Motion;
 
         // --- ANIMATION VARIANTS ---
@@ -460,7 +460,7 @@
             </section>
         );
 
-        // 5. Research Section (Framework_Diagram.jpg)
+        // 5. Research Section (RESTORED)
         const Research = () => (
             <section className="py-24 bg-gray-50">
                 <div className="max-w-6xl mx-auto px-6">
@@ -602,101 +602,255 @@
             </section>
         );
 
-        // 6. Projects Section (Research Artifacts)
+        // 6. Projects Section (Research Artifacts - National Academy of Sciences Edition)
         const Projects = () => {
+            const [activeFilter, setActiveFilter] = useState('ALL');
+
             const works = [
                 {
-                    id: 'offline',
+                    id: 'PRJ-01',
                     title: 'Offline Oracle',
-                    cat: 'HCI & Health',
-                    desc: 'A hybrid physical-digital framework (Box + App) to diagnose and fulfill "True Needs" behind digital overuse.',
+                    cat: 'HCI & Health Intervention',
+                    filterType: 'HARDWARE',
+                    status: 'Proto v2.0',
+                    year: '2025',
+                    desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards. Validates "True Needs" hypothesis through a gamified hardware-software loop.',
+                    tech: ['Arduino IoT', 'React Native', '3D Printing', 'Fab'],
+                    role: 'Lead Researcher',
                     link: '07_Offline Oracle_ A Gamified Framework.pdf',
-                    img: 'Offline_Oracle.jpg'
+                    img: 'Offline_Oracle.png'
                 },
                 {
-                    id: 'tempest',
-                    title: 'TEMPEST Robot',
-                    cat: 'Autonomous Robotics',
-                    desc: 'Low-cost autonomous surface vessel for urban waterways. Tackled perception and navigation challenges.',
+                    id: 'PRJ-02',
+                    title: 'TEMPEST Autonomous Vessel',
+                    cat: 'Robotics & Perception',
+                    filterType: 'HARDWARE',
+                    status: 'Field Tested',
+                    year: '2023',
+                    desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring. Solved localized SLAM and obstacle avoidance challenges in dynamic fluid environments.',
+                    tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control', 'CV'],
+                    role: 'System Architect',
                     link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'TEMPEST_Robot.jpg'
+                    img: 'TEMPEST_Robot.png'
                 },
                 {
-                    id: 'smartcan',
-                    title: 'SmartCan',
+                    id: 'PRJ-03',
+                    title: 'SmartCan Intelligent Sorting',
                     cat: 'Behavioral Design',
-                    desc: 'Intelligent waste sorting assistant using sensors and visual feedback to gamify disposal processes.',
+                    filterType: 'SOFTWARE',
+                    status: 'Deployed',
+                    year: '2024',
+                    desc: 'Computer-vision assisted waste disposal system. Uses real-time object recognition to guide user behavior and gamify the recycling process.',
+                    tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'],
+                    role: 'Interaction Designer',
                     link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'SmartCan.jpg'
+                    img: 'SmartCan.png'
                 },
                 {
-                    id: 'chill',
+                    id: 'PRJ-04',
                     title: 'Chill by "U"',
-                    cat: 'Fabrication & IoT',
-                    desc: 'Modular laptop stand with adaptive cooling. 2nd Most Creative Prize at UNC MakerFest.',
+                    cat: 'Fabrication & Thermal Eng',
+                    filterType: 'HARDWARE',
+                    status: 'Awarded',
+                    year: '2024',
+                    desc: 'Modular laptop cooling infrastructure with adaptive airflow. Winner of "2nd Most Creative" at UNC MakerFest for novel structural engineering.',
+                    tech: ['Laser Cutting', 'Thermal Analysis', 'Fusion 360'],
+                    role: 'Solo Inventor',
                     link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Chill_by_U.jpg'
+                    img: 'Chill_by_U.png'
                 },
                 {
-                    id: 'bird',
-                    title: 'Smart Bird Feeder',
-                    cat: 'Ecological IoT',
-                    desc: 'Automated system utilizing light/weight sensors to distinguish target species. 90% recycled materials.',
+                    id: 'PRJ-05',
+                    title: 'Ecological IoT Feeder',
+                    cat: 'Ecological Sensing',
+                    filterType: 'HARDWARE',
+                    status: 'Operational',
+                    year: '2023',
+                    desc: 'Automated avian monitoring system using weight/light sensors to classify species. Constructed from 90% post-consumer recycled materials.',
+                    tech: ['IoT Sensors', 'Data Logging', 'Sustainable Mat.'],
+                    role: 'Hardware Eng',
                     link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Smart_Bird_Feeder.jpg'
+                    img: 'Smart_Bird_Feeder.png'
                 },
                 {
-                    id: 'gis',
-                    title: 'Spatial Inequality',
-                    cat: 'Data Science',
-                    desc: 'Quantitative analysis of US Population Change & Global Coffee Trade inequalities using R and ArcGIS.',
+                    id: 'PRJ-06',
+                    title: 'Spatial Inequality Analysis',
+                    cat: 'Data Science (GIS)',
+                    filterType: 'DATA_SCI',
+                    status: 'Published',
+                    year: '2022',
+                    desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade. Utilizing R and ArcGIS to map socioeconomic disparities.',
+                    tech: ['R / RStudio', 'ArcGIS Pro', 'Statistical Modeling'],
+                    role: 'Data Analyst',
                     link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'GIS_Map.jpg'
+                    img: 'GIS_Map.png'
                 }
             ];
 
+            const filteredWorks = useMemo(() => {
+                if (activeFilter === 'ALL') return works;
+                return works.filter(work => work.filterType === activeFilter);
+            }, [activeFilter, works]);
+
             return (
-                <section className="py-16 md:py-32 bg-white">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="mb-12 md:mb-16 flex justify-between items-end">
+                <section className="py-24 bg-white relative border-t border-gray-200">
+                    {/* NAS Style: Precise Engineering Grid Background */}
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(to right, #111 1px, transparent 1px),
+                                linear-gradient(to bottom, #111 1px, transparent 1px)
+                            `,
+                            backgroundSize: '40px 40px'
+                        }}
+                    ></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-black via-gray-500 to-black"></div>
+
+                    <div className="max-w-7xl mx-auto px-6 relative z-10">
+
+                        {/* NAS Style: Authoritative Header */}
+                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b-2 border-black pb-6">
                             <div>
-                                <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">Research Artifacts</h2>
-                                <p className="text-gray-500 mt-2 text-sm md:text-base">Selected prototypes and analytical projects.</p>
+                                <div className="flex items-center gap-2 text-black font-serif italic text-sm mb-2">
+                                    <span className="w-2 h-2 bg-black rounded-full"></span>
+                                    National Academy of Sciences Style Archive
+                                </div>
+                                <h2 className="text-4xl md:text-6xl font-serif font-bold text-black tracking-tight">
+                                    Artifacts <span className="text-gray-400 font-light">&</span> Data
+                                </h2>
+                            </div>
+                            <div className="mt-6 md:mt-0 text-right font-mono text-xs space-y-1 text-gray-600">
+                                <p>ARCHIVE_ID: YZ-UNC-2025</p>
+                                <p>STATUS: <span className="text-green-600 font-bold">ONLINE</span></p>
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 md:gap-y-16">
-                            {works.map((work, i) => (
-                                <div key={work.id} className="group flex flex-col h-full">
-                                    <a href={work.link} target="_blank" className="block overflow-hidden mb-4 md:mb-6 border border-gray-100 rounded-sm relative aspect-[4/3] bg-gray-50">
-                                        <img
-                                            src={work.img}
-                                            alt={work.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.parentElement.classList.add('img-placeholder');
-                                                e.target.parentElement.innerHTML = `<div class="text-center p-4"><i data-lucide="image" class="mx-auto mb-2 text-gray-300"></i><span class="text-xs text-gray-400">${work.img}</span></div>`;
-                                                lucide.createIcons();
-                                            }}
-                                        />
-
-                                        {/* Hover Overlay */}
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-unc/10 transition-colors flex items-center justify-center">
-                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-4 py-2 rounded-full text-xs font-medium shadow-lg text-unc">
-                                                View PDF
-                                            </div>
-                                        </div>
-                                    </a>
-
-                                    <div>
-                                        <span className="text-[10px] md:text-xs font-mono text-gray-400 uppercase tracking-widest">{work.cat}</span>
-                                        <h3 className="text-lg md:text-xl font-serif font-medium mt-1 md:mt-2 mb-2 md:mb-3 group-hover:text-unc transition-colors">{work.title}</h3>
-                                        <p className="text-sm text-gray-600 font-light leading-relaxed">{work.desc}</p>
-                                    </div>
-                                </div>
+                        {/* Functional Filters - NAS Style Buttons */}
+                        <div className="flex flex-wrap gap-2 mb-12 pb-6 border-b border-gray-200 font-mono text-xs">
+                            {[
+                                { id: 'ALL', label: 'ALL_ENTRIES' },
+                                { id: 'HARDWARE', label: 'HARDWARE_SYSTEMS' },
+                                { id: 'SOFTWARE', label: 'SOFTWARE_COMPUTING' },
+                                { id: 'DATA_SCI', label: 'DATA_ANALYSIS' }
+                            ].map((filter) => (
+                                <button
+                                    key={filter.id}
+                                    onClick={() => setActiveFilter(filter.id)}
+                                    className={`px-4 py-2 border transition-all duration-300 uppercase tracking-wider ${activeFilter === filter.id
+                                            ? 'bg-black text-white border-black shadow-lg'
+                                            : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black'
+                                        }`}
+                                >
+                                    {filter.label}
+                                </button>
                             ))}
                         </div>
+
+                        {/* The "Institute" Grid with AnimatePresence for Smooth Filtering */}
+                        <motion.div
+                            layout
+                            className="grid md:grid-cols-2 gap-8 md:gap-12"
+                        >
+                            <AnimatePresence mode='popLayout'>
+                                {filteredWorks.map((work) => (
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.3 }}
+                                        key={work.id}
+                                        className="group bg-white border border-gray-200 hover:border-black transition-all duration-500 flex flex-col h-full shadow-sm hover:shadow-2xl relative overflow-hidden"
+                                    >
+                                        {/* Corner Marker */}
+                                        <div className="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-black border-l-[40px] border-l-transparent z-20"></div>
+
+                                        {/* Technical Top Bar */}
+                                        <div className="bg-gray-100 border-b border-gray-200 px-5 py-3 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-wider">
+                                            <span className="font-bold text-black">REF: {work.id}</span>
+                                            <div className="flex gap-4 items-center">
+                                                <span>{work.year}</span>
+                                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${work.status.includes('Awarded') ? 'bg-yellow-100 border-yellow-400 text-yellow-800' : 'bg-white border-gray-300 text-black'}`}>
+                                                    {work.status}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Image Area (Scientific View) */}
+                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 bg-gray-50 group-hover:opacity-100">
+                                            <img
+                                                src={work.img}
+                                                alt={work.title}
+                                                className="w-full h-full object-cover filter grayscale contrast-125 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-in-out group-hover:scale-105"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.parentElement.classList.add('img-placeholder');
+                                                    e.target.parentElement.innerHTML = `<div class="text-center p-4 font-mono text-xs"><span class="block text-2xl mb-2">⚠️</span>DATA_MISSING<br/><span class="text-gray-400">${work.img}</span></div>`;
+                                                }}
+                                            />
+
+                                            {/* Scientific Grid Overlay */}
+                                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
+
+                                            {/* Hover Action */}
+                                            <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur text-white px-6 py-3 text-xs font-mono uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center">
+                                                <span>Access Full Documentation</span>
+                                                <i data-lucide="arrow-right" className="w-3 h-3"></i>
+                                            </div>
+                                        </a>
+
+                                        {/* Content Body */}
+                                        <div className="p-8 flex-grow flex flex-col relative">
+                                            {/* Watermark Number */}
+                                            <div className="absolute top-4 right-4 text-6xl font-bold text-gray-100 font-serif pointer-events-none -z-0 select-none">
+                                                {work.id.split('-')[1]}
+                                            </div>
+
+                                            <div className="mb-6 relative z-10">
+                                                <span className="text-[10px] font-bold bg-black text-white px-2 py-1 inline-block mb-3 font-mono uppercase tracking-widest">{work.cat}</span>
+                                                <h3 className="text-3xl font-serif font-bold text-black leading-none group-hover:text-unc transition-colors mt-1">
+                                                    {work.title}
+                                                </h3>
+                                            </div>
+
+                                            <p className="text-sm text-gray-600 font-serif leading-relaxed mb-8 flex-grow relative z-10">
+                                                {work.desc}
+                                            </p>
+
+                                            {/* Tech Specs Matrix - NAS Style */}
+                                            <div className="mt-auto border-t-2 border-gray-100 pt-4 relative z-10">
+                                                <div className="grid grid-cols-3 gap-4 mb-4">
+                                                    <div className="col-span-3">
+                                                        <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400 block mb-2">Technology Stack</span>
+                                                        <div className="flex flex-wrap gap-1.5">
+                                                            {work.tech.map((t, i) => (
+                                                                <span key={i} className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 text-[9px] font-mono text-gray-700">
+                                                                    {t}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between items-end border-t border-gray-100 pt-2">
+                                                    <div>
+                                                        <span className="text-[9px] font-mono text-gray-400 uppercase block">Primary Role</span>
+                                                        <span className="text-xs font-bold text-black">{work.role}</span>
+                                                    </div>
+                                                    <i data-lucide="file-check" className="w-4 h-4 text-gray-300 group-hover:text-black transition-colors"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        {/* No Results Message */}
+                        {filteredWorks.length === 0 && (
+                            <div className="py-24 text-center border-2 border-dashed border-gray-200 rounded-lg">
+                                <p className="font-mono text-gray-400">NO_ENTRIES_FOUND_FOR_FILTER</p>
+                            </div>
+                        )}
                     </div>
                 </section>
             );
@@ -850,8 +1004,8 @@
         const UNCSection = () => (
             <section className="bg-white pb-24">
                 {/* 1. Hero Banner with Full-Width Blurred Background */}
-                {/* Height to 120vh and added pt-20 to prevent navbar occlusion */}
-                <div className="relative w-full h-[100vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
+                {/* Updated height to 120vh and added pt-20 to prevent navbar occlusion */}
+                <div className="relative w-full h-[120vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
 
                     {/* Background Image */}
                     <div className="absolute inset-0 z-0 overflow-hidden">
