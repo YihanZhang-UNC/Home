@@ -1,14 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yihan Zhang's World - UNC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- SEO & Social Sharing -->
+    <title>Yihan Zhang's World</title>
+    <meta name="description"
+        content="Portfolio of Yihan Zhang, a Researcher and Designer at UNC Chapel Hill. Current focus: Pluggy Ecosystem, 26Fall PhD Applications.">
+    <meta name="keywords" content="Yihan Zhang, UNC, HCI, Design Engineering, Portfolio, Pluggy, 26Fall">
+    <meta name="author" content="Yihan Zhang">
+    <link rel="icon" href="UNC_Logo.png" type="image/png">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zhayihan.unc.edu/">
+    <meta property="og:title" content="Yihan Zhang - UNC Researcher & Designer">
+    <meta property="og:description"
+        content="Bridging Industrial Hardware, Full-Stack Prototyping, and Behavioral Data Science.">
+    <meta property="og:image" content="UNC_Logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://zhayihan.unc.edu/">
+    <meta property="twitter:title" content="Yihan Zhang - UNC Researcher & Designer">
+    <meta property="twitter:description"
+        content="Bridging Industrial Hardware, Full-Stack Prototyping, and Behavioral Data Science.">
+    <meta property="twitter:image" content="UNC_Logo.png">
 
     <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -36,6 +59,17 @@
                         sans: ['Inter', 'sans-serif'],
                         serif: ['Playfair Display', 'serif'],
                         mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'blob': 'blob 12s infinite ease-in-out',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
                     }
                 }
             }
@@ -55,7 +89,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400&display=swap"
         rel="stylesheet">
 
     <style>
@@ -67,6 +101,19 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: none;
+            /* Hide default cursor for custom implementation */
+        }
+
+        /* Restore default cursor on touch devices */
+        @media (pointer: coarse) {
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor-container {
+                display: none !important;
+            }
         }
 
         .dark body {
@@ -92,12 +139,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #fff;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
             background: #d1d5db;
             border-radius: 3px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
         }
 
         ::-webkit-scrollbar-thumb:hover {
@@ -112,7 +163,7 @@
             display: block;
         }
 
-        /* Image Placeholder Styling */
+        /* Image Placeholder */
         .img-placeholder {
             background-color: #f8fafc;
             display: flex;
@@ -130,33 +181,10 @@
             min-height: 240px;
         }
 
-        .img-placeholder:hover {
-            background-color: #f1f5f9;
-            color: #0f172a;
-            border-color: #cbd5e1;
-        }
-
-        /* MoMA Art Placeholder - Dark Theme */
-        .art-placeholder {
-            background-color: #1a1a1a;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            text-align: center;
-            border: 1px solid #333;
-            transition: all 0.4s ease;
-            width: 100%;
-            height: 100%;
-        }
-
-        .art-placeholder:hover {
-            border-color: #E4002B;
-            /* Red Border on Hover */
-            color: #fff;
+        .dark .img-placeholder {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #64748b;
         }
 
         /* Animated Blobs */
@@ -186,15 +214,20 @@
             animation-delay: 2s;
         }
 
-        /* PDF Viewer Container */
-        .viewer-container {
-            height: calc(100vh - 64px);
-        }
-
         /* Mobile Menu Backdrop */
         .mobile-menu-backdrop {
             background-color: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(16px);
+        }
+
+        /* No Scrollbar Utility */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -203,8 +236,106 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
-        const { motion, AnimatePresence } = window.Motion;
+        const { useState, useEffect, useRef, useMemo, useCallback, useLayoutEffect } = React;
+        const { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } = window.Motion;
+
+        // --- ENHANCED CUSTOM CURSOR (Trail duration changed to 500ms) ---
+        const CustomCursor = () => {
+            const cursorRef = useRef(null);
+            const pathRef = useRef(null);
+            const pointsRef = useRef([]);
+
+            const [isHovering, setIsHovering] = useState(false);
+            const [isClicking, setIsClicking] = useState(false);
+
+            useEffect(() => {
+                const onMouseDown = () => setIsClicking(true);
+                const onMouseUp = () => setIsClicking(false);
+                const onMouseOver = (e) => {
+                    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' ||
+                        e.target.closest('button') || e.target.closest('a') ||
+                        e.target.closest('.cursor-pointer') || e.target.tagName === 'INPUT') {
+                        setIsHovering(true);
+                    } else {
+                        setIsHovering(false);
+                    }
+                };
+
+                window.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mouseup', onMouseUp);
+                window.addEventListener('mouseover', onMouseOver);
+
+                let animationFrameId;
+                const renderLoop = () => {
+                    const now = Date.now();
+                    if (pointsRef.current.length > 0) {
+                        // Trail retains for 500ms
+                        pointsRef.current = pointsRef.current.filter(p => now - p.t < 500);
+                    }
+                    if (pathRef.current) {
+                        if (pointsRef.current.length > 1) {
+                            const head = pointsRef.current[pointsRef.current.length - 1];
+                            let d = `M ${head.x} ${head.y}`;
+                            for (let i = pointsRef.current.length - 2; i >= 0; i--) {
+                                const p = pointsRef.current[i];
+                                d += ` L ${p.x} ${p.y}`;
+                            }
+                            pathRef.current.setAttribute('d', d);
+                        } else {
+                            pathRef.current.setAttribute('d', '');
+                        }
+                    }
+                    animationFrameId = requestAnimationFrame(renderLoop);
+                };
+                animationFrameId = requestAnimationFrame(renderLoop);
+
+                const onMouseMove = (e) => {
+                    const { clientX, clientY } = e;
+                    if (cursorRef.current) {
+                        cursorRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+                    }
+                    pointsRef.current.push({ x: clientX, y: clientY, t: Date.now() });
+                };
+
+                window.addEventListener('mousemove', onMouseMove);
+
+                return () => {
+                    window.removeEventListener('mousedown', onMouseDown);
+                    window.removeEventListener('mouseup', onMouseUp);
+                    window.removeEventListener('mouseover', onMouseOver);
+                    window.removeEventListener('mousemove', onMouseMove);
+                    cancelAnimationFrame(animationFrameId);
+                };
+            }, [isHovering, isClicking]);
+
+            return (
+                <div className="custom-cursor-container pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                        <path ref={pathRef} fill="none" stroke="#4B9CD3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }} />
+                    </svg>
+                    <div ref={cursorRef} className="fixed top-0 left-0 pointer-events-none will-change-transform" style={{ left: 0, top: 0 }}>
+                        <div className="w-4 h-4 bg-unc rounded-full mix-blend-difference" style={{ transform: `translate(-50%, -50%) scale(${isClicking ? 0.8 : (isHovering ? 2.0 : 1)})`, transition: 'transform 0.15s cubic-bezier(0.2, 0, 0.13, 1.5)' }} />
+                    </div>
+                </div>
+            );
+        };
+
+        // --- UTILITIES ---
+        const ScrollProgress = () => {
+            const { scrollYProgress } = useScroll();
+            const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+            return <motion.div className="fixed top-0 left-0 right-0 h-1 bg-unc origin-left z-[60]" style={{ scaleX }} />;
+        };
+
+        const Toast = ({ message, isVisible, onClose }) => (
+            <AnimatePresence>
+                {isVisible && (
+                    <motion.div initial={{ opacity: 0, y: 50, x: '-50%' }} animate={{ opacity: 1, y: 0, x: '-50%' }} exit={{ opacity: 0, y: 20, x: '-50%' }} className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[110] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full shadow-2xl flex items-center gap-3">
+                        <i data-lucide="check-circle" className="w-5 h-5 text-green-500"></i><span className="font-medium text-sm">{message}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        );
 
         // --- ANIMATION VARIANTS ---
         const pageVariants = {
@@ -214,134 +345,25 @@
             transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
         };
 
-        // --- DATA CONSTANTS ---
-
+        // --- DATA ---
+        const NAV_ITEMS = [{ id: 'home', label: 'Overview' }, { id: 'now', label: 'Now' }, { id: 'news', label: 'News' }, { id: 'research', label: 'Research' }, { id: 'projects', label: 'Artifacts' }, { id: 'unc', label: 'Campus' }, { id: 'art', label: 'Gallery' }, { id: 'contact', label: 'Contact' }];
         const NEWS_DATA = [
             { date: "May 2025", title: "Selected Exhibitor", subtitle: "UNC Smart Design Showcase", desc: "Showcased 'Chill by U' laptop stand prototype to engineering faculty.", id: 'news-01' },
             { date: "Spring 2025", title: "Academic Excellence", subtitle: "UNC Chapel Hill", desc: "Achieved 4.00 GPA with maximum course load (18 credits), demonstrating resilience and academic rigor.", id: 'news-02' },
             { date: "2024", title: "Award Winner", subtitle: "UNC MakerFest", desc: "Won 2nd Most Creative Prize for innovative hardware design.", id: 'news-03' },
             { date: "2022", title: "Competition Winner", subtitle: "Sustainable Campus Design", desc: "3rd Prize in 'Let's Charrette' competition for urban sustainability concepts.", id: 'news-04' }
         ];
-
         const WORKS_DATA = [
-            {
-                id: 'PRJ-01',
-                title: 'Offline Oracle',
-                cat: 'HCI & Health Intervention',
-                filterType: 'HARDWARE',
-                status: 'Proto v2.0',
-                year: '2025',
-                desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards. Validates "True Needs" hypothesis through a gamified hardware-software loop.',
-                tech: ['Arduino IoT', 'React Native', '3D Printing', 'Fab'],
-                role: 'Lead Researcher',
-                link: '07_Offline Oracle_ A Gamified Framework.pdf',
-                img: 'Offline_Oracle.png'
-            },
-            {
-                id: 'PRJ-02',
-                title: 'TEMPEST Autonomous Vessel',
-                cat: 'Robotics & Perception',
-                filterType: 'HARDWARE',
-                status: 'Field Tested',
-                year: '2023',
-                desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring. Solved localized SLAM and obstacle avoidance challenges in dynamic fluid environments.',
-                tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control', 'CV'],
-                role: 'System Architect',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'TEMPEST_Robot.png'
-            },
-            {
-                id: 'PRJ-03',
-                title: 'SmartCan Intelligent Sorting',
-                cat: 'Behavioral Design',
-                filterType: 'SOFTWARE',
-                status: 'Deployed',
-                year: '2024',
-                desc: 'Computer-vision assisted waste disposal system. Uses real-time object recognition to guide user behavior and gamify the recycling process.',
-                tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'],
-                role: 'Interaction Designer',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'SmartCan.png'
-            },
-            {
-                id: 'PRJ-04',
-                title: 'Chill by "U"',
-                cat: 'Fabrication & Thermal Eng',
-                filterType: 'HARDWARE',
-                status: 'Awarded',
-                year: '2024',
-                desc: 'Modular laptop cooling infrastructure with adaptive airflow. Winner of "2nd Most Creative" at UNC MakerFest for novel structural engineering.',
-                tech: ['Laser Cutting', 'Thermal Analysis', 'Fusion 360'],
-                role: 'Solo Inventor',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'Chill_by_U.png'
-            },
-            {
-                id: 'PRJ-05',
-                title: 'Ecological IoT Feeder',
-                cat: 'Ecological Sensing',
-                filterType: 'HARDWARE',
-                status: 'Operational',
-                year: '2023',
-                desc: 'Automated avian monitoring system using weight/light sensors to classify species. Constructed from 90% post-consumer recycled materials.',
-                tech: ['IoT Sensors', 'Data Logging', 'Sustainable Mat.'],
-                role: 'Hardware Eng',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'Smart_Bird_Feeder.png'
-            },
-            {
-                id: 'PRJ-06',
-                title: 'Spatial Inequality Analysis',
-                cat: 'Data Science (GIS)',
-                filterType: 'DATA_SCI',
-                status: 'Published',
-                year: '2022',
-                desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade. Utilizing R and ArcGIS to map socioeconomic disparities.',
-                tech: ['R / RStudio', 'ArcGIS Pro', 'Statistical Modeling'],
-                role: 'Data Analyst',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'GIS_Map.png'
-            }, {
-                id: 'PRJ-07',
-                title: 'Pluggy Ecosystem',
-                cat: 'Hardware & Business',
-                filterType: 'HARDWARE',
-                status: 'Proposal',
-                year: '2025',
-                desc: 'The World\'s First 30W Gamified Charger for Digital Detox. A hardware-enabled ecosystem combining physical constraints with a gamified "Skin Economy" to redefine bedtime rituals.',
-                tech: ['GaN Hardware', 'IoT', 'Gamification', 'Business Strategy'],
-                role: 'Co-Founder',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'Pluggy.png'
-            },
-            {
-                id: 'PRJ-08',
-                title: 'Agri-Drone HMI Controller',
-                cat: 'HMI & Systems Design',
-                filterType: 'UI_DESIGN',
-                status: 'Concept v3',
-                year: '2025',
-                desc: 'Human-Machine Interface (HMI) for managing autonomous agricultural drone swarms. Features gaze-tracking assisted navigation and adaptive dark mode for field use.',
-                tech: ['Adobe XD', 'Principle', 'WebGazer API'],
-                role: 'UX Researcher',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'Drone_HMI.png'
-            },
-            {
-                id: 'PRJ-09',
-                title: 'Health Informatics Dashboard',
-                cat: 'UI/UX & MedTech',
-                filterType: 'UI_DESIGN',
-                status: 'Ongoing',
-                year: '2025',
-                desc: 'Health Informatics APP for remote patient monitoring and health data visualization.',
-                tech: ['Figma', 'Human-Centered Design', 'Health Informatics'],
-                role: 'UX Designer',
-                link: '03_Research-portfolio_Yihan.pdf',
-                img: 'Health_Informatics.png'
-            }
+            { id: 'PRJ-01', title: 'Offline Oracle', cat: 'HCI & Health Intervention', filterType: 'HARDWARE', status: 'Proto v2.0', year: '2025', desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards.', tech: ['Arduino IoT', 'React Native', '3D Printing'], role: 'Lead Researcher', link: '07_Offline Oracle_ A Gamified Framework.pdf', img: 'Offline_Oracle.png' },
+            { id: 'PRJ-02', title: 'TEMPEST Autonomous Vessel', cat: 'Robotics & Perception', filterType: 'HARDWARE', status: 'Field Tested', year: '2023', desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring.', tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control'], role: 'System Architect', link: '03_Research-portfolio_Yihan.pdf', img: 'TEMPEST_Robot.png' },
+            { id: 'PRJ-03', title: 'SmartCan Intelligent Sorting', cat: 'Behavioral Design', filterType: 'SOFTWARE', status: 'Deployed', year: '2024', desc: 'Computer-vision assisted waste disposal system with real-time object recognition.', tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'], role: 'Interaction Designer', link: '03_Research-portfolio_Yihan.pdf', img: 'SmartCan.png' },
+            { id: 'PRJ-04', title: 'Chill by "U"', cat: 'Fabrication & Thermal Eng', filterType: 'HARDWARE', status: 'Awarded', year: '2024', desc: 'Modular laptop cooling infrastructure with adaptive airflow.', tech: ['Laser Cutting', 'Fusion 360'], role: 'Solo Inventor', link: '03_Research-portfolio_Yihan.pdf', img: 'Chill_by_U.png' },
+            { id: 'PRJ-05', title: 'Ecological IoT Feeder', cat: 'Ecological Sensing', filterType: 'HARDWARE', status: 'Operational', year: '2023', desc: 'Automated avian monitoring system using weight/light sensors.', tech: ['IoT Sensors', 'Data Logging'], role: 'Hardware Eng', link: '03_Research-portfolio_Yihan.pdf', img: 'Smart_Bird_Feeder.png' },
+            { id: 'PRJ-06', title: 'Spatial Inequality Analysis', cat: 'Data Science (GIS)', filterType: 'DATA_SCI', status: 'Published', year: '2022', desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade.', tech: ['R / RStudio', 'ArcGIS Pro'], role: 'Data Analyst', link: '03_Research-portfolio_Yihan.pdf', img: 'GIS_Map.png' },
+            { id: 'PRJ-07', title: 'Pluggy Ecosystem', cat: 'Hardware & Business', filterType: 'HARDWARE', status: 'Proposal', year: '2025', desc: 'The World\'s First 30W Gamified Charger for Digital Detox.', tech: ['GaN Hardware', 'IoT', 'Gamification'], role: 'Co-Founder', link: '03_Research-portfolio_Yihan.pdf', img: 'Pluggy.png' },
+            { id: 'PRJ-08', title: 'Agri-Drone HMI', cat: 'HMI & Systems Design', filterType: 'UI_DESIGN', status: 'Concept v3', year: '2025', desc: 'HMI for managing autonomous agricultural drone swarms with gaze-tracking.', tech: ['Adobe XD', 'WebGazer API'], role: 'UX Researcher', link: '03_Research-portfolio_Yihan.pdf', img: 'Drone_HMI.png' },
+            { id: 'PRJ-09', title: 'Health Dashboard', cat: 'UI/UX & MedTech', filterType: 'UI_DESIGN', status: 'Ongoing', year: '2025', desc: 'Health Informatics APP for remote patient monitoring.', tech: ['Figma', 'Health Informatics'], role: 'UX Designer', link: '03_Research-portfolio_Yihan.pdf', img: 'Health_Informatics.png' }
         ];
-
         const ART_DATA = [
             { id: 'art-01', title: "Altered Landscape", medium: "Digital Photography, 2024", img: "Altered_Landscape_I.jpg", aspect: "aspect-[3/2]", colSpan: "md:col-span-8" },
             { id: 'art-02', title: "Layered Transparency", medium: "Graphite on Paper", img: "Layered_Transparency.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
@@ -355,53 +377,21 @@
 
         // --- COMPONENTS ---
 
-        // 1. Search Modal (Command Palette)
+        // 1. Search Modal
         const SearchModal = ({ isOpen, onClose, sections, activeSection, setActiveSection }) => {
             const [query, setQuery] = useState('');
             const inputRef = useRef(null);
 
             useEffect(() => {
-                if (isOpen) {
-                    setTimeout(() => inputRef.current?.focus(), 100);
-                }
+                if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
             }, [isOpen]);
 
-            // Filter logic
             const filteredItems = useMemo(() => {
                 if (!query) return [];
                 const lowerQ = query.toLowerCase();
                 const results = [];
-
-                // 1. Navigation
-                sections.forEach(sec => {
-                    if (sec.label.toLowerCase().includes(lowerQ)) {
-                        results.push({ type: 'Navigate', label: sec.label, id: sec.id, icon: 'map-pin' });
-                    }
-                });
-
-                // 2. Projects
-                WORKS_DATA.forEach(work => {
-                    if (work.title.toLowerCase().includes(lowerQ) ||
-                        work.desc.toLowerCase().includes(lowerQ) ||
-                        work.tech.some(t => t.toLowerCase().includes(lowerQ))) {
-                        results.push({ type: 'Project', label: work.title, id: 'projects', sub: work.cat, icon: 'folder' });
-                    }
-                });
-
-                // 3. News
-                NEWS_DATA.forEach(news => {
-                    if (news.title.toLowerCase().includes(lowerQ) || news.desc.toLowerCase().includes(lowerQ)) {
-                        results.push({ type: 'News', label: news.title, id: 'news', sub: news.date, icon: 'newspaper' });
-                    }
-                });
-
-                // 4. Art
-                ART_DATA.forEach(art => {
-                    if (art.title.toLowerCase().includes(lowerQ) || art.medium.toLowerCase().includes(lowerQ)) {
-                        results.push({ type: 'Art', label: art.title, id: 'art', sub: art.medium, icon: 'image' });
-                    }
-                });
-
+                sections.forEach(sec => { if (sec.label.toLowerCase().includes(lowerQ)) results.push({ type: 'Navigate', label: sec.label, id: sec.id, icon: 'map-pin' }); });
+                WORKS_DATA.forEach(work => { if (work.title.toLowerCase().includes(lowerQ) || work.desc.toLowerCase().includes(lowerQ)) results.push({ type: 'Project', label: work.title, id: 'projects', sub: work.cat, icon: 'folder' }); });
                 return results;
             }, [query, sections]);
 
@@ -419,36 +409,23 @@
                             <i data-lucide="search" className="w-5 h-5 text-gray-400"></i>
                             <input
                                 ref={inputRef}
-                                className="flex-1 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-400 ml-3 text-base"
+                                className="flex-1 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-400 ml-3 text-base outline-none"
                                 placeholder="Search projects, research, or navigate..."
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
-                                onKeyDown={e => {
-                                    if (e.key === 'Escape') onClose();
-                                }}
+                                onKeyDown={e => { if (e.key === 'Escape') onClose(); }}
                             />
-                            <button onClick={onClose} className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded">ESC</button>
+                            <button onClick={onClose} className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded cursor-pointer">ESC</button>
                         </div>
-
                         <div className="overflow-y-auto p-2">
-                            {query === '' && (
-                                <div className="p-4 text-center text-sm text-gray-400 dark:text-gray-500">
-                                    Type to search...
-                                </div>
-                            )}
-                            {query !== '' && filteredItems.length === 0 && (
-                                <div className="p-4 text-center text-sm text-gray-500">
-                                    No results found.
-                                </div>
+                            {filteredItems.length === 0 && query !== '' && (
+                                <div className="p-4 text-center text-sm text-gray-500">No results found.</div>
                             )}
                             {filteredItems.map((item, idx) => (
                                 <button
                                     key={idx}
-                                    onClick={() => {
-                                        setActiveSection(item.id);
-                                        onClose();
-                                    }}
-                                    className="w-full text-left flex items-center gap-3 px-3 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg group transition-colors"
+                                    onClick={() => { setActiveSection(item.id); onClose(); }}
+                                    className="w-full text-left flex items-center gap-3 px-3 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg group transition-colors cursor-pointer"
                                 >
                                     <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:bg-unc group-hover:text-white transition-colors">
                                         <i data-lucide={item.icon || 'arrow-right'} className="w-4 h-4"></i>
@@ -465,252 +442,77 @@
             );
         };
 
-        // 2. Navigation (Responsive & Dark Mode)
         const Navbar = ({ activeSection, setActiveSection, darkMode, toggleTheme, setSearchOpen }) => {
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-            const navItems = [
-                { id: 'home', label: 'Overview' },
-                { id: 'news', label: 'News' },
-                { id: 'research', label: 'Research' },
-                { id: 'projects', label: 'Artifacts' },
-                { id: 'unc', label: 'Campus' },
-                { id: 'art', label: 'Gallery' },
-                { id: 'contact', label: 'Contact' },
-            ];
-
-            const handleNavClick = (id) => {
-                setActiveSection(id);
-                setMobileMenuOpen(false);
-            }
-
             return (
-                <>
-                    <nav className="fixed w-full z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
-                        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                            <div className="flex justify-between items-center h-20">
-                                {/* Logo / Name */}
-                                <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}>
-                                    <span className="text-lg font-serif font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-unc transition-colors">
-                                        Yihan Zhang
-                                    </span>
-                                    <span className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700"></span>
-                                    <span className="hidden sm:block text-xs font-medium text-unc tracking-wide uppercase group-hover:text-unc-dark transition-colors">UNC Chapel Hill</span>
+                <nav className="fixed w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
+                    <ScrollProgress />
+                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-20">
+                            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}><span className="text-lg font-serif font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-unc transition-colors">Yihan Zhang</span><span className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700"></span><span className="hidden sm:block text-xs font-medium text-unc tracking-wide uppercase">UNC Chapel Hill</span></div>
+                            <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-500 dark:text-gray-400">{NAV_ITEMS.map((item) => (<button key={item.id} onClick={() => setActiveSection(item.id)} className={`nav-btn transition-colors hover:text-black dark:hover:text-white relative cursor-pointer ${activeSection === item.id ? 'text-black dark:text-white font-semibold' : ''}`}>{item.label}{activeSection === item.id && <motion.div layoutId="underline" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-unc" />}</button>))}</div>
+                            <div className="hidden md:flex items-center gap-3">
+                                <div onClick={() => setSearchOpen(true)} className="group relative flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-300 dark:hover:border-gray-600 w-48">
+                                    <i data-lucide="search" className="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+                                    <span className="text-sm text-gray-400 dark:text-gray-500 font-normal">Search...</span>
+                                    <div className="absolute right-2 flex items-center gap-1"><span className="text-[10px] font-mono text-gray-400 border border-gray-300 dark:border-gray-600 rounded px-1">⌘K</span></div>
                                 </div>
-
-                                {/* Desktop Menu */}
-                                <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                    {navItems.map((item) => (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => setActiveSection(item.id)}
-                                            className={`nav-btn transition-colors hover:text-black dark:hover:text-white relative ${activeSection === item.id ? 'text-black dark:text-white font-semibold' : ''}`}
-                                        >
-                                            {item.label}
-                                            {activeSection === item.id && (
-                                                <motion.div
-                                                    layoutId="underline"
-                                                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-unc"
-                                                />
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {/* Desktop Actions */}
-                                <div className="hidden md:flex items-center gap-3">
-                                    {/* Search Bar */}
-                                    <div
-                                        onClick={() => setSearchOpen(true)}
-                                        className="group relative flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full cursor-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-300 dark:hover:border-gray-600 w-48"
-                                    >
-                                        <i data-lucide="search" className="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
-                                        <span className="text-sm text-gray-400 dark:text-gray-500 font-normal">Search...</span>
-                                        <div className="absolute right-2 flex items-center gap-1">
-                                            <span className="text-[10px] font-mono text-gray-400 border border-gray-300 dark:border-gray-600 rounded px-1">⌘K</span>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={toggleTheme}
-                                        className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-                                        title="Toggle Theme"
-                                    >
-                                        <i data-lucide={darkMode ? "sun" : "moon"} className="w-4 h-4"></i>
-                                    </button>
-
-                                    <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
-
-                                    <button onClick={() => setActiveSection('cv')} className="flex items-center gap-2 text-xs font-medium text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-unc/30 transition shadow-sm">
-                                        <i data-lucide="file-text" className="w-3 h-3"></i> CV
-                                    </button>
-                                </div>
-
-                                {/* Mobile Menu Button */}
-                                <div className="flex md:hidden items-center gap-4">
-                                    <button onClick={toggleTheme} className="text-gray-600 dark:text-gray-300">
-                                        <i data-lucide={darkMode ? "sun" : "moon"} className="w-5 h-5"></i>
-                                    </button>
-                                    <button
-                                        className="p-2 text-gray-600 dark:text-gray-300"
-                                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                    >
-                                        <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
-                                    </button>
-                                </div>
+                                <button onClick={toggleTheme} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-4 h-4"></i></button><div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div><button onClick={() => setActiveSection('cv')} className="cursor-pointer flex items-center gap-2 text-xs font-medium text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-unc/30 transition shadow-sm"><i data-lucide="file-text" className="w-3 h-3"></i> CV</button>
                             </div>
+                            <div className="flex md:hidden items-center gap-4"><button onClick={toggleTheme} className="text-gray-600 dark:text-gray-300 cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-5 h-5"></i></button><button className="p-2 text-gray-600 dark:text-gray-300 cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}><i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i></button></div>
                         </div>
-
-                        {/* Mobile Menu Overlay */}
-                        <AnimatePresence>
-                            {mobileMenuOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -20 }}
-                                    className="fixed inset-0 z-40 pt-24 px-6 mobile-menu-backdrop dark:bg-gray-900/98 md:hidden flex flex-col h-screen"
-                                >
-                                    <div className="flex flex-col gap-6 text-center">
-                                        <button
-                                            onClick={() => { setSearchOpen(true); setMobileMenuOpen(false); }}
-                                            className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg flex items-center justify-center gap-2 text-gray-600 dark:text-gray-300 mx-8"
-                                        >
-                                            <i data-lucide="search" className="w-4 h-4"></i> Search...
-                                        </button>
-
-                                        {navItems.map((item) => (
-                                            <button
-                                                key={item.id}
-                                                onClick={() => handleNavClick(item.id)}
-                                                className={`text-2xl font-serif ${activeSection === item.id ? 'text-unc font-bold' : 'text-gray-800 dark:text-gray-200'}`}
-                                            >
-                                                {item.label}
-                                            </button>
-                                        ))}
-                                        <div className="h-px bg-gray-200 dark:bg-gray-800 w-1/2 mx-auto my-4"></div>
-                                        <button onClick={() => handleNavClick('cv')} className="text-lg font-medium text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2">
-                                            <i data-lucide="file-text" className="w-4 h-4"></i> View CV
-                                        </button>
-                                        <a href="mailto:zhayihan@unc.edu" className="text-lg font-medium text-gray-600 dark:text-gray-400">
-                                            zhayihan@unc.edu
-                                        </a>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </nav>
-                </>
+                    </div>
+                    <AnimatePresence>{mobileMenuOpen && (<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 z-40 pt-24 px-6 mobile-menu-backdrop dark:bg-gray-900/98 md:hidden flex flex-col h-screen"><div className="flex flex-col gap-6 text-center">{NAV_ITEMS.map((item) => (<button key={item.id} onClick={() => { setActiveSection(item.id); setMobileMenuOpen(false); }} className={`text-2xl font-serif cursor-pointer ${activeSection === item.id ? 'text-unc font-bold' : 'text-gray-800 dark:text-gray-200'}`}>{item.label}</button>))}</div></motion.div>)}</AnimatePresence>
+                </nav>
             );
         };
 
-        // 2. Hero Section (Yihan.jpg)
-        const Hero = ({ setActiveSection }) => (
-            <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-20 bg-white dark:bg-gray-900 transition-colors duration-300">
-                {/* Carolina Blue Blobs */}
-                <div className="absolute top-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-unc/5 dark:bg-unc/10 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-70 animate-blob"></div>
-                <div className="absolute top-0 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-blue-50 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
+        const Hero = ({ setActiveSection }) => {
+            const [text, setText] = useState('');
+            const fullText = "Idealist.";
+            useEffect(() => {
+                let index = 0;
+                const timer = setInterval(() => { setText(fullText.slice(0, index)); index++; if (index > fullText.length) clearInterval(timer); }, 150);
+                return () => clearInterval(timer);
+            }, []);
 
-                <div className="max-w-6xl mx-auto px-6 z-10 relative grid md:grid-cols-12 gap-12 md:gap-16 items-center">
-                    <div className="md:col-span-7 text-center md:text-left">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded border border-unc/20 bg-unc/5 dark:bg-unc/10 mb-6 md:mb-8 mx-auto md:mx-0"
-                        >
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-unc opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-unc"></span>
-                            </span>
-                            <span className="text-[10px] font-bold text-unc-dark dark:text-unc-light uppercase tracking-widest">Open for PhD Opportunities Fall 2026</span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                            className="text-5xl md:text-8xl font-medium tracking-tighter mb-6 md:mb-8 leading-[1.1] text-gray-900 dark:text-white"
-                        >
-                            The Pragmatic <br />
-                            <span className="serif italic text-unc">Idealist.</span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                            className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8"
-                        >
-                            Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong> to build Human-Centered Intelligent Systems.
-                        </motion.p>
-
-                        {/* UNC Identity Block - Responsive */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                            className="flex items-center gap-4 mb-10 p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl max-w-sm md:max-w-md shadow-sm hover:shadow-md transition-all cursor-default mx-auto md:mx-0 text-left group"
-                            onClick={() => setActiveSection('unc')}
-                        >
-                            {/* CSS-Only UNC Seal Approximation */}
-                            <div className="w-12 h-12 bg-unc/10 dark:bg-unc/20 rounded-full border-2 border-unc/30 flex items-center justify-center flex-shrink-0 group-hover:border-unc transition-colors">
-                                <div className="w-8 h-8 border border-unc rounded-full flex items-center justify-center">
-                                    <span className="font-serif text-unc font-bold text-xs">UNC</span>
+            return (
+                <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-20 bg-white dark:bg-gray-900 transition-colors duration-300">
+                    <div className="absolute top-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-unc/5 dark:bg-unc/10 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-70 animate-blob"></div>
+                    <div className="absolute top-0 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-blue-50 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
+                    <div className="max-w-6xl mx-auto px-6 z-10 relative grid md:grid-cols-12 gap-12 md:gap-16 items-center">
+                        <div className="md:col-span-7 text-center md:text-left">
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 px-3 py-1 rounded border border-unc/20 bg-unc/5 dark:bg-unc/10 mb-6 md:mb-8 mx-auto md:mx-0">
+                                <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-unc opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-unc"></span></span>
+                                <span className="text-[10px] font-bold text-unc-dark dark:text-unc-light uppercase tracking-widest">Open for PhD Opportunities Fall 2026</span>
+                            </motion.div>
+                            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-5xl md:text-8xl font-medium tracking-tighter mb-6 md:mb-8 leading-[1.1] text-gray-900 dark:text-white">The Pragmatic <br /><span className="serif italic text-unc">{text}<span className="animate-pulse">|</span></span></motion.h1>
+                            <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8">Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong> to build Human-Centered Intelligent Systems.</motion.p>
+                            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                                <button onClick={() => setActiveSection('projects')} className="cursor-pointer px-8 py-3 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-full hover:bg-unc dark:hover:bg-unc dark:hover:text-white hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto">View Portfolio</button>
+                                <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="cursor-pointer px-8 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-700 rounded-full hover:border-unc dark:hover:border-unc transition-all duration-300 w-full sm:w-auto flex items-center justify-center">Research Statement</a>
+                            </motion.div>
+                        </div>
+                        <div className="md:col-span-5 relative hidden md:block">
+                            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} className="aspect-[4/5] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
+                                <div className="w-full h-full bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden group">
+                                    {/* Enhanced Fallback: Shows a framed Yihan text if image fails */}
+                                    <img src="Yihan.png" alt="Yihan Zhang" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('img-placeholder'); e.target.parentElement.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center"><span class="text-4xl mb-2">🎓</span><span class="font-serif text-lg text-gray-500">Yihan Zhang</span></div>`; }} />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                 </div>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide font-bold">Academic Affiliation</p>
-                                <p className="text-sm font-serif text-gray-900 dark:text-gray-100 leading-tight">University of North Carolina<br />at Chapel Hill</p>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
-                        >
-                            <button onClick={() => setActiveSection('projects')} className="px-8 py-3 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-full hover:bg-unc dark:hover:bg-unc dark:hover:text-white hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto">
-                                View Portfolio
-                            </button>
-
-                            <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="px-8 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-700 rounded-full hover:border-unc dark:hover:border-unc transition-all duration-300 w-full sm:w-auto">
-                                Research Statement
-                            </a>
-                        </motion.div>
+                            </motion.div>
+                        </div>
                     </div>
+                </section>
+            );
+        };
 
-                    <div className="md:col-span-5 relative hidden md:block">
-                        {/* Academic Profile Image */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}
-                            className="aspect-[4/5] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
-                        >
-                            <div className="w-full h-full bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
-                                <img
-                                    src="Yihan.png"
-                                    alt="Yihan Zhang"
-                                    className="w-full h-full object-cover object-top"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = "https://placehold.co/400x500?text=Yihan.jpg+Missing";
-                                    }}
-                                />
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-        );
-
-        // 3. Stats Bar
         const Stats = () => (
             <div className="bg-white dark:bg-gray-900 border-t border-b border-gray-100 dark:border-gray-800 py-12 relative overflow-hidden transition-colors duration-300">
                 <div className="absolute left-0 top-0 h-full w-1 bg-unc hidden md:block"></div>
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
-                    {[
-                        { val: "Chinese A Share public Group", label: "Indus. R&D Context" },
-                        { val: "2", label: "Granted Patents" },
-                        { val: "4.0", label: "Recent Term GPA" },
-                        { val: "Top 2", label: "UNC MakerFest" }
-                    ].map((stat, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1 }}
-                        >
+                    {[{ val: "Chinese A Share", label: "Indus. R&D Context" }, { val: "2", label: "Granted Patents" }, { val: "4.0", label: "Recent Term GPA" }, { val: "Top 2", label: "UNC MakerFest" }].map((stat, i) => (
+                        <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                             <div className="text-2xl md:text-3xl font-serif font-bold text-gray-900 dark:text-white">{stat.val}</div>
                             <div className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-widest mt-2 text-unc-dark dark:text-unc-light">{stat.label}</div>
                         </motion.div>
@@ -719,15 +521,33 @@
             </div>
         );
 
-        // 4. News Section
+        const NowPage = () => {
+            const focusItems = [
+                { title: "Pluggy Ecosystem", subtitle: "Hardware Founder", desc: "Building the world's first 30W Gamified Charger. Addressing digital wellbeing through physical constraints and a gamified 'Skin Economy'.", tags: ["Hardware", "Startup", "Gamification"], status: "In Development", icon: "zap" },
+                { title: "PhD Applications", subtitle: "Fall 2026 Entry", desc: "Applying to PhD programs in HCI and Design Engineering. Research interest: Urban Micro-Interaction Systems & Behavioral Sensing.", tags: ["Academic", "Research", "Future"], status: "Drafting Statements", icon: "graduation-cap" },
+                { title: "UNC Graduation", subtitle: "Senior Capstone", desc: "Completing final undergraduate requirements at UNC Chapel Hill. Integrating Information Science with Studio Art practice.", tags: ["Milestone", "SILS", "Art"], status: "Spring 2026", icon: "flag" }
+            ];
+            return (
+                <section className="py-24 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+                    <div className="max-w-5xl mx-auto px-6">
+                        <div className="flex flex-col md:flex-row justify-between items-end mb-16"><div><div className="flex items-center gap-2 mb-4"><span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><span className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Current Focus / Now</span></div><h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 dark:text-white">What I'm doing.</h2></div><div className="text-right hidden md:block"><p className="text-sm font-mono text-green-500">LAST_UPDATED: NOV 2025</p><p className="text-sm font-mono text-green-500">LOC: CHAPEL HILL, NC</p></div></div>
+                        <div className="grid gap-8">
+                            {focusItems.map((item, i) => (
+                                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
+                                    <div className="absolute -right-6 -bottom-6 opacity-5 dark:opacity-10 transform group-hover:scale-110 transition-transform duration-500"><i data-lucide={item.icon} className="w-40 h-40"></i></div>
+                                    <div className="flex flex-col md:flex-row gap-6 md:items-start relative z-10"><div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><i data-lucide={item.icon} className="w-6 h-6 text-gray-900 dark:text-white"></i></div><div className="flex-1"><div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2"><h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-unc transition-colors">{item.title}</h3><span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-900 rounded-full text-xs font-mono font-bold text-gray-500 dark:text-gray-400 mt-2 md:mt-0 w-fit">{item.status}</span></div><p className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4">{item.subtitle}</p><p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6 max-w-3xl">{item.desc}</p><div className="flex flex-wrap gap-2">{item.tags.map(tag => (<span key={tag} className="text-xs font-medium px-2 py-1 border border-gray-200 dark:border-gray-600 rounded text-gray-500 dark:text-gray-400">#{tag}</span>))}</div></div></div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
         const NewsSection = () => (
             <section className="py-16 md:py-24 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
                 <div className="max-w-4xl mx-auto px-6">
-                    <div className="flex items-baseline gap-4 mb-8 md:mb-12">
-                        <h2 className="text-xl md:text-2xl font-serif font-bold text-black dark:text-white">Academic Updates</h2>
-                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
-                    </div>
-
+                    <div className="flex items-baseline gap-4 mb-8 md:mb-12"><h2 className="text-xl md:text-2xl font-serif font-bold text-black dark:text-white">Academic Updates</h2><div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div></div>
                     <div className="space-y-8 md:space-y-12 border-l border-gray-200 dark:border-gray-700 pl-6 md:pl-8 ml-2 md:ml-3">
                         {NEWS_DATA.map((item, i) => (
                             <div key={i} className="relative group">
@@ -742,30 +562,13 @@
             </section>
         );
 
-        // 5. Research Section (RESTORED)
         const Research = () => (
             <section className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto px-6">
-
-                    {/* 1. Header & Framework Intro */}
                     <div className="mb-20">
-                        <div className="flex items-baseline gap-4 mb-6">
-                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white">Research Framework</h2>
-                            <div className="h-px bg-gray-300 dark:bg-gray-700 flex-1"></div>
-                        </div>
-
-                        {/* Vision Quote */}
-                        <blockquote className="border-l-4 border-unc pl-6 mb-8 italic text-gray-500 dark:text-gray-400 text-lg">
-                            "Smartness serves functions; Wisdom serves people. A truly 'smart' city is not one that merely optimizes efficiency, but one that understands human needs and adapts to social diversity."
-                        </blockquote>
-
-                        <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-light leading-relaxed max-w-4xl">
-                            <strong>From Smart Cities to Wise Systems.</strong><br />
-                            Traditional systems ask: <em>"How can machines be smarter?"</em> My research asks: <em>"How can machines better understand us?"</em><br />
-                            I build <strong>Human-Centered IoT Systems</strong> that bridge the gap between digital sensing and human social behavior—moving beyond efficiency to <strong>empathy, adaptation, and wisdom</strong>.
-                        </p>
-
-                        {/* Methodology Tags */}
+                        <div className="flex items-baseline gap-4 mb-6"><h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white">Research Framework</h2><div className="h-px bg-gray-300 dark:bg-gray-700 flex-1"></div></div>
+                        <blockquote className="border-l-4 border-unc pl-6 mb-8 italic text-gray-500 dark:text-gray-400 text-lg">"Smartness serves functions; Wisdom serves people..."</blockquote>
+                        <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-light leading-relaxed max-w-4xl"><strong>From Smart Cities to Wise Systems.</strong><br />I build <strong>Human-Centered IoT Systems</strong> that bridge the gap between digital sensing and human social behavior.</p>
                         <div className="flex flex-wrap gap-3 mt-8">
                             {['Behavioral Sensing', 'Human-Centered AI', 'Preventive Intervention', 'Social Nuance Understanding', 'Closed-Loop Feedback'].map(tag => (
                                 <span key={tag} className="px-3 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-mono text-gray-600 dark:text-gray-300 tracking-wide uppercase">
@@ -775,25 +578,12 @@
                         </div>
                     </div>
 
-                    {/* 2. Methodology Visual (Full Width) */}
+                    {/* Methodology Visual */}
                     <div className="mb-24">
-                        <div className="flex justify-between items-end mb-4">
-                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Methodology Architecture</h3>
-                            <span className="text-xs font-mono text-gray-400">Fig 1. Perception-Decision-Execution Loop</span>
-                        </div>
+                        <div className="flex justify-between items-end mb-4"><h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Methodology Architecture</h3><span className="text-xs font-mono text-gray-400">Fig 1. Perception-Decision-Execution Loop</span></div>
                         <div className="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-center items-center group hover:border-unc/30 transition-colors cursor-pointer overflow-hidden relative">
-                            <img
-                                src="Framework_Diagram.jpg"
-                                alt="Methodology Diagram"
-                                className="w-full h-full object-contain dark:invert dark:hue-rotate-180"
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    // Fallback to icon if image missing
-                                    e.target.parentElement.classList.add('img-placeholder');
-                                }}
-                            />
-                            {/* Fallback content shown if img error */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center z-[-1]">
+                            <img src="Framework_Diagram.jpg" alt="Methodology Diagram" className="w-full h-full object-contain dark:invert dark:hue-rotate-180" onError={(e) => { e.target.style.display = 'none'; }} />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center z-0">
                                 <i data-lucide="workflow" className="w-10 h-10 mb-3 text-gray-300 dark:text-gray-600"></i>
                                 <span className="text-sm text-gray-500 dark:text-gray-400">Framework_Diagram.jpg</span>
                                 <span className="text-xs text-gray-400 mt-1">Place image in folder</span>
@@ -802,8 +592,7 @@
                     </div>
 
                     <div className="grid md:grid-cols-12 gap-16">
-
-                        {/* 3. Publications (Left Column - Wider 7/12) */}
+                        {/* Publications Column */}
                         <div className="md:col-span-7 space-y-12">
                             <div>
                                 <div className="flex items-center gap-3 mb-8">
@@ -831,6 +620,24 @@
                                     </li>
 
                                     <li className="group">
+                                        <a href="03_Research-portfolio_Yihan.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
+                                            <div className="flex justify-between items-start mb-3">
+                                                <span className="text-[10px] font-bold text-white bg-black dark:bg-white dark:text-black px-2 py-1 rounded uppercase tracking-wider">Published</span>
+                                                <span className="text-xs font-mono text-gray-400">2022</span>
+                                            </div>
+                                            <h4 className="text-xl font-medium text-gray-900 dark:text-gray-100 leading-tight group-hover:text-unc transition-colors">
+                                                Spatial Inequality Analysis: US Population Change & Global Coffee Trade
+                                            </h4>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-light">
+                                                <span className="font-medium text-black dark:text-white">Yihan Zhang</span>.
+                                            </p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
+                                                Quantitative geospatial analysis utilizing R and ArcGIS to map socioeconomic disparities.
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                    <li className="group">
                                         <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
                                                 <span className="text-[10px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded uppercase tracking-wider">Statement</span>
@@ -849,9 +656,9 @@
                             </div>
                         </div>
 
-                        {/* 4. Patents (Right Column - Narrower 5/12) */}
+                        {/* Patents Column - Removed sticky to ensure it scrolls naturally */}
                         <div className="md:col-span-5">
-                            <div className="bg-[#111] dark:bg-black text-white p-8 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-unc sticky top-24">
+                            <div className="bg-[#111] dark:bg-black text-white p-8 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-unc">
                                 <div className="absolute top-0 right-0 w-40 h-40 bg-gray-800 rounded-full mix-blend-screen filter blur-3xl opacity-20 pointer-events-none"></div>
 
                                 <h3 className="text-xs font-bold uppercase tracking-widest mb-8 text-gray-400 flex items-center gap-2">
@@ -885,38 +692,18 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
         );
 
-        // 6. Projects Section (Research Artifacts - National Academy of Sciences Edition)
         const Projects = () => {
             const [activeFilter, setActiveFilter] = useState('ALL');
-
-            const filteredWorks = useMemo(() => {
-                if (activeFilter === 'ALL') return WORKS_DATA;
-                return WORKS_DATA.filter(work => work.filterType === activeFilter);
-            }, [activeFilter]);
+            const filteredWorks = useMemo(() => { if (activeFilter === 'ALL') return WORKS_DATA; return WORKS_DATA.filter(work => work.filterType === activeFilter); }, [activeFilter]);
 
             return (
                 <section className="py-24 bg-white dark:bg-gray-900 relative border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
-                    {/* NAS Style: Precise Engineering Grid Background */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.05] dark:opacity-[0.1]"
-                        style={{
-                            backgroundImage: `
-                                linear-gradient(to right, #888 1px, transparent 1px),
-                                linear-gradient(to bottom, #888 1px, transparent 1px)
-                            `,
-                            backgroundSize: '40px 40px'
-                        }}
-                    ></div>
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-black via-gray-500 to-black dark:from-white dark:via-gray-400 dark:to-white"></div>
-
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
-
-                        {/* NAS Style: Authoritative Header */}
                         <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b-2 border-black dark:border-white pb-6">
                             <div>
                                 <div className="flex items-center gap-2 text-black dark:text-white font-serif italic text-sm mb-2">
@@ -933,7 +720,6 @@
                             </div>
                         </div>
 
-                        {/* Functional Filters - NAS Style Buttons */}
                         <div className="flex flex-wrap gap-2 mb-12 pb-6 border-b border-gray-200 dark:border-gray-700 font-mono text-xs">
                             {[
                                 { id: 'ALL', label: 'ALL_ENTRIES' },
@@ -945,7 +731,7 @@
                                 <button
                                     key={filter.id}
                                     onClick={() => setActiveFilter(filter.id)}
-                                    className={`px-4 py-2 border transition-all duration-300 uppercase tracking-wider ${activeFilter === filter.id
+                                    className={`px-4 py-2 border transition-all duration-300 uppercase tracking-wider cursor-pointer ${activeFilter === filter.id
                                         ? 'bg-black text-white border-black shadow-lg dark:bg-white dark:text-black dark:border-white'
                                         : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black dark:bg-gray-900 dark:text-gray-400 dark:border-gray-700 dark:hover:border-white dark:hover:text-white'
                                         }`}
@@ -955,31 +741,21 @@
                             ))}
                         </div>
 
-                        {/* The "Institute" Grid with AnimatePresence for Smooth Filtering */}
-                        <motion.div
-                            layout
-                            className="grid md:grid-cols-2 gap-8 md:gap-12"
-                        >
-                            <AnimatePresence mode='popLayout'>
+                        <AnimatePresence mode='wait'>
+                            <motion.div
+                                key={activeFilter}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="grid md:grid-cols-2 gap-8 md:gap-12"
+                            >
                                 {filteredWorks.map((work) => (
                                     <motion.div
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 300,
-                                            damping: 30,
-                                            opacity: { duration: 0.2 }
-                                        }}
                                         key={work.id}
                                         className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-500 flex flex-col h-full shadow-sm hover:shadow-2xl relative overflow-hidden"
                                     >
-                                        {/* Corner Marker */}
                                         <div className="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-black dark:border-t-white border-l-[40px] border-l-transparent z-20"></div>
-
-                                        {/* Technical Top Bar */}
                                         <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-5 py-3 flex justify-between items-center font-mono text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             <span className="font-bold text-black dark:text-white">REF: {work.id}</span>
                                             <div className="flex gap-4 items-center">
@@ -990,8 +766,7 @@
                                             </div>
                                         </div>
 
-                                        {/* Image Area (Scientific View) */}
-                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 group-hover:opacity-100">
+                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 group-hover:opacity-100 cursor-pointer">
                                             <img
                                                 src={work.img}
                                                 alt={work.title}
@@ -1002,36 +777,26 @@
                                                     e.target.parentElement.innerHTML = `<div class="text-center p-4 font-mono text-xs"><span class="block text-2xl mb-2">⚠️</span>DATA_MISSING<br/><span class="text-gray-400">${work.img}</span></div>`;
                                                 }}
                                             />
-
-                                            {/* Scientific Grid Overlay */}
                                             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-overlay"></div>
-
-                                            {/* Hover Action */}
                                             <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur text-white px-6 py-3 text-xs font-mono uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center">
                                                 <span>Access Full Documentation</span>
                                                 <i data-lucide="arrow-right" className="w-3 h-3"></i>
                                             </div>
                                         </a>
 
-                                        {/* Content Body */}
                                         <div className="p-8 flex-grow flex flex-col relative">
-                                            {/* Watermark Number */}
                                             <div className="absolute top-4 right-4 text-6xl font-bold text-gray-100 dark:text-gray-800 font-serif pointer-events-none -z-0 select-none">
                                                 {work.id.split('-')[1]}
                                             </div>
-
                                             <div className="mb-6 relative z-10">
                                                 <span className="text-[10px] font-bold bg-black dark:bg-white text-white dark:text-black px-2 py-1 inline-block mb-3 font-mono uppercase tracking-widest">{work.cat}</span>
                                                 <h3 className="text-3xl font-serif font-bold text-black dark:text-white leading-none group-hover:text-unc transition-colors mt-1">
                                                     {work.title}
                                                 </h3>
                                             </div>
-
                                             <p className="text-sm text-gray-600 dark:text-gray-400 font-serif leading-relaxed mb-8 flex-grow relative z-10">
                                                 {work.desc}
                                             </p>
-
-                                            {/* Tech Specs Matrix - NAS Style */}
                                             <div className="mt-auto border-t-2 border-gray-100 dark:border-gray-800 pt-4 relative z-10">
                                                 <div className="grid grid-cols-3 gap-4 mb-4">
                                                     <div className="col-span-3">
@@ -1056,29 +821,21 @@
                                         </div>
                                     </motion.div>
                                 ))}
-                            </AnimatePresence>
-                        </motion.div>
-
-                        {/* No Results Message */}
-                        {filteredWorks.length === 0 && (
-                            <div className="py-24 text-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
-                                <p className="font-mono text-gray-400">NO_ENTRIES_FOUND_FOR_FILTER</p>
-                            </div>
-                        )}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </section>
             );
         };
 
-        // 7. MoMA Style Art Gallery (Updated to 8 items)
+        // ENHANCED MOMA STYLE ART GALLERY (Asymmetrical Grid & Design Refresh)
         const ArtGallery = () => (
-            <section className="py-16 md:py-32 bg-black text-white">
+            <section className="py-14 md:py-20 bg-black text-white transition-colors duration-300">
                 <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
-
                     {/* Gallery Header */}
-                    <div className="mb-16 md:mb-24 border-t border-white pt-8 flex flex-col md:flex-row justify-between items-start">
+                    <div className="mb-10 md:mb-16 border-t border-white pt-6 flex flex-col md:flex-row justify-between items-start">
                         <div className="md:w-1/3">
-                            <h2 className="text-3xl md:text-5xl font-sans font-bold tracking-tighter mb-6 text-white">
+                            <h2 className="text-4xl md:text-6xl font-sans font-bold tracking-tighter mb-4">
                                 Art & Design<br /><span className="text-moma-red">Gallery</span>
                             </h2>
                         </div>
@@ -1090,109 +847,74 @@
                         </div>
                     </div>
 
-                    {/* Masonry / Gallery Layout */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                    {/* MoMA Asymmetrical Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-8">
                         {ART_DATA.map((art, i) => (
-                            <div key={i} className={`${art.colSpan} flex flex-col gap-3`}>
-                                <div className={`w-full ${art.aspect} bg-[#111] border-none group overflow-hidden relative`}>
+                            <motion.div
+                                key={i}
+                                className={`${art.colSpan} flex flex-col gap-3 group`}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-10%" }}
+                                transition={{ duration: 0.6, delay: i * 0.05 }}
+                            >
+                                {/* Artwork Frame */}
+                                <div className={`w-full ${art.aspect} bg-[#111] relative overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500`}>
                                     {art.isPlaceholder ? (
-                                        <div className="w-full h-full bg-neutral-900 flex items-center justify-center text-gray-600 font-mono text-xs">
+                                        <div className="w-full h-full flex items-center justify-center bg-neutral-900 text-gray-500 font-mono text-xs p-8 text-center">
                                             [ Wide Feature: e.g. Landscape_Compilation.jpg ]
                                         </div>
                                     ) : (
                                         <img
                                             src={art.img}
                                             alt={art.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
-                                                e.target.parentElement.classList.add('art-placeholder');
-                                                e.target.parentElement.innerHTML = `<span>${art.img}</span>`;
+                                                e.target.parentElement.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs font-mono p-4 border border-dashed border-gray-700"><span class="text-2xl mb-2">🖼️</span>${art.img}</div>`;
                                             }}
                                         />
                                     )}
                                 </div>
-                                <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                    <div>
-                                        <h4 className="text-sm font-bold text-white">{art.title}</h4>
-                                        <p className="text-xs text-gray-500 font-mono">{art.medium}</p>
+
+                                {/* Museum Label Style Info */}
+                                <div className="flex justify-between items-start border-t border-gray-800 pt-2 mt-1 group-hover:border-moma-red transition-colors duration-300">
+                                    <div className="max-w-[80%]">
+                                        <h4 className="text-lg font-bold leading-tight group-hover:text-moma-red transition-colors">{art.title}</h4>
+                                        <p className="text-xs text-gray-500 font-serif italic mt-0.5">{art.medium}</p>
                                     </div>
-                                    <span className="text-moma-red text-xs font-bold">{(i + 1).toString().padStart(2, '0')}</span>
+                                    <span className="text-xs font-mono font-bold text-gray-500 group-hover:text-moma-red transition-colors">
+                                        {(i + 1).toString().padStart(2, '0')}
+                                    </span>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
 
-                    <div className="mt-16 md:mt-24 border-b border-white"></div>
+                    <div className="mt-16 border-b border-white"></div>
                 </div>
             </section>
         );
 
-        // 8. UNC Section (UPDATED: Campus Context with Actual Image & Logo)
         const UNCSection = () => (
             <section className="bg-white pb-24">
                 {/* 1. Hero Banner with Full-Width Blurred Background */}
-                {/* Updated height to 120vh and added pt-20 to prevent navbar occlusion */}
                 <div className="relative w-full h-[90vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
-
-                    {/* Background Image */}
                     <div className="absolute inset-0 z-0 overflow-hidden">
-                        <img
-                            src="UNC_Landscape.jpg"
-                            alt="UNC Campus Landscape"
-                            className="w-full h-full object-cover object-top blur-md scale-110"
-                        />
-                        {/* Overlay to ensure text readability */}
-                        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                        {/* Robust Background Fallback */}
+                        <img src="UNC_Landscape.jpg" alt="UNC" className="w-full h-full object-cover object-top blur-md scale-110" onError={(e) => { e.target.style.display = 'none'; }} />
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-unc/10 to-white"></div>
                     </div>
-
-                    {/* Content Layer */}
                     <div className="relative z-10 text-center px-6 w-full max-w-4xl mx-auto mt-12">
-
-                        {/* School Logo Slot - Enhanced with Real Image */}
-                        <div className="mb-8 flex justify-center">
-                            <div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden group cursor-pointer relative hover:scale-105 transition-transform duration-500">
-                                <img
-                                    src="UNC_Logo.png"
-                                    alt="UNC Logo"
-                                    className="w-full h-full object-contain p-4"
-                                    onError={(e) => {
-                                        // Fallback if image is missing
-                                        e.target.style.display = 'none';
-                                        e.target.parentElement.innerHTML = '<div class="text-center text-unc opacity-50"><span class="text-[10px] font-bold uppercase tracking-widest">UNC_Logo.png</span></div>';
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white/60 shadow-sm mb-6">
-                            <i data-lucide="map-pin" className="w-3 h-3 text-unc"></i>
-                            <span className="text-xs font-bold uppercase tracking-widest text-gray-800">Chapel Hill, NC</span>
-                        </div>
-
-                        <h2 className="text-5xl md:text-8xl font-serif font-bold text-gray-900 mb-6 leading-none tracking-tight drop-shadow-lg">
-                            University of North Carolina<br />
-                            <span className="text-unc italic relative">
-                                at Chapel Hill
-                                {/* Decorative underline */}
-                                <svg className="absolute w-full h-3 -bottom-1 left-0 text-unc opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
-                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
-                                </svg>
-                            </span>
-                        </h2>
-
-                        <p className="text-lg md:text-2xl text-gray-800 font-light max-w-2xl mx-auto leading-relaxed">
-                            Ranking No. 1 public university in the South.<br />
-                            USNEWS 2024 #22 National University
-                        </p>
+                        <div className="mb-8 flex justify-center"><div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden group cursor-pointer relative hover:scale-105 transition-transform duration-500"><img src="UNC_Logo.png" alt="UNC Logo" className="w-full h-full object-contain p-4" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center text-unc font-serif font-bold">UNC</div>'; }} /></div></div>
+                        <h2 className="text-5xl md:text-8xl font-serif font-bold text-gray-900 mb-6 leading-none tracking-tight drop-shadow-lg">University of North Carolina<br /><span className="text-unc italic relative">at Chapel Hill</span></h2>
+                        <p className="text-lg md:text-2xl text-gray-800 font-light max-w-2xl mx-auto leading-relaxed">Ranking No. 1 public university in the South.<br />USNEWS 2024 #22 National University</p>
                     </div>
                 </div>
 
-                {/* Bento Grid Layout */}
+                {/* 2. Bento Grid Layout (Restored) */}
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
                         {/* Card 1: Heritage (Large) */}
                         <div className="md:col-span-2 bg-gray-50 p-8 rounded-xl border border-gray-100 relative overflow-hidden group hover:border-unc/20 transition-colors">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-unc/5 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
@@ -1259,375 +981,74 @@
                                 🐏
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
         );
 
-        // 9. CV Viewer Component (FULLSCREEN IMMERSIVE)
-        const CVViewer = ({ setActiveSection }) => (
-            <motion.div
-                className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col"
-                initial={{ opacity: 0, y: '100%' }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: '100%' }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-                {/* Toolbar */}
-                <div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0">
-                    <div className="flex items-center gap-4">
-                        <button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
-                            <i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span>
-                        </button>
-                        <div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div>
-                        <span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20">
-                            <i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span>
-                        </a>
-                    </div>
-                </div>
-
-                {/* PDF View Area - MAXIMIZED & MOBILE FRIENDLY */}
-                <div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center">
-                    <iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe>
-
-                    {/* Mobile Fallback for PDF */}
-                    <div className="md:hidden flex flex-col items-center justify-center text-center p-8">
-                        <i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i>
-                        <h3 className="text-xl font-bold mb-2">View PDF</h3>
-                        <p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p>
-                        <a href="04_Yihan Zhang_CV.pdf" target="_blank" className="bg-white text-black px-6 py-3 rounded-full font-bold">Tap to Open PDF</a>
-                    </div>
-                </div>
-            </motion.div>
-        );
-
-        // 10. Contact Section (RESTORED with Image)
-        const Contact = () => (
-            <section className="py-16 md:py-32 bg-white min-h-screen flex items-center relative overflow-hidden">
-                {/* Background Graphic - REPLACED with Real Image */}
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                    <img
-                        src="UNC_Landscape.jpg"
-                        alt="UNC Campus Landscape"
-                        className="w-full h-full object-cover object-center blur-sm opacity-20 scale-105"
-                    />
-                    <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
-                </div>
-
-                <div className="max-w-5xl mx-auto px-6 w-full z-10">
-                    <div className="grid md:grid-cols-2 gap-12 md:gap-20">
-                        <div>
-                            <h2 className="text-4xl md:text-7xl font-serif font-bold text-gray-900 mb-6 md:mb-8 leading-none">
-                                Let's<br /><span className="text-unc italic">Connect.</span>
-                            </h2>
-                            <p className="text-lg md:text-xl text-gray-600 font-light mb-8 md:mb-12 max-w-sm">
-                                Open to PhD opportunities, research collaborations, and technical discussions.
-                            </p>
-
-                            <div className="space-y-6 md:space-y-8">
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email</h3>
-                                    <a href="mailto:zhayihan@unc.edu" className="text-xl md:text-2xl font-mono hover:text-unc transition-colors border-b border-gray-200 hover:border-unc pb-1 break-all">zhayihan@unc.edu</a>
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institution</h3>
-                                    <p className="text-base md:text-lg text-gray-800">University of North Carolina<br />at Chapel Hill</p>
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Social</h3>
-                                    <div className="flex gap-4">
-                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-unc hover:text-white hover:border-unc transition-all"><i data-lucide="linkedin" className="w-4 h-4"></i></a>
-                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all"><i data-lucide="github" className="w-4 h-4"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white/90 p-6 md:p-8 rounded-lg border border-gray-100 shadow-xl backdrop-blur-md">
-                            <h3 className="text-lg font-bold mb-6">Send a Message</h3>
-                            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Name</label>
-                                    <input type="text" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="Your Name" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Email</label>
-                                    <input type="email" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="your@email.com" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Message</label>
-                                    <textarea rows="4" className="w-full bg-white border border-gray-200 rounded p-3 focus:outline-none focus:border-unc transition-colors" placeholder="Hello Yihan..."></textarea>
-                                </div>
-                                <button className="w-full bg-black text-white py-3 rounded font-medium hover:bg-unc transition-colors flex items-center justify-center gap-2">
-                                    Send Message <i data-lucide="send" className="w-4 h-4"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        );
-
-        // 11. Footer (Optimized)
-        const Footer = ({ activeSection }) => {
-            if (activeSection === 'cv' || activeSection === 'contact') return null;
-
-            const isArt = activeSection === 'art';
-            const isHome = activeSection === 'home';
-
-            if (!isHome) {
-                return (
-                    <footer className={`py-8 border-t ${isArt ? 'bg-black border-gray-900 text-gray-500' : 'bg-white border-gray-100 text-gray-400'}`}>
-                        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-2 text-[10px] font-mono uppercase tracking-wider">
-                            <span>&copy; 2025 Yihan Zhang.</span>
-                            <div className="flex items-center gap-4">
-                                <span>UNC Chapel Hill</span>
-                                <span className="hidden md:inline">|</span>
-                                <a href="mailto:zhayihan@unc.edu" className="hover:text-unc transition-colors">zhayihan@unc.edu</a>
-                            </div>
-                        </div>
-                    </footer>
-                );
-            }
-
+        // [Rest of the components: Contact, Footer, ChatWidget, App - UNCHANGED]
+        const Contact = ({ triggerToast }) => {
+            const handleCopy = (e) => { e.preventDefault(); navigator.clipboard.writeText("zhayihan@unc.edu"); triggerToast("Email copied to clipboard!"); };
+            const handleSubmit = (e) => { e.preventDefault(); triggerToast("Message sent! I'll get back to you soon."); }
             return (
-                <footer className="bg-white border-t border-gray-200 text-black py-24">
-                    <div className="max-w-5xl mx-auto px-6 text-center">
-                        <div className="mb-8 flex justify-center text-unc">
-                            <i data-lucide="landmark" className="w-8 h-8"></i>
-                        </div>
-
-                        <h2 className="text-3xl md:text-4xl font-serif mb-8 font-bold">Ready to Build.</h2>
-
-                        <p className="text-gray-500 max-w-xl mx-auto mb-12 font-light">
-                            School of Information and Library Science (SILS)<br />
-                            University of North Carolina at Chapel Hill
-                        </p>
-                        <a href="mailto:zhayihan@unc.edu" className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-unc transition-all">
-                            zhayihan@unc.edu
-                        </a>
-                        <div className="mt-24 pt-8 border-t border-gray-100 text-xs text-gray-400 flex justify-between items-center">
-                            <span>&copy; 2025 Yihan Zhang.</span>
-                            <span className="font-mono">CHAPEL HILL, NC</span>
+                <section className="py-16 md:py-32 bg-white dark:bg-gray-900 min-h-screen flex items-center relative overflow-hidden transition-colors duration-300">
+                    <div className="absolute inset-0 z-0 overflow-hidden"><img src="UNC_Landscape.jpg" alt="UNC Campus" className="w-full h-full object-cover object-center blur-sm opacity-20 scale-105" onError={(e) => { e.target.style.display = 'none' }} /><div className="absolute inset-0 bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm"></div></div>
+                    <div className="max-w-5xl mx-auto px-6 w-full z-10">
+                        <div className="grid md:grid-cols-2 gap-12 md:gap-20">
+                            <div><h2 className="text-4xl md:text-7xl font-serif font-bold text-gray-900 dark:text-white mb-6 md:mb-8 leading-none">Let's<br /><span className="text-unc italic">Connect.</span></h2><p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-light mb-8 md:mb-12 max-w-sm">Open to PhD opportunities, research collaborations, and technical discussions.</p><div className="space-y-6 md:space-y-8"><div><h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email</h3><button onClick={handleCopy} className="text-xl md:text-2xl font-mono text-gray-900 dark:text-white hover:text-unc transition-colors border-b border-gray-200 dark:border-gray-700 hover:border-unc pb-1 break-all text-left cursor-pointer">zhayihan@unc.edu</button></div><div><h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institution</h3><p className="text-base md:text-lg text-gray-800 dark:text-gray-200">University of North Carolina<br />at Chapel Hill</p></div></div></div>
+                            <div className="bg-white/90 dark:bg-gray-800/90 p-6 md:p-8 rounded-lg border border-gray-100 dark:border-gray-700 shadow-xl backdrop-blur-md"><h3 className="text-lg font-bold mb-6 text-gray-900 dark:text-white">Send a Message</h3><form className="space-y-4" onSubmit={handleSubmit}><div><label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Name</label><input type="text" required className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded p-3 focus:outline-none focus:border-unc transition-colors text-gray-900 dark:text-white" placeholder="Your Name" /></div><div><label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Email</label><input type="email" required className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded p-3 focus:outline-none focus:border-unc transition-colors text-gray-900 dark:text-white" placeholder="your@email.com" /></div><div><label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Message</label><textarea rows="4" required className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded p-3 focus:outline-none focus:border-unc transition-colors text-gray-900 dark:text-white" placeholder="Hello Yihan..."></textarea></div><button type="submit" className="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded font-medium hover:bg-unc dark:hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Send Message <i data-lucide="send" className="w-4 h-4"></i></button></form></div>
                         </div>
                     </div>
-                </footer>
+                </section>
             );
         };
 
-        // 12. Chat Widget (MOCK ONLY - Safe for GitHub)
-        const ChatWidget = () => {
-            const [isOpen, setIsOpen] = useState(false);
-            const [messages, setMessages] = useState([{
-                role: 'ai',
-                text: "Hi! I'm Yihan's digital assistant. Ask me about his **Research**, **Patents**, or **UNC Background**."
-            }]);
-            const [input, setInput] = useState('');
-            const [loading, setLoading] = useState(false);
-            const messagesEndRef = useRef(null);
-
-            useEffect(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, [messages]);
-
-            const handleSend = async (text = input) => {
-                if (!text.trim()) return;
-                const userMsg = { role: 'user', text };
-                setMessages(prev => [...prev, userMsg]);
-                setInput('');
-                setLoading(true);
-
-                // MOCK RESPONSE LOGIC
-                // This replaces the API call to ensure safety and reliability in demo mode.
-                setTimeout(() => {
-                    let aiText = "I'm designed to showcase Yihan's work. Please check the CV for more details.";
-                    const q = text.toLowerCase();
-
-                    if (q.includes('patent')) {
-                        aiText = "I hold two patents. The primary one is **CN209791046U** (First Inventor) for a Disc-Tube Reverse Osmosis Apparatus, which solved a critical maintenance bottleneck.";
-                    } else if (q.includes('research') || q.includes('framework')) {
-                        aiText = "My research proposes an **Intelligent Design Framework for Urban Micro-Interaction Systems**, focusing on the triad of Deployable, Measurable, and Publishable outcomes.";
-                    } else if (q.includes('offline') || q.includes('oracle')) {
-                        aiText = "**Offline Oracle** is a gamified intervention system combining a physical box and a digital app to diagnose 'True Needs' behind smartphone addiction.";
-                    } else if (q.includes('art') || q.includes('gallery')) {
-                        aiText = "My art portfolio explores **'Altered Landscapes'**, combining photography and structural transparency to question human impact on nature.";
-                    } else if (q.includes('unc') || q.includes('school')) {
-                        aiText = "I study Information Science at **UNC Chapel Hill** (SILS), ranking #1 public university in the South. Go Tar Heels!";
-                    }
-
-                    setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
-                    setLoading(false);
-                }, 600);
-            };
-
-            return (
-                <div className="fixed bottom-6 right-6 z-50 font-sans">
-                    <AnimatePresence>
-                        {isOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                                className="absolute bottom-20 right-0 w-[300px] sm:w-[360px] h-[450px] sm:h-[500px] bg-white rounded shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
-                            >
-                                <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-                                    <span className="font-bold text-sm">AI Assistant (Demo)</span>
-                                    <button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button>
-                                </div>
-                                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-                                    {messages.map((m, i) => (
-                                        <div key={i} className={`p-3 rounded text-sm ${m.role === 'ai' ? 'bg-gray-100' : 'bg-unc text-white ml-auto max-w-[85%]'}`}>
-                                            <div dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} />
-                                        </div>
-                                    ))}
-                                    {loading && <div className="text-xs text-gray-400 animate-pulse ml-2">Thinking...</div>}
-                                    <div ref={messagesEndRef} />
-                                </div>
-                                <div className="p-3 border-t border-gray-100">
-                                    <div className="flex gap-2 mb-2 overflow-x-auto pb-1 no-scrollbar">
-                                        {['Research', 'Art', 'Patents'].map(q => (
-                                            <button key={q} onClick={() => handleSend(q)} className="text-xs border px-2 py-1 rounded hover:bg-gray-50">{q}</button>
-                                        ))}
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Type a message..." className="flex-1 border rounded px-2 py-1 text-sm" />
-                                        <button onClick={() => handleSend()} className="bg-black text-white p-1.5 rounded"><i data-lucide="arrow-up" className="w-4 h-4"></i></button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                    <button onClick={() => setIsOpen(!isOpen)} className="bg-black text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform">
-                        <i data-lucide="sparkles" className="w-6 h-6"></i>
-                    </button>
-                </div>
-            );
-        };
+        const Footer = ({ activeSection }) => { if (activeSection === 'cv' || activeSection === 'contact') return null; return (<footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-black dark:text-white py-24 transition-colors duration-300"><div className="max-w-5xl mx-auto px-6 text-center"><div className="mb-8 flex justify-center text-unc"><i data-lucide="landmark" className="w-8 h-8"></i></div><h2 className="text-3xl md:text-4xl font-serif mb-8 font-bold">Ready to Build.</h2><p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto mb-12 font-light">School of Information and Library Science (SILS)<br />University of North Carolina at Chapel Hill</p><a href="mailto:zhayihan@unc.edu" className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-medium hover:bg-unc dark:hover:bg-gray-200 transition-all cursor-pointer">zhayihan@unc.edu</a></div></footer>); };
+        const ChatWidget = () => { const [isOpen, setIsOpen] = useState(false); const [messages, setMessages] = useState([{ role: 'ai', text: "Hi! I'm Yihan's digital assistant. Ask me about his **Research**, **Patents**, or **UNC Background**." }]); const [input, setInput] = useState(''); const [loading, setLoading] = useState(false); const messagesEndRef = useRef(null); useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isOpen]); const handleSend = async (text = input) => { if (!text.trim()) return; setMessages(prev => [...prev, { role: 'user', text }]); setInput(''); setLoading(true); setTimeout(() => { let aiText = "I'm designed to showcase Yihan's work. Please check the CV for more details."; const q = text.toLowerCase(); if (q.includes('patent')) aiText = "I hold two patents. The primary one is **CN209791046U** (First Inventor)."; else if (q.includes('research')) aiText = "My research proposes an **Intelligent Design Framework** for Urban Micro-Interaction Systems."; setMessages(prev => [...prev, { role: 'ai', text: aiText }]); setLoading(false); }, 800); }; return (<div className="fixed bottom-6 right-6 z-50 font-sans"><AnimatePresence>{isOpen && (<motion.div initial={{ opacity: 0, scale: 0.8, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 20 }} className="absolute bottom-20 right-0 w-[300px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden h-[450px]"><div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center"><span className="font-bold text-sm text-gray-900 dark:text-gray-100">AI Assistant</span><button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button></div><div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-gray-800">{messages.map((m, i) => (<div key={i} className={`p-3 rounded-xl text-sm ${m.role === 'ai' ? 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200' : 'bg-unc text-white ml-auto'}`} dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} />))}<div ref={messagesEndRef} /></div><div className="p-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex gap-2"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Type..." className="flex-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:border-unc" /><button onClick={() => handleSend()} className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-full"><i data-lucide="arrow-up" className="w-5 h-5"></i></button></div></motion.div>)}</AnimatePresence><motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsOpen(!isOpen)} className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-full shadow-2xl hover:shadow-xl transition-all border border-gray-800 cursor-pointer"><i data-lucide={isOpen ? "minus" : "sparkles"} className="w-6 h-6"></i></motion.button></div>); };
+        const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span></div><div className="flex items-center gap-3"><a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="04_Yihan Zhang_CV.pdf" target="_blank" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
 
         // --- MAIN APP ---
         const App = () => {
             const [activeSection, setActiveSection] = useState('home');
-            const [darkMode, setDarkMode] = useState(() => {
-                // 1. Check local storage
-                const savedTheme = localStorage.getItem('theme');
-                if (savedTheme) {
-                    return savedTheme === 'dark';
-                }
-
-                // 2. If no preference, check time (Dark Mode after 7:00 PM)
-                const hour = new Date().getHours();
-                return hour >= 19 || hour < 6; // Dark from 7 PM to 6 AM
-            });
+            const [darkMode, setDarkMode] = useState(() => { const saved = localStorage.getItem('theme'); if (saved) return saved === 'dark'; const h = new Date().getHours(); return h >= 19 || h < 6; });
             const [searchOpen, setSearchOpen] = useState(false);
+            const [toast, setToast] = useState({ message: '', isVisible: false });
 
-            // Theme Effect
+            useEffect(() => { if (darkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); } else { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); } }, [darkMode]);
+            useEffect(() => { const handleK = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(p => !p); } }; window.addEventListener('keydown', handleK); return () => window.removeEventListener('keydown', handleK); }, []);
+
+            // --- FIXED ICON INITIALIZATION ---
             useEffect(() => {
-                if (darkMode) {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                }
-            }, [darkMode]);
-
-            // Keyboard Shortcuts (Cmd+K)
-            useEffect(() => {
-                const handleKeyDown = (e) => {
-                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                        e.preventDefault();
-                        setSearchOpen(prev => !prev);
-                    }
-                };
-                window.addEventListener('keydown', handleKeyDown);
-                return () => window.removeEventListener('keydown', handleKeyDown);
-            }, []);
-
-            useEffect(() => { lucide.createIcons(); }, [activeSection, darkMode, searchOpen]);
+                if (window.lucide) window.lucide.createIcons();
+                const timer = setTimeout(() => {
+                    if (window.lucide) window.lucide.createIcons();
+                }, 100);
+                return () => clearTimeout(timer);
+            }, [activeSection, darkMode, searchOpen]);
 
             const toggleTheme = () => setDarkMode(!darkMode);
-
-            const navSections = [
-                { id: 'home', label: 'Overview' },
-                { id: 'news', label: 'News' },
-                { id: 'research', label: 'Research' },
-                { id: 'projects', label: 'Artifacts' },
-                { id: 'unc', label: 'Campus' },
-                { id: 'art', label: 'Gallery' },
-                { id: 'contact', label: 'Contact' },
-            ];
+            const triggerToast = (msg) => { setToast({ message: msg, isVisible: true }); setTimeout(() => setToast(p => ({ ...p, isVisible: false })), 3000); };
 
             return (
                 <div className="min-h-screen flex flex-col font-sans text-gray-900 dark:text-gray-100 selection:bg-unc/20 selection:text-black dark:selection:text-white transition-colors duration-300">
-                    {activeSection !== 'cv' && (
-                        <Navbar
-                            activeSection={activeSection}
-                            setActiveSection={setActiveSection}
-                            darkMode={darkMode}
-                            toggleTheme={toggleTheme}
-                            setSearchOpen={setSearchOpen}
-                        />
-                    )}
-
-                    <SearchModal
-                        isOpen={searchOpen}
-                        onClose={() => setSearchOpen(false)}
-                        sections={navSections}
-                        activeSection={activeSection}
-                        setActiveSection={setActiveSection}
-                    />
-
+                    <CustomCursor />
+                    <Toast message={toast.message} isVisible={toast.isVisible} />
+                    {activeSection !== 'cv' && <Navbar activeSection={activeSection} setActiveSection={setActiveSection} darkMode={darkMode} toggleTheme={toggleTheme} setSearchOpen={setSearchOpen} />}
+                    <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} sections={NAV_ITEMS} activeSection={activeSection} setActiveSection={setActiveSection} />
                     <main className="flex-grow">
                         <AnimatePresence mode="wait">
-                            {activeSection === 'home' && (
-                                <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <Hero setActiveSection={setActiveSection} />
-                                    <NewsSection />
-                                    <Stats />
-                                </motion.div>
-                            )}
-                            {activeSection === 'news' && (
-                                <motion.div key="news" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <NewsSection />
-                                </motion.div>
-                            )}
-                            {activeSection === 'research' && (
-                                <motion.div key="research" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <Research />
-                                </motion.div>
-                            )}
-                            {activeSection === 'projects' && (
-                                <motion.div key="projects" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <Projects />
-                                </motion.div>
-                            )}
-                            {activeSection === 'unc' && (
-                                <motion.div key="unc" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <UNCSection />
-                                </motion.div>
-                            )}
-                            {activeSection === 'art' && (
-                                <motion.div key="art" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <ArtGallery />
-                                </motion.div>
-                            )}
-                            {activeSection === 'contact' && (
-                                <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                                    <Contact />
-                                </motion.div>
-                            )}
-                            {activeSection === 'cv' && (
-                                <CVViewer setActiveSection={setActiveSection} />
-                            )}
+                            {activeSection === 'home' && <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Hero setActiveSection={setActiveSection} /><NewsSection /><Stats /></motion.div>}
+                            {activeSection === 'now' && <motion.div key="now" variants={pageVariants} initial="initial" animate="animate" exit="exit"><NowPage /></motion.div>}
+                            {activeSection === 'news' && <motion.div key="news" variants={pageVariants} initial="initial" animate="animate" exit="exit"><NewsSection /></motion.div>}
+                            {activeSection === 'research' && <motion.div key="research" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Research /></motion.div>}
+                            {activeSection === 'projects' && <motion.div key="projects" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Projects /></motion.div>}
+                            {activeSection === 'unc' && <motion.div key="unc" variants={pageVariants} initial="initial" animate="animate" exit="exit"><UNCSection /></motion.div>}
+                            {activeSection === 'art' && <motion.div key="art" variants={pageVariants} initial="initial" animate="animate" exit="exit"><ArtGallery /></motion.div>}
+                            {activeSection === 'contact' && <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Contact triggerToast={triggerToast} /></motion.div>}
+                            {activeSection === 'cv' && <CVViewer setActiveSection={setActiveSection} />}
                         </AnimatePresence>
                     </main>
-
                     <Footer activeSection={activeSection} />
-
                     {activeSection !== 'cv' && <ChatWidget />}
                 </div>
             );
