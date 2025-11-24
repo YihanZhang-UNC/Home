@@ -17,6 +17,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -65,6 +66,12 @@
             color: #111;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dark body {
+            background-color: #0f172a;
+            color: #f8fafc;
         }
 
         h1,
@@ -207,10 +214,259 @@
             transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
         };
 
+        // --- DATA CONSTANTS ---
+
+        const NEWS_DATA = [
+            { date: "May 2025", title: "Selected Exhibitor", subtitle: "UNC Smart Design Showcase", desc: "Showcased 'Chill by U' laptop stand prototype to engineering faculty.", id: 'news-01' },
+            { date: "Spring 2025", title: "Academic Excellence", subtitle: "UNC Chapel Hill", desc: "Achieved 4.00 GPA with maximum course load (18 credits), demonstrating resilience and academic rigor.", id: 'news-02' },
+            { date: "2024", title: "Award Winner", subtitle: "UNC MakerFest", desc: "Won 2nd Most Creative Prize for innovative hardware design.", id: 'news-03' },
+            { date: "2022", title: "Competition Winner", subtitle: "Sustainable Campus Design", desc: "3rd Prize in 'Let's Charrette' competition for urban sustainability concepts.", id: 'news-04' }
+        ];
+
+        const WORKS_DATA = [
+            {
+                id: 'PRJ-01',
+                title: 'Offline Oracle',
+                cat: 'HCI & Health Intervention',
+                filterType: 'HARDWARE',
+                status: 'Proto v2.0',
+                year: '2025',
+                desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards. Validates "True Needs" hypothesis through a gamified hardware-software loop.',
+                tech: ['Arduino IoT', 'React Native', '3D Printing', 'Fab'],
+                role: 'Lead Researcher',
+                link: '07_Offline Oracle_ A Gamified Framework.pdf',
+                img: 'Offline_Oracle.png'
+            },
+            {
+                id: 'PRJ-02',
+                title: 'TEMPEST Autonomous Vessel',
+                cat: 'Robotics & Perception',
+                filterType: 'HARDWARE',
+                status: 'Field Tested',
+                year: '2023',
+                desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring. Solved localized SLAM and obstacle avoidance challenges in dynamic fluid environments.',
+                tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control', 'CV'],
+                role: 'System Architect',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'TEMPEST_Robot.png'
+            },
+            {
+                id: 'PRJ-03',
+                title: 'SmartCan Intelligent Sorting',
+                cat: 'Behavioral Design',
+                filterType: 'SOFTWARE',
+                status: 'Deployed',
+                year: '2024',
+                desc: 'Computer-vision assisted waste disposal system. Uses real-time object recognition to guide user behavior and gamify the recycling process.',
+                tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'],
+                role: 'Interaction Designer',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'SmartCan.png'
+            },
+            {
+                id: 'PRJ-04',
+                title: 'Chill by "U"',
+                cat: 'Fabrication & Thermal Eng',
+                filterType: 'HARDWARE',
+                status: 'Awarded',
+                year: '2024',
+                desc: 'Modular laptop cooling infrastructure with adaptive airflow. Winner of "2nd Most Creative" at UNC MakerFest for novel structural engineering.',
+                tech: ['Laser Cutting', 'Thermal Analysis', 'Fusion 360'],
+                role: 'Solo Inventor',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'Chill_by_U.png'
+            },
+            {
+                id: 'PRJ-05',
+                title: 'Ecological IoT Feeder',
+                cat: 'Ecological Sensing',
+                filterType: 'HARDWARE',
+                status: 'Operational',
+                year: '2023',
+                desc: 'Automated avian monitoring system using weight/light sensors to classify species. Constructed from 90% post-consumer recycled materials.',
+                tech: ['IoT Sensors', 'Data Logging', 'Sustainable Mat.'],
+                role: 'Hardware Eng',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'Smart_Bird_Feeder.png'
+            },
+            {
+                id: 'PRJ-06',
+                title: 'Spatial Inequality Analysis',
+                cat: 'Data Science (GIS)',
+                filterType: 'DATA_SCI',
+                status: 'Published',
+                year: '2022',
+                desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade. Utilizing R and ArcGIS to map socioeconomic disparities.',
+                tech: ['R / RStudio', 'ArcGIS Pro', 'Statistical Modeling'],
+                role: 'Data Analyst',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'GIS_Map.png'
+            }, {
+                id: 'PRJ-07',
+                title: 'Pluggy Ecosystem',
+                cat: 'Hardware & Business',
+                filterType: 'HARDWARE',
+                status: 'Proposal',
+                year: '2025',
+                desc: 'The World\'s First 30W Gamified Charger for Digital Detox. A hardware-enabled ecosystem combining physical constraints with a gamified "Skin Economy" to redefine bedtime rituals.',
+                tech: ['GaN Hardware', 'IoT', 'Gamification', 'Business Strategy'],
+                role: 'Co-Founder',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'Pluggy.png'
+            },
+            {
+                id: 'PRJ-08',
+                title: 'Agri-Drone HMI Controller',
+                cat: 'HMI & Systems Design',
+                filterType: 'UI_DESIGN',
+                status: 'Concept v3',
+                year: '2025',
+                desc: 'Human-Machine Interface (HMI) for managing autonomous agricultural drone swarms. Features gaze-tracking assisted navigation and adaptive dark mode for field use.',
+                tech: ['Adobe XD', 'Principle', 'WebGazer API'],
+                role: 'UX Researcher',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'Drone_HMI.png'
+            },
+            {
+                id: 'PRJ-09',
+                title: 'Health Informatics Dashboard',
+                cat: 'UI/UX & MedTech',
+                filterType: 'UI_DESIGN',
+                status: 'Ongoing',
+                year: '2025',
+                desc: 'Health Informatics APP for remote patient monitoring and health data visualization.',
+                tech: ['Figma', 'Human-Centered Design', 'Health Informatics'],
+                role: 'UX Designer',
+                link: '03_Research-portfolio_Yihan.pdf',
+                img: 'Health_Informatics.png'
+            }
+        ];
+
+        const ART_DATA = [
+            { id: 'art-01', title: "Altered Landscape", medium: "Digital Photography, 2024", img: "Altered_Landscape_I.jpg", aspect: "aspect-[3/2]", colSpan: "md:col-span-8" },
+            { id: 'art-02', title: "Layered Transparency", medium: "Graphite on Paper", img: "Layered_Transparency.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
+            { id: 'art-03', title: "Structure 8", medium: "Charcoal Study", img: "Structure_8.png", aspect: "aspect-square", colSpan: "md:col-span-4" },
+            { id: 'art-04', title: "Cultural Stitch", medium: "Graphite & Ink, 18x24\"", img: "Cultural_Stitch.png", aspect: "aspect-[16/9]", colSpan: "md:col-span-8" },
+            { id: 'art-05', title: "Apple Study", medium: "Graphite on Paper", img: "Apple_Study.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
+            { id: 'art-06', title: "Emotional Encounter", medium: "Fanart - Pencil", img: "Conan_Fanart.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
+            { id: 'art-07', title: "Crumpled Silence", medium: "Graphite - Texture Study", img: "Crumpled_Silence.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
+            { id: 'art-08', title: "Visual Anthology", medium: "Selected Works Compilation, 2022-2025", img: "", aspect: "aspect-[21/9]", colSpan: "md:col-span-12", isPlaceholder: true }
+        ];
+
         // --- COMPONENTS ---
 
-        // 1. Navigation (Responsive)
-        const Navbar = ({ activeSection, setActiveSection }) => {
+        // 1. Search Modal (Command Palette)
+        const SearchModal = ({ isOpen, onClose, sections, activeSection, setActiveSection }) => {
+            const [query, setQuery] = useState('');
+            const inputRef = useRef(null);
+
+            useEffect(() => {
+                if (isOpen) {
+                    setTimeout(() => inputRef.current?.focus(), 100);
+                }
+            }, [isOpen]);
+
+            // Filter logic
+            const filteredItems = useMemo(() => {
+                if (!query) return [];
+                const lowerQ = query.toLowerCase();
+                const results = [];
+
+                // 1. Navigation
+                sections.forEach(sec => {
+                    if (sec.label.toLowerCase().includes(lowerQ)) {
+                        results.push({ type: 'Navigate', label: sec.label, id: sec.id, icon: 'map-pin' });
+                    }
+                });
+
+                // 2. Projects
+                WORKS_DATA.forEach(work => {
+                    if (work.title.toLowerCase().includes(lowerQ) ||
+                        work.desc.toLowerCase().includes(lowerQ) ||
+                        work.tech.some(t => t.toLowerCase().includes(lowerQ))) {
+                        results.push({ type: 'Project', label: work.title, id: 'projects', sub: work.cat, icon: 'folder' });
+                    }
+                });
+
+                // 3. News
+                NEWS_DATA.forEach(news => {
+                    if (news.title.toLowerCase().includes(lowerQ) || news.desc.toLowerCase().includes(lowerQ)) {
+                        results.push({ type: 'News', label: news.title, id: 'news', sub: news.date, icon: 'newspaper' });
+                    }
+                });
+
+                // 4. Art
+                ART_DATA.forEach(art => {
+                    if (art.title.toLowerCase().includes(lowerQ) || art.medium.toLowerCase().includes(lowerQ)) {
+                        results.push({ type: 'Art', label: art.title, id: 'art', sub: art.medium, icon: 'image' });
+                    }
+                });
+
+                return results;
+            }, [query, sections]);
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 px-4">
+                    <div className="absolute inset-0 bg-black/20 dark:bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col max-h-[60vh]"
+                    >
+                        <div className="flex items-center px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                            <i data-lucide="search" className="w-5 h-5 text-gray-400"></i>
+                            <input
+                                ref={inputRef}
+                                className="flex-1 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-400 ml-3 text-base"
+                                placeholder="Search projects, research, or navigate..."
+                                value={query}
+                                onChange={e => setQuery(e.target.value)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Escape') onClose();
+                                }}
+                            />
+                            <button onClick={onClose} className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded">ESC</button>
+                        </div>
+
+                        <div className="overflow-y-auto p-2">
+                            {query === '' && (
+                                <div className="p-4 text-center text-sm text-gray-400 dark:text-gray-500">
+                                    Type to search...
+                                </div>
+                            )}
+                            {query !== '' && filteredItems.length === 0 && (
+                                <div className="p-4 text-center text-sm text-gray-500">
+                                    No results found.
+                                </div>
+                            )}
+                            {filteredItems.map((item, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => {
+                                        setActiveSection(item.id);
+                                        onClose();
+                                    }}
+                                    className="w-full text-left flex items-center gap-3 px-3 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg group transition-colors"
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:bg-unc group-hover:text-white transition-colors">
+                                        <i data-lucide={item.icon || 'arrow-right'} className="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{item.label}</div>
+                                        {item.sub && <div className="text-xs text-gray-500 dark:text-gray-400">{item.type} • {item.sub}</div>}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </motion.div>
+                </div>
+            );
+        };
+
+        // 2. Navigation (Responsive & Dark Mode)
+        const Navbar = ({ activeSection, setActiveSection, darkMode, toggleTheme, setSearchOpen }) => {
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
             const navItems = [
@@ -230,25 +486,25 @@
 
             return (
                 <>
-                    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
+                    <nav className="fixed w-full z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
                         <div className="max-w-7xl mx-auto px-6 lg:px-8">
                             <div className="flex justify-between items-center h-20">
                                 {/* Logo / Name */}
                                 <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}>
-                                    <span className="text-lg font-serif font-bold tracking-tight group-hover:text-unc transition-colors">
+                                    <span className="text-lg font-serif font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-unc transition-colors">
                                         Yihan Zhang
                                     </span>
-                                    <span className="hidden sm:block h-4 w-px bg-gray-300"></span>
+                                    <span className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700"></span>
                                     <span className="hidden sm:block text-xs font-medium text-unc tracking-wide uppercase group-hover:text-unc-dark transition-colors">UNC Chapel Hill</span>
                                 </div>
 
                                 {/* Desktop Menu */}
-                                <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-500">
+                                <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-500 dark:text-gray-400">
                                     {navItems.map((item) => (
                                         <button
                                             key={item.id}
                                             onClick={() => setActiveSection(item.id)}
-                                            className={`nav-btn transition-colors hover:text-black relative ${activeSection === item.id ? 'text-black font-semibold' : ''}`}
+                                            className={`nav-btn transition-colors hover:text-black dark:hover:text-white relative ${activeSection === item.id ? 'text-black dark:text-white font-semibold' : ''}`}
                                         >
                                             {item.label}
                                             {activeSection === item.id && (
@@ -262,83 +518,114 @@
                                 </div>
 
                                 {/* Desktop Actions */}
-                                <div className="hidden md:flex gap-4">
-                                    <button onClick={() => setActiveSection('cv')} className="flex items-center gap-2 text-xs font-medium text-gray-900 border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 hover:border-unc/30 transition shadow-sm">
-                                        <i data-lucide="file-text" className="w-3 h-3"></i> CV
+                                <div className="hidden md:flex items-center gap-3">
+                                    {/* Search Bar */}
+                                    <div
+                                        onClick={() => setSearchOpen(true)}
+                                        className="group relative flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full cursor-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-300 dark:hover:border-gray-600 w-48"
+                                    >
+                                        <i data-lucide="search" className="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+                                        <span className="text-sm text-gray-400 dark:text-gray-500 font-normal">Search...</span>
+                                        <div className="absolute right-2 flex items-center gap-1">
+                                            <span className="text-[10px] font-mono text-gray-400 border border-gray-300 dark:border-gray-600 rounded px-1">⌘K</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={toggleTheme}
+                                        className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                                        title="Toggle Theme"
+                                    >
+                                        <i data-lucide={darkMode ? "sun" : "moon"} className="w-4 h-4"></i>
                                     </button>
-                                    <button onClick={() => setActiveSection('contact')} className="bg-black text-white px-5 py-2 rounded-full text-xs font-medium hover:bg-unc transition-all shadow-md">
-                                        Contact
+
+                                    <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+
+                                    <button onClick={() => setActiveSection('cv')} className="flex items-center gap-2 text-xs font-medium text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-unc/30 transition shadow-sm">
+                                        <i data-lucide="file-text" className="w-3 h-3"></i> CV
                                     </button>
                                 </div>
 
                                 {/* Mobile Menu Button */}
-                                <button
-                                    className="md:hidden p-2 text-gray-600"
-                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                >
-                                    <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
-                                </button>
+                                <div className="flex md:hidden items-center gap-4">
+                                    <button onClick={toggleTheme} className="text-gray-600 dark:text-gray-300">
+                                        <i data-lucide={darkMode ? "sun" : "moon"} className="w-5 h-5"></i>
+                                    </button>
+                                    <button
+                                        className="p-2 text-gray-600 dark:text-gray-300"
+                                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                    >
+                                        <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </nav>
 
-                    {/* Mobile Menu Overlay */}
-                    <AnimatePresence>
-                        {mobileMenuOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                className="fixed inset-0 z-40 pt-24 px-6 mobile-menu-backdrop md:hidden flex flex-col h-screen"
-                            >
-                                <div className="flex flex-col gap-6 text-center">
-                                    {navItems.map((item) => (
+                        {/* Mobile Menu Overlay */}
+                        <AnimatePresence>
+                            {mobileMenuOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="fixed inset-0 z-40 pt-24 px-6 mobile-menu-backdrop dark:bg-gray-900/98 md:hidden flex flex-col h-screen"
+                                >
+                                    <div className="flex flex-col gap-6 text-center">
                                         <button
-                                            key={item.id}
-                                            onClick={() => handleNavClick(item.id)}
-                                            className={`text-2xl font-serif ${activeSection === item.id ? 'text-unc font-bold' : 'text-gray-800'}`}
+                                            onClick={() => { setSearchOpen(true); setMobileMenuOpen(false); }}
+                                            className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg flex items-center justify-center gap-2 text-gray-600 dark:text-gray-300 mx-8"
                                         >
-                                            {item.label}
+                                            <i data-lucide="search" className="w-4 h-4"></i> Search...
                                         </button>
-                                    ))}
-                                    <div className="h-px bg-gray-200 w-1/2 mx-auto my-4"></div>
-                                    <button onClick={() => handleNavClick('cv')} className="text-lg font-medium text-gray-600 flex items-center justify-center gap-2">
-                                        <i data-lucide="file-text" className="w-4 h-4"></i> View CV
-                                    </button>
-                                    <a href="mailto:zhayihan@unc.edu" className="text-lg font-medium text-gray-600">
-                                        zhayihan@unc.edu
-                                    </a>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+
+                                        {navItems.map((item) => (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => handleNavClick(item.id)}
+                                                className={`text-2xl font-serif ${activeSection === item.id ? 'text-unc font-bold' : 'text-gray-800 dark:text-gray-200'}`}
+                                            >
+                                                {item.label}
+                                            </button>
+                                        ))}
+                                        <div className="h-px bg-gray-200 dark:bg-gray-800 w-1/2 mx-auto my-4"></div>
+                                        <button onClick={() => handleNavClick('cv')} className="text-lg font-medium text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2">
+                                            <i data-lucide="file-text" className="w-4 h-4"></i> View CV
+                                        </button>
+                                        <a href="mailto:zhayihan@unc.edu" className="text-lg font-medium text-gray-600 dark:text-gray-400">
+                                            zhayihan@unc.edu
+                                        </a>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </nav>
                 </>
             );
         };
 
         // 2. Hero Section (Yihan.jpg)
         const Hero = ({ setActiveSection }) => (
-            <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-20 bg-white">
+            <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden pt-20 bg-white dark:bg-gray-900 transition-colors duration-300">
                 {/* Carolina Blue Blobs */}
-                <div className="absolute top-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-unc/5 rounded-full mix-blend-multiply filter blur-[80px] md:blur-[128px] opacity-70 animate-blob"></div>
-                <div className="absolute top-0 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-blue-50 rounded-full mix-blend-multiply filter blur-[80px] md:blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
+                <div className="absolute top-0 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-unc/5 dark:bg-unc/10 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-70 animate-blob"></div>
+                <div className="absolute top-0 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-blue-50 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-[80px] md:blur-[128px] opacity-60 animate-blob animation-delay-2000"></div>
 
                 <div className="max-w-6xl mx-auto px-6 z-10 relative grid md:grid-cols-12 gap-12 md:gap-16 items-center">
                     <div className="md:col-span-7 text-center md:text-left">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded border border-unc/20 bg-unc/5 mb-6 md:mb-8 mx-auto md:mx-0"
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded border border-unc/20 bg-unc/5 dark:bg-unc/10 mb-6 md:mb-8 mx-auto md:mx-0"
                         >
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-unc opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-unc"></span>
                             </span>
-                            <span className="text-[10px] font-bold text-unc-dark uppercase tracking-widest">Open for PhD Opportunities Fall 2026</span>
+                            <span className="text-[10px] font-bold text-unc-dark dark:text-unc-light uppercase tracking-widest">Open for PhD Opportunities Fall 2026</span>
                         </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                            className="text-5xl md:text-8xl font-medium tracking-tighter mb-6 md:mb-8 leading-[1.1] text-gray-900"
+                            className="text-5xl md:text-8xl font-medium tracking-tighter mb-6 md:mb-8 leading-[1.1] text-gray-900 dark:text-white"
                         >
                             The Pragmatic <br />
                             <span className="serif italic text-unc">Idealist.</span>
@@ -346,7 +633,7 @@
 
                         <motion.p
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                            className="text-base md:text-lg text-gray-600 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8"
+                            className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8"
                         >
                             Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong> to build Human-Centered Intelligent Systems.
                         </motion.p>
@@ -354,18 +641,18 @@
                         {/* UNC Identity Block - Responsive */}
                         <motion.div
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                            className="flex items-center gap-4 mb-10 p-4 bg-white border border-gray-100 rounded-xl max-w-sm md:max-w-md shadow-sm hover:shadow-md transition-shadow cursor-default mx-auto md:mx-0 text-left group"
+                            className="flex items-center gap-4 mb-10 p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl max-w-sm md:max-w-md shadow-sm hover:shadow-md transition-all cursor-default mx-auto md:mx-0 text-left group"
                             onClick={() => setActiveSection('unc')}
                         >
                             {/* CSS-Only UNC Seal Approximation */}
-                            <div className="w-12 h-12 bg-unc/10 rounded-full border-2 border-unc/30 flex items-center justify-center flex-shrink-0 group-hover:border-unc transition-colors">
+                            <div className="w-12 h-12 bg-unc/10 dark:bg-unc/20 rounded-full border-2 border-unc/30 flex items-center justify-center flex-shrink-0 group-hover:border-unc transition-colors">
                                 <div className="w-8 h-8 border border-unc rounded-full flex items-center justify-center">
                                     <span className="font-serif text-unc font-bold text-xs">UNC</span>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-xs text-gray-400 uppercase tracking-wide font-bold">Academic Affiliation</p>
-                                <p className="text-sm font-serif text-gray-900 leading-tight">University of North Carolina<br />at Chapel Hill</p>
+                                <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide font-bold">Academic Affiliation</p>
+                                <p className="text-sm font-serif text-gray-900 dark:text-gray-100 leading-tight">University of North Carolina<br />at Chapel Hill</p>
                             </div>
                         </motion.div>
 
@@ -373,11 +660,11 @@
                             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
                             className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
                         >
-                            <button onClick={() => setActiveSection('projects')} className="px-8 py-3 text-sm font-medium text-white bg-black rounded-full hover:bg-unc hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto">
+                            <button onClick={() => setActiveSection('projects')} className="px-8 py-3 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-full hover:bg-unc dark:hover:bg-unc dark:hover:text-white hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto">
                                 View Portfolio
                             </button>
 
-                            <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="px-8 py-3 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-full hover:border-unc transition-all duration-300 w-full sm:w-auto">
+                            <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="px-8 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-700 rounded-full hover:border-unc dark:hover:border-unc transition-all duration-300 w-full sm:w-auto">
                                 Research Statement
                             </a>
                         </motion.div>
@@ -387,9 +674,9 @@
                         {/* Academic Profile Image */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}
-                            className="aspect-[4/5] bg-white border border-gray-100 p-3 rounded-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
+                            className="aspect-[4/5] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
                         >
-                            <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
+                            <div className="w-full h-full bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center text-gray-400 font-mono text-xs space-y-2 relative overflow-hidden">
                                 <img
                                     src="Yihan.png"
                                     alt="Yihan Zhang"
@@ -408,7 +695,7 @@
 
         // 3. Stats Bar
         const Stats = () => (
-            <div className="bg-white border-t border-b border-gray-100 py-12 relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 border-t border-b border-gray-100 dark:border-gray-800 py-12 relative overflow-hidden transition-colors duration-300">
                 <div className="absolute left-0 top-0 h-full w-1 bg-unc hidden md:block"></div>
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
                     {[
@@ -424,8 +711,8 @@
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
                         >
-                            <div className="text-2xl md:text-3xl font-serif font-bold text-gray-900">{stat.val}</div>
-                            <div className="text-[10px] md:text-xs text-gray-500 font-semibold uppercase tracking-widest mt-2 text-unc-dark">{stat.label}</div>
+                            <div className="text-2xl md:text-3xl font-serif font-bold text-gray-900 dark:text-white">{stat.val}</div>
+                            <div className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-widest mt-2 text-unc-dark dark:text-unc-light">{stat.label}</div>
                         </motion.div>
                     ))}
                 </div>
@@ -434,25 +721,20 @@
 
         // 4. News Section
         const NewsSection = () => (
-            <section className="py-16 md:py-24 bg-white border-t border-gray-100">
+            <section className="py-16 md:py-24 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
                 <div className="max-w-4xl mx-auto px-6">
                     <div className="flex items-baseline gap-4 mb-8 md:mb-12">
-                        <h2 className="text-xl md:text-2xl font-serif font-bold text-black">Academic Updates</h2>
-                        <div className="h-px bg-gray-200 flex-1"></div>
+                        <h2 className="text-xl md:text-2xl font-serif font-bold text-black dark:text-white">Academic Updates</h2>
+                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                     </div>
 
-                    <div className="space-y-8 md:space-y-12 border-l border-gray-200 pl-6 md:pl-8 ml-2 md:ml-3">
-                        {[
-                            { date: "May 2025", title: "Selected Exhibitor", subtitle: "UNC Smart Design Showcase", desc: "Showcased 'Chill by U' laptop stand prototype to engineering faculty." },
-                            { date: "Spring 2025", title: "Academic Excellence", subtitle: "UNC Chapel Hill", desc: "Achieved 4.00 GPA with maximum course load (18 credits), demonstrating resilience and academic rigor." },
-                            { date: "2024", title: "Award Winner", subtitle: "UNC MakerFest", desc: "Won 2nd Most Creative Prize for innovative hardware design." },
-                            { date: "2022", title: "Competition Winner", subtitle: "Sustainable Campus Design", desc: "3rd Prize in 'Let's Charrette' competition for urban sustainability concepts." }
-                        ].map((item, i) => (
+                    <div className="space-y-8 md:space-y-12 border-l border-gray-200 dark:border-gray-700 pl-6 md:pl-8 ml-2 md:ml-3">
+                        {NEWS_DATA.map((item, i) => (
                             <div key={i} className="relative group">
-                                <div className="absolute -left-[31px] md:-left-[39px] top-1.5 w-4 h-4 md:w-5 md:h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-unc group-hover:scale-110 transition-all duration-300"></div>
+                                <div className="absolute -left-[31px] md:-left-[39px] top-1.5 w-4 h-4 md:w-5 md:h-5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-full group-hover:border-unc group-hover:scale-110 transition-all duration-300"></div>
                                 <span className="text-[10px] md:text-xs font-mono text-unc mb-1 block uppercase tracking-wider font-bold">{item.date}</span>
-                                <h3 className="text-base md:text-lg font-medium text-gray-900">{item.title} <span className="text-gray-400 font-light block md:inline">| {item.subtitle}</span></h3>
-                                <p className="text-sm text-gray-600 mt-2 leading-relaxed">{item.desc}</p>
+                                <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-gray-100">{item.title} <span className="text-gray-400 dark:text-gray-500 font-light block md:inline">| {item.subtitle}</span></h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -462,22 +744,22 @@
 
         // 5. Research Section (RESTORED)
         const Research = () => (
-            <section className="py-24 bg-gray-50">
+            <section className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto px-6">
 
                     {/* 1. Header & Framework Intro */}
                     <div className="mb-20">
                         <div className="flex items-baseline gap-4 mb-6">
-                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Research Framework</h2>
-                            <div className="h-px bg-gray-300 flex-1"></div>
+                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white">Research Framework</h2>
+                            <div className="h-px bg-gray-300 dark:bg-gray-700 flex-1"></div>
                         </div>
 
                         {/* Vision Quote */}
-                        <blockquote className="border-l-4 border-unc pl-6 mb-8 italic text-gray-500 text-lg">
+                        <blockquote className="border-l-4 border-unc pl-6 mb-8 italic text-gray-500 dark:text-gray-400 text-lg">
                             "Smartness serves functions; Wisdom serves people. A truly 'smart' city is not one that merely optimizes efficiency, but one that understands human needs and adapts to social diversity."
                         </blockquote>
 
-                        <p className="text-lg md:text-xl text-gray-700 font-light leading-relaxed max-w-4xl">
+                        <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-light leading-relaxed max-w-4xl">
                             <strong>From Smart Cities to Wise Systems.</strong><br />
                             Traditional systems ask: <em>"How can machines be smarter?"</em> My research asks: <em>"How can machines better understand us?"</em><br />
                             I build <strong>Human-Centered IoT Systems</strong> that bridge the gap between digital sensing and human social behavior—moving beyond efficiency to <strong>empathy, adaptation, and wisdom</strong>.
@@ -486,7 +768,7 @@
                         {/* Methodology Tags */}
                         <div className="flex flex-wrap gap-3 mt-8">
                             {['Behavioral Sensing', 'Human-Centered AI', 'Preventive Intervention', 'Social Nuance Understanding', 'Closed-Loop Feedback'].map(tag => (
-                                <span key={tag} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-mono text-gray-600 tracking-wide uppercase">
+                                <span key={tag} className="px-3 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs font-mono text-gray-600 dark:text-gray-300 tracking-wide uppercase">
                                     {tag}
                                 </span>
                             ))}
@@ -499,11 +781,11 @@
                             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Methodology Architecture</h3>
                             <span className="text-xs font-mono text-gray-400">Fig 1. Perception-Decision-Execution Loop</span>
                         </div>
-                        <div className="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-50 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-center items-center group hover:border-unc/30 transition-colors cursor-pointer overflow-hidden relative">
+                        <div className="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-center items-center group hover:border-unc/30 transition-colors cursor-pointer overflow-hidden relative">
                             <img
                                 src="Framework_Diagram.jpg"
                                 alt="Methodology Diagram"
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-contain dark:invert dark:hue-rotate-180"
                                 onError={(e) => {
                                     e.target.style.display = 'none';
                                     // Fallback to icon if image missing
@@ -512,8 +794,8 @@
                             />
                             {/* Fallback content shown if img error */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center z-[-1]">
-                                <i data-lucide="workflow" className="w-10 h-10 mb-3 text-gray-300"></i>
-                                <span className="text-sm text-gray-500">Framework_Diagram.jpg</span>
+                                <i data-lucide="workflow" className="w-10 h-10 mb-3 text-gray-300 dark:text-gray-600"></i>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">Framework_Diagram.jpg</span>
                                 <span className="text-xs text-gray-400 mt-1">Place image in folder</span>
                             </div>
                         </div>
@@ -525,40 +807,40 @@
                         <div className="md:col-span-7 space-y-12">
                             <div>
                                 <div className="flex items-center gap-3 mb-8">
-                                    <h3 className="text-xl font-serif font-bold text-gray-900">Publications & Manuscripts</h3>
-                                    <div className="h-px bg-gray-200 flex-1"></div>
+                                    <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white">Publications & Manuscripts</h3>
+                                    <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                                 </div>
                                 <ul className="space-y-8">
                                     <li className="group">
-                                        <a href="07_Offline Oracle_ A Gamified Framework.pdf" target="_blank" className="block hover:bg-white hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100">
+                                        <a href="07_Offline Oracle_ A Gamified Framework.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
                                                 <span className="text-[10px] font-bold text-unc bg-unc/10 px-2 py-1 rounded uppercase tracking-wider">Draft Paper</span>
                                                 <span className="text-xs font-mono text-gray-400">2025</span>
                                             </div>
-                                            <h4 className="text-xl font-medium text-gray-900 leading-tight group-hover:text-unc transition-colors">
+                                            <h4 className="text-xl font-medium text-gray-900 dark:text-gray-100 leading-tight group-hover:text-unc transition-colors">
                                                 Offline Oracle: A Gamified Framework for Diagnosing "True Needs"
                                             </h4>
-                                            <p className="text-sm text-gray-600 mt-3 font-light">
-                                                <span className="font-medium text-black">Yihan Zhang</span>.
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-light">
+                                                <span className="font-medium text-black dark:text-white">Yihan Zhang</span>.
                                                 <em>Targeting CHI / UbiComp.</em>
                                             </p>
-                                            <p className="text-sm text-gray-500 mt-3 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
                                                 Proposes a hybrid physical-digital system to address digital addiction through tangible rewards and social bonding, validating the "True Needs" hypothesis.
                                             </p>
                                         </a>
                                     </li>
 
                                     <li className="group">
-                                        <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="block hover:bg-white hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100">
+                                        <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
-                                                <span className="text-[10px] font-bold text-gray-600 bg-gray-200 px-2 py-1 rounded uppercase tracking-wider">Statement</span>
+                                                <span className="text-[10px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded uppercase tracking-wider">Statement</span>
                                                 <span className="text-xs font-mono text-gray-400">2025</span>
                                             </div>
-                                            <h4 className="text-xl font-medium text-gray-900 leading-tight group-hover:text-unc transition-colors">
+                                            <h4 className="text-xl font-medium text-gray-900 dark:text-gray-100 leading-tight group-hover:text-unc transition-colors">
                                                 Research Statement: Intelligent Design Framework for Deployable Systems
                                             </h4>
-                                            <p className="text-sm text-gray-600 mt-3 font-light">
-                                                <span className="font-medium text-black">Yihan Zhang</span>.
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-light">
+                                                <span className="font-medium text-black dark:text-white">Yihan Zhang</span>.
                                                 <em>University of North Carolina at Chapel Hill.</em>
                                             </p>
                                         </a>
@@ -569,7 +851,7 @@
 
                         {/* 4. Patents (Right Column - Narrower 5/12) */}
                         <div className="md:col-span-5">
-                            <div className="bg-[#111] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-unc sticky top-24">
+                            <div className="bg-[#111] dark:bg-black text-white p-8 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-unc sticky top-24">
                                 <div className="absolute top-0 right-0 w-40 h-40 bg-gray-800 rounded-full mix-blend-screen filter blur-3xl opacity-20 pointer-events-none"></div>
 
                                 <h3 className="text-xs font-bold uppercase tracking-widest mb-8 text-gray-400 flex items-center gap-2">
@@ -613,165 +895,46 @@
         const Projects = () => {
             const [activeFilter, setActiveFilter] = useState('ALL');
 
-            const works = [
-                {
-                    id: 'PRJ-01',
-                    title: 'Offline Oracle',
-                    cat: 'HCI & Health Intervention',
-                    filterType: 'HARDWARE',
-                    status: 'Proto v2.0',
-                    year: '2025',
-                    desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards. Validates "True Needs" hypothesis through a gamified hardware-software loop.',
-                    tech: ['Arduino IoT', 'React Native', '3D Printing', 'Fab'],
-                    role: 'Lead Researcher',
-                    link: '07_Offline Oracle_ A Gamified Framework.pdf',
-                    img: 'Offline_Oracle.png'
-                },
-                {
-                    id: 'PRJ-02',
-                    title: 'TEMPEST Autonomous Vessel',
-                    cat: 'Robotics & Perception',
-                    filterType: 'HARDWARE',
-                    status: 'Field Tested',
-                    year: '2023',
-                    desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring. Solved localized SLAM and obstacle avoidance challenges in dynamic fluid environments.',
-                    tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control', 'CV'],
-                    role: 'System Architect',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'TEMPEST_Robot.png'
-                },
-                {
-                    id: 'PRJ-03',
-                    title: 'SmartCan Intelligent Sorting',
-                    cat: 'Behavioral Design',
-                    filterType: 'SOFTWARE',
-                    status: 'Deployed',
-                    year: '2024',
-                    desc: 'Computer-vision assisted waste disposal system. Uses real-time object recognition to guide user behavior and gamify the recycling process.',
-                    tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'],
-                    role: 'Interaction Designer',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'SmartCan.png'
-                },
-                {
-                    id: 'PRJ-04',
-                    title: 'Chill by "U"',
-                    cat: 'Fabrication & Thermal Eng',
-                    filterType: 'HARDWARE',
-                    status: 'Awarded',
-                    year: '2024',
-                    desc: 'Modular laptop cooling infrastructure with adaptive airflow. Winner of "2nd Most Creative" at UNC MakerFest for novel structural engineering.',
-                    tech: ['Laser Cutting', 'Thermal Analysis', 'Fusion 360'],
-                    role: 'Solo Inventor',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Chill_by_U.png'
-                },
-                {
-                    id: 'PRJ-05',
-                    title: 'Ecological IoT Feeder',
-                    cat: 'Ecological Sensing',
-                    filterType: 'HARDWARE',
-                    status: 'Operational',
-                    year: '2023',
-                    desc: 'Automated avian monitoring system using weight/light sensors to classify species. Constructed from 90% post-consumer recycled materials.',
-                    tech: ['IoT Sensors', 'Data Logging', 'Sustainable Mat.'],
-                    role: 'Hardware Eng',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Smart_Bird_Feeder.png'
-                },
-                {
-                    id: 'PRJ-06',
-                    title: 'Spatial Inequality Analysis',
-                    cat: 'Data Science (GIS)',
-                    filterType: 'DATA_SCI',
-                    status: 'Published',
-                    year: '2022',
-                    desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade. Utilizing R and ArcGIS to map socioeconomic disparities.',
-                    tech: ['R / RStudio', 'ArcGIS Pro', 'Statistical Modeling'],
-                    role: 'Data Analyst',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'GIS_Map.png'
-                }, {
-                    id: 'PRJ-07',
-                    title: 'Pluggy Ecosystem',
-                    cat: 'Hardware & Business',
-                    filterType: 'HARDWARE',
-                    status: 'Proposal',
-                    year: '2025',
-                    desc: 'The World\'s First 30W Gamified Charger for Digital Detox. A hardware-enabled ecosystem combining physical constraints with a gamified "Skin Economy" to redefine bedtime rituals.',
-                    tech: ['GaN Hardware', 'IoT', 'Gamification', 'Business Strategy'],
-                    role: 'Co-Founder',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Pluggy.png'
-                },
-                {
-                    id: 'PRJ-08',
-                    title: 'Agri-Drone HMI Controller',
-                    cat: 'HMI & Systems Design',
-                    filterType: 'UI_DESIGN',
-                    status: 'Concept v3',
-                    year: '2025',
-                    desc: 'Human-Machine Interface (HMI) for managing autonomous agricultural drone swarms. Features gaze-tracking assisted navigation and adaptive dark mode for field use.',
-                    tech: ['Adobe XD', 'Principle', 'WebGazer API'],
-                    role: 'UX Researcher',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Drone_HMI.png'
-                },
-                {
-                    id: 'PRJ-09',
-                    title: 'Health Informatics Dashboard',
-                    cat: 'UI/UX & MedTech',
-                    filterType: 'UI_DESIGN',
-                    status: 'Ongoing',
-                    year: '2025',
-                    desc: 'Health Informatics APP for remote patient monitoring and health data visualization.',
-                    tech: ['Figma', 'Human-Centered Design', 'Health Informatics'],
-                    role: 'UX Designer',
-                    link: '03_Research-portfolio_Yihan.pdf',
-                    img: 'Health_Informatics.png'
-                }
-            ];
-
             const filteredWorks = useMemo(() => {
-                if (activeFilter === 'ALL') return works;
-                return works.filter(work => work.filterType === activeFilter);
-            }, [activeFilter, works]);
+                if (activeFilter === 'ALL') return WORKS_DATA;
+                return WORKS_DATA.filter(work => work.filterType === activeFilter);
+            }, [activeFilter]);
 
             return (
-                <section className="py-24 bg-white relative border-t border-gray-200">
+                <section className="py-24 bg-white dark:bg-gray-900 relative border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
                     {/* NAS Style: Precise Engineering Grid Background */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]"
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05] dark:opacity-[0.1]"
                         style={{
                             backgroundImage: `
-                                linear-gradient(to right, #111 1px, transparent 1px),
-                                linear-gradient(to bottom, #111 1px, transparent 1px)
+                                linear-gradient(to right, #888 1px, transparent 1px),
+                                linear-gradient(to bottom, #888 1px, transparent 1px)
                             `,
                             backgroundSize: '40px 40px'
                         }}
                     ></div>
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-black via-gray-500 to-black"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-black via-gray-500 to-black dark:from-white dark:via-gray-400 dark:to-white"></div>
 
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
 
                         {/* NAS Style: Authoritative Header */}
-                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b-2 border-black pb-6">
+                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b-2 border-black dark:border-white pb-6">
                             <div>
-                                <div className="flex items-center gap-2 text-black font-serif italic text-sm mb-2">
-                                    <span className="w-2 h-2 bg-black rounded-full"></span>
+                                <div className="flex items-center gap-2 text-black dark:text-white font-serif italic text-sm mb-2">
+                                    <span className="w-2 h-2 bg-black dark:bg-white rounded-full"></span>
                                     Selected Works
                                 </div>
-                                <h2 className="text-4xl md:text-6xl font-serif font-bold text-black tracking-tight">
+                                <h2 className="text-4xl md:text-6xl font-serif font-bold text-black dark:text-white tracking-tight">
                                     Artifacts <span className="text-gray-400 font-light">&</span> Data
                                 </h2>
                             </div>
-                            <div className="mt-6 md:mt-0 text-right font-mono text-xs space-y-1 text-gray-600">
+                            <div className="mt-6 md:mt-0 text-right font-mono text-xs space-y-1 text-gray-600 dark:text-gray-400">
                                 <p>ARCHIVE_ID: YZ-UNC-2025</p>
-                                <p>STATUS: <span className="text-green-600 font-bold">ONLINE</span></p>
+                                <p>STATUS: <span className="text-green-600 dark:text-green-400 font-bold">ONLINE</span></p>
                             </div>
                         </div>
 
                         {/* Functional Filters - NAS Style Buttons */}
-                        <div className="flex flex-wrap gap-2 mb-12 pb-6 border-b border-gray-200 font-mono text-xs">
+                        <div className="flex flex-wrap gap-2 mb-12 pb-6 border-b border-gray-200 dark:border-gray-700 font-mono text-xs">
                             {[
                                 { id: 'ALL', label: 'ALL_ENTRIES' },
                                 { id: 'HARDWARE', label: 'HARDWARE_SYSTEMS' },
@@ -783,8 +946,8 @@
                                     key={filter.id}
                                     onClick={() => setActiveFilter(filter.id)}
                                     className={`px-4 py-2 border transition-all duration-300 uppercase tracking-wider ${activeFilter === filter.id
-                                        ? 'bg-black text-white border-black shadow-lg'
-                                        : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black'
+                                        ? 'bg-black text-white border-black shadow-lg dark:bg-white dark:text-black dark:border-white'
+                                        : 'bg-white text-gray-500 border-gray-300 hover:border-black hover:text-black dark:bg-gray-900 dark:text-gray-400 dark:border-gray-700 dark:hover:border-white dark:hover:text-white'
                                         }`}
                                 >
                                     {filter.label}
@@ -811,24 +974,24 @@
                                             opacity: { duration: 0.2 }
                                         }}
                                         key={work.id}
-                                        className="group bg-white border border-gray-200 hover:border-black transition-all duration-500 flex flex-col h-full shadow-sm hover:shadow-2xl relative overflow-hidden"
+                                        className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-500 flex flex-col h-full shadow-sm hover:shadow-2xl relative overflow-hidden"
                                     >
                                         {/* Corner Marker */}
-                                        <div className="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-black border-l-[40px] border-l-transparent z-20"></div>
+                                        <div className="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-black dark:border-t-white border-l-[40px] border-l-transparent z-20"></div>
 
                                         {/* Technical Top Bar */}
-                                        <div className="bg-gray-100 border-b border-gray-200 px-5 py-3 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-wider">
-                                            <span className="font-bold text-black">REF: {work.id}</span>
+                                        <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-5 py-3 flex justify-between items-center font-mono text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                                            <span className="font-bold text-black dark:text-white">REF: {work.id}</span>
                                             <div className="flex gap-4 items-center">
                                                 <span>{work.year}</span>
-                                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${work.status.includes('Awarded') ? 'bg-yellow-100 border-yellow-400 text-yellow-800' : 'bg-white border-gray-300 text-black'}`}>
+                                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${work.status.includes('Awarded') ? 'bg-yellow-100 border-yellow-400 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-black dark:text-white'}`}>
                                                     {work.status}
                                                 </span>
                                             </div>
                                         </div>
 
                                         {/* Image Area (Scientific View) */}
-                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 bg-gray-50 group-hover:opacity-100">
+                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 group-hover:opacity-100">
                                             <img
                                                 src={work.img}
                                                 alt={work.title}
@@ -841,7 +1004,7 @@
                                             />
 
                                             {/* Scientific Grid Overlay */}
-                                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
+                                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-overlay"></div>
 
                                             {/* Hover Action */}
                                             <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur text-white px-6 py-3 text-xs font-mono uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center">
@@ -853,41 +1016,41 @@
                                         {/* Content Body */}
                                         <div className="p-8 flex-grow flex flex-col relative">
                                             {/* Watermark Number */}
-                                            <div className="absolute top-4 right-4 text-6xl font-bold text-gray-100 font-serif pointer-events-none -z-0 select-none">
+                                            <div className="absolute top-4 right-4 text-6xl font-bold text-gray-100 dark:text-gray-800 font-serif pointer-events-none -z-0 select-none">
                                                 {work.id.split('-')[1]}
                                             </div>
 
                                             <div className="mb-6 relative z-10">
-                                                <span className="text-[10px] font-bold bg-black text-white px-2 py-1 inline-block mb-3 font-mono uppercase tracking-widest">{work.cat}</span>
-                                                <h3 className="text-3xl font-serif font-bold text-black leading-none group-hover:text-unc transition-colors mt-1">
+                                                <span className="text-[10px] font-bold bg-black dark:bg-white text-white dark:text-black px-2 py-1 inline-block mb-3 font-mono uppercase tracking-widest">{work.cat}</span>
+                                                <h3 className="text-3xl font-serif font-bold text-black dark:text-white leading-none group-hover:text-unc transition-colors mt-1">
                                                     {work.title}
                                                 </h3>
                                             </div>
 
-                                            <p className="text-sm text-gray-600 font-serif leading-relaxed mb-8 flex-grow relative z-10">
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 font-serif leading-relaxed mb-8 flex-grow relative z-10">
                                                 {work.desc}
                                             </p>
 
                                             {/* Tech Specs Matrix - NAS Style */}
-                                            <div className="mt-auto border-t-2 border-gray-100 pt-4 relative z-10">
+                                            <div className="mt-auto border-t-2 border-gray-100 dark:border-gray-800 pt-4 relative z-10">
                                                 <div className="grid grid-cols-3 gap-4 mb-4">
                                                     <div className="col-span-3">
                                                         <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400 block mb-2">Technology Stack</span>
                                                         <div className="flex flex-wrap gap-1.5">
                                                             {work.tech.map((t, i) => (
-                                                                <span key={i} className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 text-[9px] font-mono text-gray-700">
+                                                                <span key={i} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[9px] font-mono text-gray-700 dark:text-gray-300">
                                                                     {t}
                                                                 </span>
                                                             ))}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-between items-end border-t border-gray-100 pt-2">
+                                                <div className="flex justify-between items-end border-t border-gray-100 dark:border-gray-800 pt-2">
                                                     <div>
                                                         <span className="text-[9px] font-mono text-gray-400 uppercase block">Primary Role</span>
-                                                        <span className="text-xs font-bold text-black">{work.role}</span>
+                                                        <span className="text-xs font-bold text-black dark:text-white">{work.role}</span>
                                                     </div>
-                                                    <i data-lucide="file-check" className="w-4 h-4 text-gray-300 group-hover:text-black transition-colors"></i>
+                                                    <i data-lucide="file-check" className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-black dark:group-hover:text-white transition-colors"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -898,7 +1061,7 @@
 
                         {/* No Results Message */}
                         {filteredWorks.length === 0 && (
-                            <div className="py-24 text-center border-2 border-dashed border-gray-200 rounded-lg">
+                            <div className="py-24 text-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
                                 <p className="font-mono text-gray-400">NO_ENTRIES_FOUND_FOR_FILTER</p>
                             </div>
                         )}
@@ -929,121 +1092,35 @@
 
                     {/* Masonry / Gallery Layout */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-
-                        {/* Artwork 1 */}
-                        <div className="md:col-span-8 flex flex-col gap-3">
-                            <div className="w-full aspect-[3/2] bg-[#111] relative group overflow-hidden">
-                                <img src="Altered_Landscape_I.jpg" alt="Altered Landscape I" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Altered_Landscape_I.jpg</span>' }} />
-                            </div>
-                            <div className="flex justify-between items-baseline mt-2 border-t border-gray-800 pt-2">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Altered Landscape</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Digital Photography, 2024</p>
+                        {ART_DATA.map((art, i) => (
+                            <div key={i} className={`${art.colSpan} flex flex-col gap-3`}>
+                                <div className={`w-full ${art.aspect} bg-[#111] border-none group overflow-hidden relative`}>
+                                    {art.isPlaceholder ? (
+                                        <div className="w-full h-full bg-neutral-900 flex items-center justify-center text-gray-600 font-mono text-xs">
+                                            [ Wide Feature: e.g. Landscape_Compilation.jpg ]
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={art.img}
+                                            alt={art.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                                e.target.parentElement.classList.add('art-placeholder');
+                                                e.target.parentElement.innerHTML = `<span>${art.img}</span>`;
+                                            }}
+                                        />
+                                    )}
                                 </div>
-                                <span className="text-moma-red text-xs font-bold">01</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 2 */}
-                        <div className="md:col-span-4 flex flex-col gap-3">
-                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
-                                <img src="Layered_Transparency.png" alt="Layered Transparency" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Layered_Transparency.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Layered Transparency</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Graphite on Paper</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">02</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 3 */}
-                        <div className="md:col-span-4 flex flex-col gap-3">
-                            <div className="w-full aspect-square bg-[#111] border-none group overflow-hidden">
-                                <img src="Structure_8.png" alt="Structure 8" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Structure_8.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Structure 8</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Charcoal Study</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">03</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 4 */}
-                        <div className="md:col-span-8 flex flex-col gap-3">
-                            <div className="w-full aspect-[16/9] bg-[#111] border-none group overflow-hidden">
-                                <img src="Cultural_Stitch.png" alt="Cultural Stitch" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Cultural_Stitch.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Cultural Stitch</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Graphite & Ink, 18x24"</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">04</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 5 - NEW */}
-                        <div className="md:col-span-4 flex flex-col gap-3">
-                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
-                                <img src="Apple_Study.png" alt="Apple Study" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Apple_Study.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Apple Study</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Graphite on Paper</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">05</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 6 - NEW */}
-                        <div className="md:col-span-4 flex flex-col gap-3">
-                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
-                                <img src="Conan_Fanart.png" alt="Conan Fanart" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Conan_Fanart.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Emotional Encounter</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Fanart - Pencil</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">06</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 7 - NEW */}
-                        <div className="md:col-span-4 flex flex-col gap-3">
-                            <div className="w-full aspect-[3/4] bg-[#111] border-none group overflow-hidden">
-                                <img src="Crumpled_Silence.png" alt="Crumpled Silence" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('art-placeholder'); e.target.parentElement.innerHTML = '<span>Crumpled_Silence.jpg</span>' }} />
-                            </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Crumpled Silence</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Graphite - Texture Study</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">07</span>
-                            </div>
-                        </div>
-
-                        {/* Artwork 8 - NEW - Featured Wide */}
-                        <div className="md:col-span-12 flex flex-col gap-3">
-                            <div className="w-full aspect-[21/9] bg-[#111] border-none group overflow-hidden">
-                                {/* Placeholder for a wide landscape or compilation image */}
-                                <div className="w-full h-full bg-neutral-900 flex items-center justify-center text-gray-600 font-mono text-xs">
-                                    [ Wide Feature: e.g. Landscape_Compilation.jpg ]
+                                <div className="border-t border-gray-800 pt-2 flex justify-between">
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white">{art.title}</h4>
+                                        <p className="text-xs text-gray-500 font-mono">{art.medium}</p>
+                                    </div>
+                                    <span className="text-moma-red text-xs font-bold">{(i + 1).toString().padStart(2, '0')}</span>
                                 </div>
                             </div>
-                            <div className="border-t border-gray-800 pt-2 flex justify-between">
-                                <div>
-                                    <h4 className="text-sm font-bold text-white">Visual Anthology</h4>
-                                    <p className="text-xs text-gray-500 font-mono">Selected Works Compilation, 2022-2025</p>
-                                </div>
-                                <span className="text-moma-red text-xs font-bold">08</span>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="mt-16 md:mt-24 border-b border-white"></div>
@@ -1434,11 +1511,75 @@
         // --- MAIN APP ---
         const App = () => {
             const [activeSection, setActiveSection] = useState('home');
-            useEffect(() => { lucide.createIcons(); }, [activeSection]);
+            const [darkMode, setDarkMode] = useState(() => {
+                // 1. Check local storage
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    return savedTheme === 'dark';
+                }
+
+                // 2. If no preference, check time (Dark Mode after 7:00 PM)
+                const hour = new Date().getHours();
+                return hour >= 19 || hour < 6; // Dark from 7 PM to 6 AM
+            });
+            const [searchOpen, setSearchOpen] = useState(false);
+
+            // Theme Effect
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            }, [darkMode]);
+
+            // Keyboard Shortcuts (Cmd+K)
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        setSearchOpen(prev => !prev);
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, []);
+
+            useEffect(() => { lucide.createIcons(); }, [activeSection, darkMode, searchOpen]);
+
+            const toggleTheme = () => setDarkMode(!darkMode);
+
+            const navSections = [
+                { id: 'home', label: 'Overview' },
+                { id: 'news', label: 'News' },
+                { id: 'research', label: 'Research' },
+                { id: 'projects', label: 'Artifacts' },
+                { id: 'unc', label: 'Campus' },
+                { id: 'art', label: 'Gallery' },
+                { id: 'contact', label: 'Contact' },
+            ];
 
             return (
-                <div className="min-h-screen flex flex-col font-sans text-gray-900 selection:bg-unc/20 selection:text-black">
-                    {activeSection !== 'cv' && <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />}
+                <div className="min-h-screen flex flex-col font-sans text-gray-900 dark:text-gray-100 selection:bg-unc/20 selection:text-black dark:selection:text-white transition-colors duration-300">
+                    {activeSection !== 'cv' && (
+                        <Navbar
+                            activeSection={activeSection}
+                            setActiveSection={setActiveSection}
+                            darkMode={darkMode}
+                            toggleTheme={toggleTheme}
+                            setSearchOpen={setSearchOpen}
+                        />
+                    )}
+
+                    <SearchModal
+                        isOpen={searchOpen}
+                        onClose={() => setSearchOpen(false)}
+                        sections={navSections}
+                        activeSection={activeSection}
+                        setActiveSection={setActiveSection}
+                    />
 
                     <main className="flex-grow">
                         <AnimatePresence mode="wait">
