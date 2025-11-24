@@ -82,6 +82,9 @@
     <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
+    <!-- Three.js for 3D Globe -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <!-- Marked for Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -1007,6 +1010,162 @@
         const ChatWidget = () => { const [isOpen, setIsOpen] = useState(false); const [messages, setMessages] = useState([{ role: 'ai', text: "Hi! I'm Yihan's digital assistant. Ask me about his **Research**, **Patents**, or **UNC Background**." }]); const [input, setInput] = useState(''); const [loading, setLoading] = useState(false); const messagesEndRef = useRef(null); useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isOpen]); const handleSend = async (text = input) => { if (!text.trim()) return; setMessages(prev => [...prev, { role: 'user', text }]); setInput(''); setLoading(true); setTimeout(() => { let aiText = "I'm designed to showcase Yihan's work. Please check the CV for more details."; const q = text.toLowerCase(); if (q.includes('patent')) aiText = "I hold two patents. The primary one is **CN209791046U** (First Inventor)."; else if (q.includes('research')) aiText = "My research proposes an **Intelligent Design Framework** for Urban Micro-Interaction Systems."; setMessages(prev => [...prev, { role: 'ai', text: aiText }]); setLoading(false); }, 800); }; return (<div className="fixed bottom-6 right-6 z-50 font-sans"><AnimatePresence>{isOpen && (<motion.div initial={{ opacity: 0, scale: 0.8, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 20 }} className="absolute bottom-20 right-0 w-[300px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden h-[450px]"><div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center"><span className="font-bold text-sm text-gray-900 dark:text-gray-100">AI Assistant</span><button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button></div><div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-gray-800">{messages.map((m, i) => (<div key={i} className={`p-3 rounded-xl text-sm ${m.role === 'ai' ? 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200' : 'bg-unc text-white ml-auto'}`} dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} />))}<div ref={messagesEndRef} /></div><div className="p-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex gap-2"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Type..." className="flex-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:border-unc" /><button onClick={() => handleSend()} className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-full"><i data-lucide="arrow-up" className="w-5 h-5"></i></button></div></motion.div>)}</AnimatePresence><motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsOpen(!isOpen)} className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-full shadow-2xl hover:shadow-xl transition-all border border-gray-800 cursor-pointer"><i data-lucide={isOpen ? "minus" : "sparkles"} className="w-6 h-6"></i></motion.button></div>); };
         const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span></div><div className="flex items-center gap-3"><a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="04_Yihan Zhang_CV.pdf" target="_blank" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
 
+        // --- 3D VISITOR GLOBE COMPONENT ---
+        const VisitorGlobe = () => {
+            const mountRef = useRef(null);
+            const [stats, setStats] = useState({ total: 12453, live: 42, top: "United States" });
+
+            // Simulate live data updates
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setStats(prev => ({
+                        total: prev.total + Math.floor(Math.random() * 2),
+                        live: Math.max(20, prev.live + Math.floor(Math.random() * 5) - 2),
+                        top: prev.top
+                    }));
+                }, 3000);
+                return () => clearInterval(interval);
+            }, []);
+
+            useEffect(() => {
+                if (!mountRef.current) return;
+
+                // Scene Setup
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
+                camera.position.z = 2.5;
+
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                mountRef.current.appendChild(renderer.domElement);
+
+                // Globe Geometry (Wireframe Style)
+                const geometry = new THREE.IcosahedronGeometry(1, 16); // Higher detail
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x4B9CD3, // UNC Blue
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const globe = new THREE.Mesh(geometry, material);
+                scene.add(globe);
+
+                // Inner Core (Solid darker)
+                const coreGeo = new THREE.IcosahedronGeometry(0.98, 16);
+                const coreMat = new THREE.MeshBasicMaterial({
+                    color: 0x000000,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                const core = new THREE.Mesh(coreGeo, coreMat);
+                scene.add(core);
+
+                // Add Random Data Points (Visitors)
+                const pointsGroup = new THREE.Group();
+                const pointGeo = new THREE.SphereGeometry(0.015, 8, 8);
+                const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+
+                for (let i = 0; i < 40; i++) {
+                    const point = new THREE.Mesh(pointGeo, pointMat);
+                    // Random spherical coordinates
+                    const phi = Math.acos(-1 + (2 * i) / 40);
+                    const theta = Math.sqrt(40 * Math.PI) * phi;
+
+                    point.position.setFromSphericalCoords(1.02, phi, theta);
+                    pointsGroup.add(point);
+                }
+                globe.add(pointsGroup);
+
+                // Animation Loop
+                let animationId;
+                const animate = () => {
+                    animationId = requestAnimationFrame(animate);
+
+                    globe.rotation.y += 0.002;
+                    core.rotation.y += 0.002;
+
+                    // Pulse effect for points
+                    const time = Date.now() * 0.002;
+                    pointsGroup.children.forEach((p, i) => {
+                        const scale = 1 + Math.sin(time + i) * 0.3;
+                        p.scale.set(scale, scale, scale);
+                    });
+
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                // Resize Handler
+                const handleResize = () => {
+                    if (!mountRef.current) return;
+                    const width = mountRef.current.clientWidth;
+                    const height = mountRef.current.clientHeight;
+                    renderer.setSize(width, height);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                };
+                window.addEventListener('resize', handleResize);
+
+                return () => {
+                    cancelAnimationFrame(animationId);
+                    window.removeEventListener('resize', handleResize);
+                    if (mountRef.current && renderer.domElement) {
+                        mountRef.current.removeChild(renderer.domElement);
+                    }
+                    geometry.dispose();
+                    material.dispose();
+                    renderer.dispose();
+                };
+            }, []);
+
+            return (
+                <section className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                        {/* Text / Stats Side */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                </span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-green-400">Live Visitor Analytics</span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Global Reach.</h2>
+                            <p className="text-gray-400 text-lg mb-12 max-w-md leading-relaxed">
+                                Real-time visualization of visitor traffic and engagement across the globe. Connecting ideas without borders.
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm">
+                                    <div className="text-3xl font-mono font-bold text-white mb-1">{stats.total.toLocaleString()}</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Total Page Views</div>
+                                </div>
+                                <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm">
+                                    <div className="text-3xl font-mono font-bold text-unc mb-1">{stats.live}</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Active Users</div>
+                                </div>
+                                <div className="col-span-2 bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm flex justify-between items-center">
+                                    <div>
+                                        <div className="text-xl font-bold text-white mb-1">{stats.top}</div>
+                                        <div className="text-xs text-gray-500 uppercase tracking-wider">Top Region</div>
+                                    </div>
+                                    <i data-lucide="globe" className="w-8 h-8 text-gray-700"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 3D Globe Side */}
+                        <div className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center">
+                            <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-move"></div>
+                            {/* Background Glow */}
+                            <div className="absolute inset-0 bg-unc/20 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
         // --- MAIN APP ---
         const App = () => {
             const [activeSection, setActiveSection] = useState('home');
@@ -1049,6 +1208,7 @@
                         </AnimatePresence>
                     </main>
                     <Footer activeSection={activeSection} />
+                    {activeSection === 'home' && <VisitorGlobe />}
                     {activeSection !== 'cv' && <ChatWidget />}
                 </div>
             );
