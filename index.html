@@ -1066,62 +1066,94 @@
         // --- 3D VISITOR GLOBE COMPONENT ---
         const VisitorGlobe = () => {
             const mountRef = useRef(null);
+            const pointsGroupRef = useRef(null);
             const [stats, setStats] = useState({ total: 0, live: 0, top: "Loading..." });
             const [myVisits, setMyVisits] = useState(1);
             const scriptStatus = useScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
+            const [globePoints, setGlobePoints] = useState([]); // Added for the new logic
 
             // Data Fetching & Interception
             useEffect(() => {
-                // Mock jQuery/Zepto if the script relies on it (common in older widgets)
-                if (!window.$) {
-                    window.$ = (callback) => {
-                        if (typeof callback === 'function') callback();
-                        return {
-                            ready: (cb) => cb && cb(),
-                            // Add other dummy methods if needed
-                        };
-                    };
-                    window.jQuery = window.$;
-                }
+                // Mock jQuery for the external script
+                window.$ = window.jQuery = (selector) => ({
+                    length: 1,
+                    on: () => { },
+                    velocity: () => { },
+                    css: () => { },
+                    attr: () => { },
+                    parent: () => ({ width: () => window.innerWidth }),
+                    ready: (fn) => fn && fn(),
+                    load: (fn) => fn && fn(),
+                    scroll: () => { },
+                    delegate: () => { }
+                });
+                window.$.ajax = ({ success }) => success && success(); // Mock ajax if needed, though we load script directly
 
-                // Define global callback to intercept data from the JSONP script
+                // Define the callback function that the external script calls
                 window.addPoints = (points) => {
-                    console.log("Visitor Data Intercepted:", points);
-
+                    console.log("Visitor Data Received:", points);
                     if (!Array.isArray(points)) {
-                        console.warn("Expected array of points, got:", typeof points);
+                        console.warn("Received invalid points data:", points);
                         return;
                     }
 
-                    // Process stats
-                    const totalVisitors = points.reduce((acc, p) => acc + (p.v || 1), 0);
-                    // Find top region (simple heuristic: first point or max visitors)
-                    const topPoint = points.reduce((prev, current) => ((prev.v || 0) > (current.v || 0)) ? prev : current, points[0] || { name: "Global" });
+                    // Process points
+                    const processedPoints = points.map(p => ({
+                        lat: p.latLng[0],
+                        lng: p.latLng[1],
+                        count: p.v || 1,
+                        location: p.name || "Unknown"
+                    }));
 
-                    setStats({
-                        total: totalVisitors,
-                        live: points.length, // Approximate active sessions based on recent points
-                        top: topPoint ? topPoint.name : "Global"
+                    setGlobePoints(processedPoints);
+
+                    // Calculate stats
+                    const total = processedPoints.reduce((acc, curr) => acc + curr.count, 0);
+                    const live = processedPoints.length; // Assuming each point is a recent visitor
+                    // Find top region (simple logic: max count)
+                    const topRegion = processedPoints.reduce((prev, current) => (prev.count > current.count) ? prev : current, { location: "Global" }).location;
+
+                    setStats({ total, live, top: topRegion });
+
+                    // Check for user location (Chapel Hill: 35.9132, -79.0558)
+                    const myLoc = processedPoints.find(p => {
+                        const d = Math.sqrt(Math.pow(p.lat - 35.9132, 2) + Math.pow(p.lng - (-79.0558), 2));
+                        return d < 2; // Within ~2 degrees
                     });
 
-                    // Dispatch event for the 3D scene to pick up
-                    const event = new CustomEvent('visitorDataReady', { detail: points });
-                    window.dispatchEvent(event);
+                    if (myLoc) {
+                        console.log("User location found in data:", myLoc);
+                        setMyVisits(myLoc.count);
+                    } else {
+                        console.log("User location NOT found in data. Using default.");
+                    }
                 };
 
                 // Load the MapMyVisitors script dynamically
                 const script = document.createElement('script');
-                script.src = "//mapmyvisitors.com/globe_call_home.js?d=WoxzpcNyJItYwn8YpdhfKrREKe55ID9BVs9z5KqcDiI&w=1000"; // Added w param to ensure data
+                // Use Date.now() to prevent caching and ensure visit is counted
+                script.src = "//mapmyvisitors.com/globe_call_home.js?d=" + Date.now() + "&w=" + window.innerWidth;
                 script.async = true;
-                script.onerror = (e) => console.error("Failed to load MapMyVisitors script:", e);
+
+                script.onload = () => {
+                    // Assuming setScriptStatus is a state setter for script loading status
+                    // If not defined, this line might cause an error.
+                    // For now, we'll assume it's meant to be there or can be removed if not needed.
+                    // setScriptStatus("ready"); 
+                    console.log("Visitor data script loaded successfully.");
+                };
+                script.onerror = () => {
+                    console.error("Failed to load visitor data script");
+                    // setScriptStatus("error");
+                };
+
                 document.body.appendChild(script);
 
                 return () => {
-                    // Cleanup
+                    document.body.removeChild(script);
                     delete window.addPoints;
-                    // Only delete $ if we created it
-                    // if (window.$ === window.jQuery) delete window.$; 
-                    if (script.parentNode) script.parentNode.removeChild(script);
+                    delete window.$;
+                    delete window.jQuery;
                 };
             }, []);
 
@@ -1174,6 +1206,7 @@
                 // Data Points Group
                 const pointsGroup = new THREE.Group();
                 globe.add(pointsGroup);
+                pointsGroupRef.current = pointsGroup;
 
                 // Special Marker for Chapel Hill, NC (User Location)
                 const myLocation = { lat: 35.9132, lng: -79.0558 };
@@ -1192,49 +1225,6 @@
 
                 myLocMesh.position.set(myX, myY, myZ);
                 globe.add(myLocMesh);
-
-                // Function to add points to the globe
-                const addGlobePoints = (data) => {
-                    // Clear existing points
-                    while (pointsGroup.children.length > 0) {
-                        pointsGroup.remove(pointsGroup.children[0]);
-                    }
-
-                    // Increased point size for better visibility
-                    const pointGeo = new THREE.SphereGeometry(0.02, 8, 8);
-                    const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
-
-                    // Find my location visits
-                    let myCount = 1;
-                    data.forEach(p => {
-                        // MapMyVisitors uses [lat, lng]
-                        const lat = p.latLng[0];
-                        const lng = p.latLng[1];
-
-                        // Check if close to my location (within ~0.5 degrees)
-                        if (Math.abs(lat - myLocation.lat) < 0.5 && Math.abs(lng - myLocation.lng) < 0.5) {
-                            myCount = p.v || 1;
-                        }
-
-                        // Convert Lat/Lng to 3D Coordinates
-                        const phi = (90 - lat) * (Math.PI / 180);
-                        const theta = (lng + 180) * (Math.PI / 180);
-                        const radius = 1.02;
-
-                        const x = -(radius * Math.sin(phi) * Math.cos(theta));
-                        const z = (radius * Math.sin(phi) * Math.sin(theta));
-                        const y = (radius * Math.cos(phi));
-
-                        const point = new THREE.Mesh(pointGeo, pointMat);
-                        point.position.set(x, y, z);
-                        pointsGroup.add(point);
-                    });
-                    setMyVisits(myCount);
-                };
-
-                // Listen for data
-                const handleData = (e) => addGlobePoints(e.detail);
-                window.addEventListener('visitorDataReady', handleData);
 
                 // Load OrbitControls and Start Animation
                 let controls;
@@ -1271,71 +1261,77 @@
                 mountRef.current.addEventListener('mousemove', onMouseMove);
                 mountRef.current.addEventListener('click', onClick);
 
-                const startAnimation = () => {
-                    const animate = () => {
-                        animationId = requestAnimationFrame(animate);
+                const animate = () => {
+                    animationId = requestAnimationFrame(animate);
 
-                        if (controls) {
-                            controls.update(); // Required for autoRotate
-                        } else {
-                            // Fallback rotation if controls not loaded
-                            globe.rotation.y += 0.001;
-                            if (atmosphere) atmosphere.rotation.y += 0.001;
+                    if (controls) {
+                        controls.update();
+                    } else if (window.THREE && window.THREE.OrbitControls) {
+                        controls = new THREE.OrbitControls(camera, renderer.domElement);
+                        controls.enableDamping = true;
+                        controls.dampingFactor = 0.05;
+                        controls.enableZoom = false;
+                        controls.enablePan = false;
+                        controls.autoRotate = true;
+                        controls.autoRotateSpeed = 1.0;
+                    } else {
+                        // Fallback rotation
+                        globe.rotation.y += 0.001;
+                        atmosphere.rotation.y += 0.001;
+                    }
+
+                    // Raycasting for Interaction
+                    raycaster.setFromCamera(mouse, camera);
+                    const intersects = raycaster.intersectObject(myLocMesh);
+
+                    if (intersects.length > 0) {
+                        if (!isHovering) {
+                            isHovering = true;
+                            mountRef.current.style.cursor = 'pointer';
                         }
+                    } else {
+                        if (isHovering) {
+                            isHovering = false;
+                            mountRef.current.style.cursor = 'move';
+                        }
+                    }
 
-                        // Pulse effect for points
-                        const time = Date.now() * 0.002;
-                        pointsGroup.children.forEach((p, i) => {
-                            const scale = 1 + Math.sin(time + i) * 0.3;
-                            p.scale.set(scale, scale, scale);
-                        });
+                    // Label Positioning
+                    if (labelDiv) {
+                        myLocMesh.getWorldPosition(tempV);
+                        tempV.project(camera);
 
-                        // Raycasting for Hover
-                        raycaster.setFromCamera(mouse, camera);
-                        const intersects = raycaster.intersectObject(myLocMesh);
-                        isHovering = intersects.length > 0;
+                        // Check dot product to hide label when behind globe
+                        const dot = tempV.z;
+                        const isVisible = dot < 0.99; // Simple check, usually z < 1 is visible in NDC but for globe occlusion we need more. 
+                        // Actually, simple occlusion check:
+                        const rayOrigin = camera.position.clone();
+                        const rayDir = myLocMesh.position.clone().sub(rayOrigin).normalize();
+                        const raycasterOcclusion = new THREE.Raycaster(rayOrigin, rayDir);
+                        const intersectsOcclusion = raycasterOcclusion.intersectObject(globe);
 
-                        // Update Label Position & Visibility
-                        if (labelDiv && myLocMesh) {
-                            // Get world position of the marker
-                            myLocMesh.getWorldPosition(tempV);
-
-                            // Check if visible (simple dot product check for sphere)
-                            // Vector from camera to point
-                            const cameraToPoint = new THREE.Vector3().subVectors(tempV, camera.position);
-                            // Normal at point (since it's a sphere at 0,0,0, normal is just position normalized)
-                            // But simpler: check distance. If point is further than center + radius, it's behind? No.
-                            // Dot product of surface normal and camera view vector.
-                            // Surface normal at tempV is tempV.clone().normalize().
-                            // View vector is cameraToPoint.normalize().
-                            // If dot < 0, it's facing the camera.
-
-                            const isNotOccluded = tempV.clone().normalize().dot(cameraToPoint.normalize()) < -0.2; // -0.2 to hide slightly before horizon
-
-                            if (isNotOccluded) {
-                                tempV.project(camera);
-                                const x = (tempV.x * .5 + .5) * mountRef.current.clientWidth;
-                                const y = (tempV.y * -.5 + .5) * mountRef.current.clientHeight;
-
-                                labelDiv.style.transform = `translate(-50%, -100%) translate(${x}px, ${y - 10}px)`;
-
-                                // Visibility Logic: Show if Hovering OR Clicked
-                                if (isHovering || isClicked) {
-                                    labelDiv.style.opacity = '1';
-                                    mountRef.current.style.cursor = 'pointer'; // Change cursor on hover
-                                } else {
-                                    labelDiv.style.opacity = '0';
-                                    mountRef.current.style.cursor = 'move'; // Default cursor
-                                }
-                            } else {
-                                labelDiv.style.opacity = '0';
+                        // If intersection distance is less than distance to marker, it's occluded
+                        const distToMarker = camera.position.distanceTo(myLocMesh.position);
+                        let isOccluded = false;
+                        if (intersectsOcclusion.length > 0) {
+                            if (intersectsOcclusion[0].distance < distToMarker - 0.1) {
+                                isOccluded = true;
                             }
                         }
 
-                        renderer.render(scene, camera);
-                    };
-                    animate();
+                        if (!isOccluded && (isHovering || isClicked)) {
+                            const x = (tempV.x * .5 + .5) * mountRef.current.clientWidth;
+                            const y = (tempV.y * -.5 + .5) * mountRef.current.clientHeight;
+                            labelDiv.style.transform = `translate(-50%, -100%) translate(${x}px, ${y}px)`;
+                            labelDiv.style.opacity = '1';
+                        } else {
+                            labelDiv.style.opacity = '0';
+                        }
+                    }
+
+                    renderer.render(scene, camera);
                 };
+                animate();
 
                 // Dynamically load OrbitControls
                 const controlsScript = document.createElement('script');
@@ -1357,8 +1353,6 @@
                 };
                 document.body.appendChild(controlsScript);
 
-                startAnimation();
-
                 // Resize Handler
                 const handleResize = () => {
                     if (!mountRef.current) return;
@@ -1373,7 +1367,6 @@
                 return () => {
                     cancelAnimationFrame(animationId);
                     window.removeEventListener('resize', handleResize);
-                    window.removeEventListener('visitorDataReady', handleData);
                     if (mountRef.current) {
                         mountRef.current.removeEventListener('mousemove', onMouseMove);
                         mountRef.current.removeEventListener('click', onClick);
@@ -1389,6 +1382,35 @@
                     renderer.dispose();
                 };
             }, [scriptStatus]);
+
+            // Effect to update points when data changes
+            useEffect(() => {
+                if (!pointsGroupRef.current || globePoints.length === 0) return;
+
+                const pointsGroup = pointsGroupRef.current;
+                // Clear existing
+                while (pointsGroup.children.length > 0) {
+                    pointsGroup.remove(pointsGroup.children[0]);
+                }
+
+                const pointGeo = new THREE.SphereGeometry(0.02, 8, 8);
+                const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+
+                globePoints.forEach(p => {
+                    // Convert Lat/Lng to 3D Coordinates
+                    const phi = (90 - p.lat) * (Math.PI / 180);
+                    const theta = (p.lng + 180) * (Math.PI / 180);
+                    const radius = 1.02;
+
+                    const x = -(radius * Math.sin(phi) * Math.cos(theta));
+                    const z = (radius * Math.sin(phi) * Math.sin(theta));
+                    const y = (radius * Math.cos(phi));
+
+                    const point = new THREE.Mesh(pointGeo, pointMat);
+                    point.position.set(x, y, z);
+                    pointsGroup.add(point);
+                });
+            }, [globePoints]);
 
             return (
                 <section className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
