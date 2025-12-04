@@ -1065,19 +1065,63 @@
         // --- 3D VISITOR GLOBE COMPONENT ---
         const VisitorGlobe = () => {
             const mountRef = useRef(null);
-            const [stats, setStats] = useState({ total: 12453, live: 42, top: "United States" });
+            const [stats, setStats] = useState({ total: 0, live: 0, top: "Loading..." });
+            const [myVisits, setMyVisits] = useState(1);
             const scriptStatus = useScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
 
-            // Simulate live data updates
+            // Data Fetching & Interception
             useEffect(() => {
-                const interval = setInterval(() => {
-                    setStats(prev => ({
-                        total: prev.total + Math.floor(Math.random() * 2),
-                        live: Math.max(20, prev.live + Math.floor(Math.random() * 5) - 2),
-                        top: prev.top
-                    }));
-                }, 3000);
-                return () => clearInterval(interval);
+                // Mock jQuery/Zepto if the script relies on it (common in older widgets)
+                if (!window.$) {
+                    window.$ = (callback) => {
+                        if (typeof callback === 'function') callback();
+                        return {
+                            ready: (cb) => cb && cb(),
+                            // Add other dummy methods if needed
+                        };
+                    };
+                    window.jQuery = window.$;
+                }
+
+                // Define global callback to intercept data from the JSONP script
+                window.addPoints = (points) => {
+                    console.log("Visitor Data Intercepted:", points);
+
+                    if (!Array.isArray(points)) {
+                        console.warn("Expected array of points, got:", typeof points);
+                        return;
+                    }
+
+                    // Process stats
+                    const totalVisitors = points.reduce((acc, p) => acc + (p.v || 1), 0);
+                    // Find top region (simple heuristic: first point or max visitors)
+                    const topPoint = points.reduce((prev, current) => ((prev.v || 0) > (current.v || 0)) ? prev : current, points[0] || { name: "Global" });
+
+                    setStats({
+                        total: totalVisitors,
+                        live: points.length, // Approximate active sessions based on recent points
+                        top: topPoint ? topPoint.name : "Global"
+                    });
+
+                    // Dispatch event for the 3D scene to pick up
+                    const event = new CustomEvent('visitorDataReady', { detail: points });
+                    window.dispatchEvent(event);
+                };
+
+                // Load the MapMyVisitors script dynamically
+                const script = document.createElement('script');
+                script.src = "//mapmyvisitors.com/globe_call_home.js?d=WoxzpcNyJItYwn8YpdhfKrREKe55ID9BVs9z5KqcDiI&w=1000"; // Added w param to ensure data
+                script.async = true;
+                script.onerror = (e) => console.error("Failed to load MapMyVisitors script:", e);
+                document.body.appendChild(script);
+
+                return () => {
+                    // Cleanup
+                    delete window.addPoints;
+                    // Only delete $ if we created it
+                    // if (window.$ === window.jQuery) delete window.$; 
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                };
             }, []);
 
             useEffect(() => {
@@ -1086,68 +1130,233 @@
                 // Scene Setup
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-                camera.position.z = 2.5;
+                camera.position.z = 2.9; // Zoomed out to fit better (was 1.8)
 
                 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
                 renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
                 renderer.setPixelRatio(window.devicePixelRatio);
                 mountRef.current.appendChild(renderer.domElement);
 
-                // Globe Geometry (Wireframe Style)
-                const geometry = new THREE.IcosahedronGeometry(1, 16); // Higher detail
-                const material = new THREE.MeshBasicMaterial({
-                    color: 0x4B9CD3, // UNC Blue
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.3
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                scene.add(ambientLight);
+                const pointLight = new THREE.PointLight(0xffffff, 0.5);
+                pointLight.position.set(5, 3, 5);
+                scene.add(pointLight);
+
+                // Globe Geometry (Textured)
+                const geometry = new THREE.SphereGeometry(1, 64, 64);
+                const textureLoader = new THREE.TextureLoader();
+                // Using a reliable dark earth texture
+                const texture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
+
+                const material = new THREE.MeshPhongMaterial({
+                    map: texture,
+                    color: 0xaaaaaa, // Tint to match theme slightly
+                    shininess: 5
                 });
+
                 const globe = new THREE.Mesh(geometry, material);
                 scene.add(globe);
 
-                // Inner Core (Solid darker)
-                const coreGeo = new THREE.IcosahedronGeometry(0.98, 16);
-                const coreMat = new THREE.MeshBasicMaterial({
-                    color: 0x000000,
+                // Atmosphere Glow (Optional, for aesthetics)
+                const atmosphereGeo = new THREE.SphereGeometry(1.1, 64, 64);
+                const atmosphereMat = new THREE.MeshBasicMaterial({
+                    color: 0x4B9CD3,
                     transparent: true,
-                    opacity: 0.9
+                    opacity: 0.1,
+                    side: THREE.BackSide
                 });
-                const core = new THREE.Mesh(coreGeo, coreMat);
-                scene.add(core);
+                const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+                scene.add(atmosphere);
 
-                // Add Random Data Points (Visitors)
+                // Data Points Group
                 const pointsGroup = new THREE.Group();
-                const pointGeo = new THREE.SphereGeometry(0.015, 8, 8);
-                const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
-
-                for (let i = 0; i < 40; i++) {
-                    const point = new THREE.Mesh(pointGeo, pointMat);
-                    // Random spherical coordinates
-                    const phi = Math.acos(-1 + (2 * i) / 40);
-                    const theta = Math.sqrt(40 * Math.PI) * phi;
-
-                    point.position.setFromSphericalCoords(1.02, phi, theta);
-                    pointsGroup.add(point);
-                }
                 globe.add(pointsGroup);
 
-                // Animation Loop
-                let animationId;
-                const animate = () => {
-                    animationId = requestAnimationFrame(animate);
+                // Special Marker for Chapel Hill, NC (User Location)
+                const myLocation = { lat: 35.9132, lng: -79.0558 };
+                const myLocGeo = new THREE.SphereGeometry(0.012, 16, 16); // Smaller size (was 0.025)
+                const myLocMat = new THREE.MeshBasicMaterial({ color: 0x00FF00 }); // Green
+                const myLocMesh = new THREE.Mesh(myLocGeo, myLocMat);
 
-                    globe.rotation.y += 0.002;
-                    core.rotation.y += 0.002;
+                // Convert Lat/Lng to 3D Coordinates
+                const myPhi = (90 - myLocation.lat) * (Math.PI / 180);
+                const myTheta = (myLocation.lng + 180) * (Math.PI / 180);
+                const myRadius = 1.02;
 
-                    // Pulse effect for points
-                    const time = Date.now() * 0.002;
-                    pointsGroup.children.forEach((p, i) => {
-                        const scale = 1 + Math.sin(time + i) * 0.3;
-                        p.scale.set(scale, scale, scale);
+                const myX = -(myRadius * Math.sin(myPhi) * Math.cos(myTheta));
+                const myZ = (myRadius * Math.sin(myPhi) * Math.sin(myTheta));
+                const myY = (myRadius * Math.cos(myPhi));
+
+                myLocMesh.position.set(myX, myY, myZ);
+                globe.add(myLocMesh);
+
+                // Function to add points to the globe
+                const addGlobePoints = (data) => {
+                    // Clear existing points
+                    while (pointsGroup.children.length > 0) {
+                        pointsGroup.remove(pointsGroup.children[0]);
+                    }
+
+                    // Increased point size for better visibility
+                    const pointGeo = new THREE.SphereGeometry(0.02, 8, 8);
+                    const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+
+                    // Find my location visits
+                    let myCount = 1;
+                    data.forEach(p => {
+                        // MapMyVisitors uses [lat, lng]
+                        const lat = p.latLng[0];
+                        const lng = p.latLng[1];
+
+                        // Check if close to my location (within ~0.5 degrees)
+                        if (Math.abs(lat - myLocation.lat) < 0.5 && Math.abs(lng - myLocation.lng) < 0.5) {
+                            myCount = p.v || 1;
+                        }
+
+                        // Convert Lat/Lng to 3D Coordinates
+                        const phi = (90 - lat) * (Math.PI / 180);
+                        const theta = (lng + 180) * (Math.PI / 180);
+                        const radius = 1.02;
+
+                        const x = -(radius * Math.sin(phi) * Math.cos(theta));
+                        const z = (radius * Math.sin(phi) * Math.sin(theta));
+                        const y = (radius * Math.cos(phi));
+
+                        const point = new THREE.Mesh(pointGeo, pointMat);
+                        point.position.set(x, y, z);
+                        pointsGroup.add(point);
                     });
-
-                    renderer.render(scene, camera);
+                    setMyVisits(myCount);
                 };
-                animate();
+
+                // Listen for data
+                const handleData = (e) => addGlobePoints(e.detail);
+                window.addEventListener('visitorDataReady', handleData);
+
+                // Load OrbitControls and Start Animation
+                let controls;
+                let animationId;
+                const labelDiv = document.getElementById('my-location-label');
+                const tempV = new THREE.Vector3();
+
+                // Interaction State
+                const raycaster = new THREE.Raycaster();
+                const mouse = new THREE.Vector2();
+                let isHovering = false;
+                let isClicked = false;
+                let clickTimeout;
+
+                // Handle Mouse Move for Raycasting
+                const onMouseMove = (event) => {
+                    if (!mountRef.current) return;
+                    const rect = mountRef.current.getBoundingClientRect();
+                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                };
+
+                // Handle Click
+                const onClick = (event) => {
+                    if (isHovering) {
+                        isClicked = true;
+                        if (clickTimeout) clearTimeout(clickTimeout);
+                        clickTimeout = setTimeout(() => {
+                            isClicked = false;
+                        }, 2000);
+                    }
+                };
+
+                mountRef.current.addEventListener('mousemove', onMouseMove);
+                mountRef.current.addEventListener('click', onClick);
+
+                const startAnimation = () => {
+                    const animate = () => {
+                        animationId = requestAnimationFrame(animate);
+
+                        if (controls) {
+                            controls.update(); // Required for autoRotate
+                        } else {
+                            // Fallback rotation if controls not loaded
+                            globe.rotation.y += 0.001;
+                            if (atmosphere) atmosphere.rotation.y += 0.001;
+                        }
+
+                        // Pulse effect for points
+                        const time = Date.now() * 0.002;
+                        pointsGroup.children.forEach((p, i) => {
+                            const scale = 1 + Math.sin(time + i) * 0.3;
+                            p.scale.set(scale, scale, scale);
+                        });
+
+                        // Raycasting for Hover
+                        raycaster.setFromCamera(mouse, camera);
+                        const intersects = raycaster.intersectObject(myLocMesh);
+                        isHovering = intersects.length > 0;
+
+                        // Update Label Position & Visibility
+                        if (labelDiv && myLocMesh) {
+                            // Get world position of the marker
+                            myLocMesh.getWorldPosition(tempV);
+
+                            // Check if visible (simple dot product check for sphere)
+                            // Vector from camera to point
+                            const cameraToPoint = new THREE.Vector3().subVectors(tempV, camera.position);
+                            // Normal at point (since it's a sphere at 0,0,0, normal is just position normalized)
+                            // But simpler: check distance. If point is further than center + radius, it's behind? No.
+                            // Dot product of surface normal and camera view vector.
+                            // Surface normal at tempV is tempV.clone().normalize().
+                            // View vector is cameraToPoint.normalize().
+                            // If dot < 0, it's facing the camera.
+
+                            const isNotOccluded = tempV.clone().normalize().dot(cameraToPoint.normalize()) < -0.2; // -0.2 to hide slightly before horizon
+
+                            if (isNotOccluded) {
+                                tempV.project(camera);
+                                const x = (tempV.x * .5 + .5) * mountRef.current.clientWidth;
+                                const y = (tempV.y * -.5 + .5) * mountRef.current.clientHeight;
+
+                                labelDiv.style.transform = `translate(-50%, -100%) translate(${x}px, ${y - 10}px)`;
+
+                                // Visibility Logic: Show if Hovering OR Clicked
+                                if (isHovering || isClicked) {
+                                    labelDiv.style.opacity = '1';
+                                    mountRef.current.style.cursor = 'pointer'; // Change cursor on hover
+                                } else {
+                                    labelDiv.style.opacity = '0';
+                                    mountRef.current.style.cursor = 'move'; // Default cursor
+                                }
+                            } else {
+                                labelDiv.style.opacity = '0';
+                            }
+                        }
+
+                        renderer.render(scene, camera);
+                    };
+                    animate();
+                };
+
+                // Dynamically load OrbitControls
+                const controlsScript = document.createElement('script');
+                controlsScript.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js";
+                controlsScript.onload = () => {
+                    if (window.THREE && window.THREE.OrbitControls) {
+                        controls = new THREE.OrbitControls(camera, renderer.domElement);
+                        controls.enableDamping = true;
+                        controls.dampingFactor = 0.05;
+                        controls.enableZoom = false; // Disable zoom to keep layout stable
+                        controls.enablePan = false;
+                        controls.autoRotate = true;
+                        controls.autoRotateSpeed = 1.0;
+
+                        // Sync atmosphere rotation with globe (if needed, but OrbitControls rotates camera, so objects stay still relative to each other)
+                        // Actually, OrbitControls moves the CAMERA. So we don't need to manually rotate the globe mesh anymore.
+                        // But we need to make sure the atmosphere is part of the scene (it is).
+                    }
+                };
+                document.body.appendChild(controlsScript);
+
+                startAnimation();
 
                 // Resize Handler
                 const handleResize = () => {
@@ -1163,9 +1372,17 @@
                 return () => {
                     cancelAnimationFrame(animationId);
                     window.removeEventListener('resize', handleResize);
-                    if (mountRef.current && renderer.domElement) {
-                        mountRef.current.removeChild(renderer.domElement);
+                    window.removeEventListener('visitorDataReady', handleData);
+                    if (mountRef.current) {
+                        mountRef.current.removeEventListener('mousemove', onMouseMove);
+                        mountRef.current.removeEventListener('click', onClick);
+                        if (renderer.domElement && mountRef.current.contains(renderer.domElement)) {
+                            mountRef.current.removeChild(renderer.domElement);
+                        }
                     }
+                    if (clickTimeout) clearTimeout(clickTimeout);
+                    if (controlsScript.parentNode) controlsScript.parentNode.removeChild(controlsScript);
+                    if (controls) controls.dispose();
                     geometry.dispose();
                     material.dispose();
                     renderer.dispose();
@@ -1175,30 +1392,33 @@
             return (
                 <section className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-                        {/* Text / Stats Side */}
-                        <div>
-                            <div className="flex items-center gap-2 mb-6">
+                        {/* Left Column: Data & Context */}
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3">
                                 <span className="relative flex h-3 w-3">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                                 </span>
-                                <span className="text-xs font-bold uppercase tracking-widest text-green-400">Live Visitor Analytics</span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-green-400">System Online</span>
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Global Reach.</h2>
-                            <p className="text-gray-400 text-lg mb-12 max-w-md leading-relaxed">
-                                Real-time visualization of visitor traffic and engagement across the globe. Connecting ideas without borders.
-                            </p>
+
+                            <div>
+                                <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">Global Reach.</h2>
+                                <p className="text-gray-400 text-lg leading-relaxed max-w-md">
+                                    Real-time visualization of visitor traffic. Connecting ideas across borders through digital presence.
+                                </p>
+                            </div>
 
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm">
+                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm">
                                     <div className="text-3xl font-mono font-bold text-white mb-1">{stats.total.toLocaleString()}</div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Total Page Views</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Total Visits</div>
                                 </div>
-                                <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm">
-                                    <div className="text-3xl font-mono font-bold text-unc mb-1">{stats.live}</div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Active Users</div>
+                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm">
+                                    <div className="text-3xl font-mono font-bold text-blue-400 mb-1">{stats.live}</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Active Now</div>
                                 </div>
-                                <div className="col-span-2 bg-gray-900/50 p-6 rounded-xl border border-gray-800 backdrop-blur-sm flex justify-between items-center">
+                                <div className="col-span-2 p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm flex justify-between items-center">
                                     <div>
                                         <div className="text-xl font-bold text-white mb-1">{stats.top}</div>
                                         <div className="text-xs text-gray-500 uppercase tracking-wider">Top Region</div>
@@ -1208,15 +1428,33 @@
                             </div>
                         </div>
 
-                        {/* 3D Globe Side */}
-                        <div className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center">
+                        {/* Right Column: 3D Globe */}
+                        <div className="relative h-[500px] w-full flex items-center justify-center rounded-2xl bg-transparent overflow-hidden">
                             {scriptStatus === "ready" ? (
                                 <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-move"></div>
                             ) : (
                                 <div className="flex items-center justify-center text-gray-500 text-xs font-mono">Initializing 3D Engine...</div>
                             )}
-                            {/* Background Glow */}
-                            <div className="absolute inset-0 bg-unc/20 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
+                            {/* Background Glow for Globe */}
+                            <div className="absolute inset-0 bg-blue-500/5 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
+
+                            {/* Location Label */}
+                            <div id="my-location-label" className="absolute top-0 left-0 z-20 pointer-events-none opacity-0 transition-opacity duration-300 whitespace-nowrap">
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg text-xs text-white shadow-xl transform translate-y-[-10px]">
+                                    <span className="text-sm">🇺🇸</span>
+                                    <span className="font-medium text-gray-300">United States,</span>
+                                    <span className="font-bold text-white">Chapel Hill,</span>
+                                    <span className="font-mono text-blue-400">{myVisits}</span>
+                                </div>
+                                {/* Little triangle pointer */}
+                                <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-black/80 mx-auto"></div>
+                            </div>
+
+                            {/* Legend Overlay */}
+                            <div className="absolute bottom-4 right-4 flex gap-4 text-[10px] text-white/40 bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/5 z-20">
+                                <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-white"></div> Visitor</span>
+                                <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-green-500"></div> Live</span>
+                            </div>
                         </div>
                     </div>
                 </section>

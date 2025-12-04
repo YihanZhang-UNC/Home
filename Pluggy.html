@@ -569,6 +569,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        {/* Interactive Prototype Embed */}
+                        <div className="md:col-span-12 h-[850px] rounded-3xl overflow-hidden">
+                            <iframe
+                                style={{ border: 'none' }}
+                                width="100%"
+                                height="100%"
+                                src="https://embed.figma.com/proto/9LoqAjJYhjFE1RNiBqr8rX/APP?node-id=140-15&p=f&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=140%3A15&embed-host=share"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -691,15 +702,15 @@
                             <div>
                                 <h4 className="font-bold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Resources</h4>
                                 <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                                    <li><a href="#" onClick={(e) => handleResourceClick(e, 'pdf')} className="hover:text-pluggy-500 transition-colors interactive">Download Paper (PDF)</a></li>
-                                    <li><a href="#" onClick={(e) => handleResourceClick(e, 'proto')} className="hover:text-pluggy-500 transition-colors interactive">View Figma Prototype</a></li>
+                                    <li><a href="03.pdf" target="_blank" className="hover:text-pluggy-500 transition-colors interactive">Download Paper (PDF)</a></li>
+                                    <li><a href="https://www.figma.com/proto/9LoqAjJYhjFE1RNiBqr8rX/APP?node-id=140-15&p=f&t=YIcFiW7bjHZ0KtFP-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=140%3A15" target="_blank" className="hover:text-pluggy-500 transition-colors interactive">View Figma Prototype</a></li>
                                     <li><a href="index.html" className="hover:text-pluggy-500 transition-colors interactive">Back to Portfolio</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 font-mono">
                             <p>&copy; 2025 Yihan Zhang. Academic Use Only.</p>
-                            <p>Designed with Pragmatic Idealism.</p>
+                            <p>Designed with Pragmatic Idealism and Love.</p>
                         </div>
                     </div>
                 </footer>
