@@ -82,8 +82,8 @@
     <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
-    <!-- Three.js for 3D Globe -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Preload Hero Image -->
+    <link rel="preload" as="image" href="Yihan.png">
 
     <!-- Marked for Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -340,6 +340,56 @@
             </AnimatePresence>
         );
 
+        // --- PERFORMANCE UTILITIES ---
+        // Hook to load scripts dynamically
+        const useScript = (src) => {
+            const [status, setStatus] = useState(src ? "loading" : "idle");
+            useEffect(() => {
+                if (!src) { setStatus("idle"); return; }
+                let script = document.querySelector(`script[src="${src}"]`);
+                if (!script) {
+                    script = document.createElement("script");
+                    script.src = src;
+                    script.async = true;
+                    script.setAttribute("data-status", "loading");
+                    document.body.appendChild(script);
+                    const setAttributeFromEvent = (event) => {
+                        script.setAttribute("data-status", event.type === "load" ? "ready" : "error");
+                        setStatus(event.type === "load" ? "ready" : "error");
+                    };
+                    script.addEventListener("load", setAttributeFromEvent);
+                    script.addEventListener("error", setAttributeFromEvent);
+                } else {
+                    setStatus(script.getAttribute("data-status"));
+                }
+                const setStateFromEvent = (event) => setStatus(event.type === "load" ? "ready" : "error");
+                script.addEventListener("load", setStateFromEvent);
+                script.addEventListener("error", setStateFromEvent);
+                return () => {
+                    if (script) {
+                        script.removeEventListener("load", setStateFromEvent);
+                        script.removeEventListener("error", setStateFromEvent);
+                    }
+                };
+            }, [src]);
+            return status;
+        };
+
+        // Component to defer rendering until visible or after initial load
+        const DeferredSection = ({ children }) => {
+            const [shouldRender, setShouldRender] = useState(false);
+            const ref = useRef(null);
+
+            useEffect(() => {
+                // Simple timeout to defer non-critical sections slightly
+                const timer = setTimeout(() => setShouldRender(true), 100);
+                return () => clearTimeout(timer);
+            }, []);
+
+            if (!shouldRender) return <div ref={ref} className="min-h-[200px]" />; // Placeholder
+            return <>{children}</>;
+        };
+
         // --- ANIMATION VARIANTS ---
         const pageVariants = {
             initial: { opacity: 0, y: 10 },
@@ -371,8 +421,8 @@
             { id: 'art-01', title: "Altered Landscape", medium: "Digital Photography, 2024", img: "Altered_Landscape_I.jpg", aspect: "aspect-[3/2]", colSpan: "md:col-span-8" },
             { id: 'art-02', title: "Layered Transparency", medium: "Graphite on Paper", img: "Layered_Transparency.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
             { id: 'art-03', title: "Structure 8", medium: "Charcoal Study", img: "Structure_8.png", aspect: "aspect-square", colSpan: "md:col-span-4" },
-            { id: 'art-04', title: "Cultural Stitch", medium: "Graphite & Ink, 18x24\"", img: "Cultural_Stitch.png", aspect: "aspect-[16/9]", colSpan: "md:col-span-8" },
-            { id: 'art-05', title: "Apple Study", medium: "Graphite on Paper", img: "Apple_Study.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
+            { id: 'art-04', title: "Apple Study", medium: "Graphite & Ink, 18x24\"", img: "Apple_Study.png", aspect: "aspect-[16/9]", colSpan: "md:col-span-8" },
+            { id: 'art-05', title: "Cultural Stitch", medium: "Graphite on Paper", img: "Cultural Stitch.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
             { id: 'art-06', title: "Emotional Encounter", medium: "Fanart - Pencil", img: "Conan_Fanart.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
             { id: 'art-07', title: "Crumpled Silence", medium: "Graphite - Texture Study", img: "Crumpled_Silence.png", aspect: "aspect-[3/4]", colSpan: "md:col-span-4" },
             { id: 'art-08', title: "Visual Anthology", medium: "Selected Works Compilation, 2022-2025", img: "", aspect: "aspect-[21/9]", colSpan: "md:col-span-12", isPlaceholder: true }
@@ -773,6 +823,7 @@
                                             <img
                                                 src={work.img}
                                                 alt={work.title}
+                                                loading="lazy"
                                                 className="w-full h-full object-cover filter grayscale contrast-125 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-in-out group-hover:scale-105"
                                                 onError={(e) => {
                                                     e.target.style.display = 'none';
@@ -871,6 +922,7 @@
                                         <img
                                             src={art.img}
                                             alt={art.title}
+                                            loading="lazy"
                                             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
@@ -905,11 +957,11 @@
                 <div className="relative w-full h-[95vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
                     <div className="absolute inset-0 z-0 overflow-hidden">
                         {/* Robust Background Fallback */}
-                        <img src="UNC_Landscape.jpg" alt="UNC" className="w-full h-full object-cover object-top blur-md scale-110" onError={(e) => { e.target.style.display = 'none'; }} />
+                        <img src="UNC_Landscape.jpg" alt="UNC" loading="lazy" className="w-full h-full object-cover object-top blur-md scale-110" onError={(e) => { e.target.style.display = 'none'; }} />
                         <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-unc/10 to-white"></div>
                     </div>
                     <div className="relative z-10 text-center px-6 w-full max-w-4xl mx-auto mt-12">
-                        <div className="mb-8 flex justify-center"><div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden group cursor-pointer relative hover:scale-105 transition-transform duration-500"><img src="UNC_Logo.png" alt="UNC Logo" className="w-full h-full object-contain p-4" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center text-unc font-serif font-bold">UNC</div>'; }} /></div></div>
+                        <div className="mb-8 flex justify-center"><div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden group cursor-pointer relative hover:scale-105 transition-transform duration-500"><img src="UNC_Logo.png" alt="UNC Logo" loading="lazy" className="w-full h-full object-contain p-4" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center text-unc font-serif font-bold">UNC</div>'; }} /></div></div>
                         <h2 className="text-5xl md:text-8xl font-serif font-bold text-gray-900 mb-6 leading-none tracking-tight drop-shadow-lg">University of North Carolina<br /><span className="text-unc italic relative">at Chapel Hill</span></h2>
                         <p className="text-lg md:text-2xl text-gray-800 font-light max-w-2xl mx-auto leading-relaxed">Ranking No. 1 public university in the South.<br />USNEWS 2024 #22 National University</p>
                     </div>
@@ -995,7 +1047,7 @@
             const handleSubmit = (e) => { e.preventDefault(); triggerToast("Message sent! I'll get back to you soon."); }
             return (
                 <section className="py-16 md:py-32 bg-white dark:bg-gray-900 min-h-screen flex items-center relative overflow-hidden transition-colors duration-300">
-                    <div className="absolute inset-0 z-0 overflow-hidden"><img src="UNC_Landscape.jpg" alt="UNC Campus" className="w-full h-full object-cover object-center blur-sm opacity-20 scale-105" onError={(e) => { e.target.style.display = 'none' }} /><div className="absolute inset-0 bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm"></div></div>
+                    <div className="absolute inset-0 z-0 overflow-hidden"><img src="UNC_Landscape.jpg" alt="UNC Campus" loading="lazy" className="w-full h-full object-cover object-center blur-sm opacity-20 scale-105" onError={(e) => { e.target.style.display = 'none' }} /><div className="absolute inset-0 bg-white/80 dark:bg-gray-900/90 backdrop-blur-sm"></div></div>
                     <div className="max-w-5xl mx-auto px-6 w-full z-10">
                         <div className="grid md:grid-cols-2 gap-12 md:gap-20">
                             <div><h2 className="text-4xl md:text-7xl font-serif font-bold text-gray-900 dark:text-white mb-6 md:mb-8 leading-none">Let's<br /><span className="text-unc italic">Connect.</span></h2><p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-light mb-8 md:mb-12 max-w-sm">Open to PhD opportunities, research collaborations, and technical discussions.</p><div className="space-y-6 md:space-y-8"><div><h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email</h3><button onClick={handleCopy} className="text-xl md:text-2xl font-mono text-gray-900 dark:text-white hover:text-unc transition-colors border-b border-gray-200 dark:border-gray-700 hover:border-unc pb-1 break-all text-left cursor-pointer">zhayihan@unc.edu</button></div><div><h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institution</h3><p className="text-base md:text-lg text-gray-800 dark:text-gray-200">University of North Carolina<br />at Chapel Hill</p></div></div></div>
@@ -1014,6 +1066,7 @@
         const VisitorGlobe = () => {
             const mountRef = useRef(null);
             const [stats, setStats] = useState({ total: 12453, live: 42, top: "United States" });
+            const scriptStatus = useScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
 
             // Simulate live data updates
             useEffect(() => {
@@ -1028,7 +1081,7 @@
             }, []);
 
             useEffect(() => {
-                if (!mountRef.current) return;
+                if (scriptStatus !== "ready" || !mountRef.current) return;
 
                 // Scene Setup
                 const scene = new THREE.Scene();
@@ -1117,7 +1170,7 @@
                     material.dispose();
                     renderer.dispose();
                 };
-            }, []);
+            }, [scriptStatus]);
 
             return (
                 <section className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
@@ -1157,7 +1210,11 @@
 
                         {/* 3D Globe Side */}
                         <div className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center">
-                            <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-move"></div>
+                            {scriptStatus === "ready" ? (
+                                <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-move"></div>
+                            ) : (
+                                <div className="flex items-center justify-center text-gray-500 text-xs font-mono">Initializing 3D Engine...</div>
+                            )}
                             {/* Background Glow */}
                             <div className="absolute inset-0 bg-unc/20 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
                         </div>
@@ -1196,7 +1253,15 @@
                     <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} sections={NAV_ITEMS} activeSection={activeSection} setActiveSection={setActiveSection} />
                     <main className="flex-grow">
                         <AnimatePresence mode="wait">
-                            {activeSection === 'home' && <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Hero setActiveSection={setActiveSection} /><NewsSection /><Stats /></motion.div>}
+                            {activeSection === 'home' && (
+                                <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+                                    <Hero setActiveSection={setActiveSection} />
+                                    <DeferredSection>
+                                        <NewsSection />
+                                        <Stats />
+                                    </DeferredSection>
+                                </motion.div>
+                            )}
                             {activeSection === 'now' && <motion.div key="now" variants={pageVariants} initial="initial" animate="animate" exit="exit"><NowPage /></motion.div>}
                             {activeSection === 'news' && <motion.div key="news" variants={pageVariants} initial="initial" animate="animate" exit="exit"><NewsSection /></motion.div>}
                             {activeSection === 'research' && <motion.div key="research" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Research /></motion.div>}
@@ -1208,7 +1273,11 @@
                         </AnimatePresence>
                     </main>
                     <Footer activeSection={activeSection} />
-                    {activeSection === 'home' && <VisitorGlobe />}
+                    {activeSection === 'home' && (
+                        <DeferredSection>
+                            <VisitorGlobe />
+                        </DeferredSection>
+                    )}
                     {activeSection !== 'cv' && <ChatWidget />}
                 </div>
             );
