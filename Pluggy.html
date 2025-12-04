@@ -10,6 +10,7 @@
         content="Pluggy: A phygital intervention ecosystem charging sleep intentions and behavior through smart hardware constraints. Research by Yihan Zhang et al.">
     <meta name="author" content="Yihan Zhang">
     <link rel="icon" href="UNC_Logo.png" type="image/png">
+    <meta name="theme-color" content="#f9fafb">
 
     <!-- Core Libraries -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -722,8 +723,16 @@
             const [toast, setToast] = useState({ message: '', isVisible: false });
 
             useEffect(() => {
-                if (darkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
-                else { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
+                const metaThemeColor = document.querySelector("meta[name=theme-color]");
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (metaThemeColor) metaThemeColor.setAttribute("content", "#050505");
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (metaThemeColor) metaThemeColor.setAttribute("content", "#f9fafb");
+                }
                 if (window.lucide) window.lucide.createIcons();
             }, [darkMode]);
 
