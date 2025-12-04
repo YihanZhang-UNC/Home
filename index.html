@@ -1131,8 +1131,8 @@
 
                 // Load the MapMyVisitors script dynamically
                 const script = document.createElement('script');
-                // Use Date.now() to prevent caching and ensure visit is counted
-                script.src = "//mapmyvisitors.com/globe_call_home.js?d=" + Date.now() + "&w=" + window.innerWidth;
+                // Use the user's specific ID for 'd' and Date.now() for cache busting
+                script.src = "//mapmyvisitors.com/globe_call_home.js?d=1KgD_BUlRL7--qUEnYyUv8lwdsd-vt7tOnhdM9S8lkI&w=" + window.innerWidth + "&t=" + Date.now();
                 script.async = true;
 
                 script.onload = () => {
