@@ -326,19 +326,24 @@
 
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pluggy-500/20 rounded-full blur-3xl group-hover:bg-pluggy-500/30 transition-colors duration-700"></div>
 
-                                <div className="relative z-10 h-full flex flex-col items-center justify-center">
-                                    <div className="w-32 h-32 bg-white dark:bg-gray-800 rounded-full shadow-xl flex items-center justify-center border-4 border-gray-50 dark:border-gray-700 mb-8 group-hover:scale-110 transition-transform duration-500">
-                                        <i data-lucide="zap" className="w-12 h-12 text-pluggy-500"></i>
-                                    </div>
-                                    <h3 className="text-2xl font-serif font-bold text-gray-900 dark:text-white">Pluggy</h3>
-                                    <p className="font-mono text-xs text-gray-500 mt-2">V2.0 HIGH-FIDELITY PROTO</p>
+                                {/* Full Size Image with Edge Blur */}
+                                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                                    <img
+                                        src="Pluggy_3D_Model.png"
+                                        alt="Pluggy Model"
+                                        className="w-[75%] h-[75%] object-cover group-hover:scale-110 transition-transform duration-700"
+                                        style={{
+                                            maskImage: 'radial-gradient(circle, black 30%, transparent 80%)',
+                                            WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 80%)'
+                                        }}
+                                    />
+                                </div>
 
-                                    {/* Tech Specs Mini Card */}
-                                    <div className="absolute bottom-6 left-6 right-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur p-4 rounded-xl border border-gray-200 dark:border-gray-700 flex justify-between text-[10px] font-mono uppercase tracking-widest text-gray-500">
-                                        <span>ESP32-C3</span>
-                                        <span>INA219</span>
-                                        <span>Relay</span>
-                                    </div>
+                                {/* Tech Specs Mini Card */}
+                                <div className="absolute bottom-6 left-6 right-6 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur p-4 rounded-xl border border-gray-200 dark:border-gray-700 flex justify-between text-[10px] font-mono uppercase tracking-widest text-gray-500">
+                                    <span>ESP32-C3</span>
+                                    <span>INA219</span>
+                                    <span>Relay</span>
                                 </div>
                             </div>
                         </motion.div>
