@@ -3,32 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO & Social Sharing -->
-    <title>Yihan Zhang's Story World</title>
+    <title>Yihan Zhang | HCI Researcher & Designer</title>
     <meta name="description"
-        content="Portfolio of Yihan Zhang, a Researcher and Designer at UNC Chapel Hill. Current focus: Pluggy Ecosystem, 26Fall PhD Applications.">
+        content="Portfolio of Yihan Zhang, an HCI researcher and designer at UNC Chapel Hill working across hardware prototyping, behavioral sensing, and human-centered intelligent systems.">
     <meta name="keywords" content="Yihan Zhang, UNC, HCI, Design Engineering, Portfolio, Pluggy, 26Fall">
     <meta name="author" content="Yihan Zhang">
     <link rel="icon" href="UNC_Logo.png" type="image/png">
+    <link rel="canonical" href="https://yihanzhang-unc.github.io/Home/">
     <meta name="theme-color" content="#ffffff">
 
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://zhayihan.unc.edu/">
+    <meta property="og:url" content="https://yihanzhang-unc.github.io/Home/">
     <meta property="og:title" content="Yihan Zhang - UNC Researcher & Designer">
     <meta property="og:description"
         content="Bridging Industrial Hardware, Full-Stack Prototyping, and Behavioral Data Science.">
-    <meta property="og:image" content="UNC_Logo.png">
+    <meta property="og:image" content="https://yihanzhang-unc.github.io/Home/Yihan.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://zhayihan.unc.edu/">
+    <meta property="twitter:url" content="https://yihanzhang-unc.github.io/Home/">
     <meta property="twitter:title" content="Yihan Zhang - UNC Researcher & Designer">
     <meta property="twitter:description"
         content="Bridging Industrial Hardware, Full-Stack Prototyping, and Behavioral Data Science.">
-    <meta property="twitter:image" content="UNC_Logo.png">
+    <meta property="twitter:image" content="https://yihanzhang-unc.github.io/Home/Yihan.png">
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -83,11 +84,23 @@
     <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
+    <!-- Safe text rendering for the assistant widget -->
+    <script>
+        window.marked = {
+            parse(value) {
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;')
+                    .replace(/\n/g, '<br>');
+            }
+        };
+    </script>
+
     <!-- Preload Hero Image -->
     <link rel="preload" as="image" href="Yihan.png">
-
-    <!-- Marked for Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,6 +136,17 @@
         .dark body {
             background-color: #0f172a;
             color: #f8fafc;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         h1,
@@ -360,6 +384,10 @@
                     };
                     script.addEventListener("load", setAttributeFromEvent);
                     script.addEventListener("error", setAttributeFromEvent);
+                    return () => {
+                        script.removeEventListener("load", setAttributeFromEvent);
+                        script.removeEventListener("error", setAttributeFromEvent);
+                    };
                 } else {
                     setStatus(script.getAttribute("data-status"));
                 }
@@ -408,15 +436,15 @@
             { date: "2022", title: "Competition Winner", subtitle: "Sustainable Campus Design", desc: "3rd Prize in 'Let's Charrette' competition for urban sustainability concepts.", id: 'news-04' }
         ];
         const WORKS_DATA = [
-            { id: 'PRJ-01', title: 'Offline Oracle', cat: 'HCI & Health Intervention', filterType: 'HARDWARE', status: 'Proto v2.0', year: '2025', desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards.', tech: ['Arduino IoT', 'React Native', '3D Printing'], role: 'Lead Researcher', link: 'Offline_Oracle.html', img: 'Offline_Oracle.png' },
-            { id: 'PRJ-02', title: 'TEMPEST Autonomous Vessel', cat: 'Robotics & Perception', filterType: 'HARDWARE', status: 'Field Tested', year: '2023', desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring.', tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control'], role: 'System Architect', link: 'TEMPEST_Autonomous_Vessel.html', img: 'TEMPEST_Robot.png' },
-            { id: 'PRJ-03', title: 'SmartCan Intelligent Sorting', cat: 'Behavioral Design', filterType: 'SOFTWARE', status: 'Deployed', year: '2024', desc: 'Computer-vision assisted waste disposal system with real-time object recognition.', tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'], role: 'Interaction Designer', link: 'SmartCan_Intelligent_Sorting.html', img: 'SmartCan.png' },
-            { id: 'PRJ-04', title: 'Chill by "U"', cat: 'Fabrication & Thermal Eng', filterType: 'HARDWARE', status: 'Awarded', year: '2024', desc: 'Modular laptop cooling infrastructure with adaptive airflow.', tech: ['Laser Cutting', 'Fusion 360'], role: 'Solo Inventor', link: 'Chill_by_U.html', img: 'Chill_by_U.png' },
-            { id: 'PRJ-05', title: 'Ecological IoT Feeder', cat: 'Ecological Sensing', filterType: 'HARDWARE', status: 'Operational', year: '2023', desc: 'Automated avian monitoring system using weight/light sensors.', tech: ['IoT Sensors', 'Data Logging'], role: 'Hardware Eng', link: 'Ecological_IoT_Feeder.html', img: 'Smart_Bird_Feeder.png' },
-            { id: 'PRJ-06', title: 'Spatial Inequality Analysis', cat: 'Data Science (GIS)', filterType: 'DATA_SCI', status: 'Published', year: '2022', desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade.', tech: ['R / RStudio', 'ArcGIS Pro'], role: 'Data Analyst', link: 'Spatial_Inequality_Analysis.html', img: 'GIS_Map.png' },
+            { id: 'PRJ-01', title: 'Offline Oracle', cat: 'HCI & Health Intervention', filterType: 'HARDWARE', status: 'Proto v2.0', year: '2025', desc: 'A hybrid physical-digital framework addressing digital addiction via tangible rewards.', tech: ['Arduino IoT', 'React Native', '3D Printing'], role: 'Lead Researcher', link: null, img: 'Offline_Oracle.png' },
+            { id: 'PRJ-02', title: 'TEMPEST Autonomous Vessel', cat: 'Robotics & Perception', filterType: 'HARDWARE', status: 'Field Tested', year: '2023', desc: 'Low-cost autonomous surface vessel (ASV) for urban waterway monitoring.', tech: ['ROS / Python', 'Lidar Sensing', 'Motor Control'], role: 'System Architect', link: null, img: 'TEMPEST_Robot.png' },
+            { id: 'PRJ-03', title: 'SmartCan Intelligent Sorting', cat: 'Behavioral Design', filterType: 'SOFTWARE', status: 'Deployed', year: '2024', desc: 'Computer-vision assisted waste disposal system with real-time object recognition.', tech: ['TensorFlow', 'Embedded C++', 'Servo Mechanics'], role: 'Interaction Designer', link: null, img: 'SmartCan.png' },
+            { id: 'PRJ-04', title: 'Chill by "U"', cat: 'Fabrication & Thermal Eng', filterType: 'HARDWARE', status: 'Awarded', year: '2024', desc: 'Modular laptop cooling infrastructure with adaptive airflow.', tech: ['Laser Cutting', 'Fusion 360'], role: 'Solo Inventor', link: null, img: 'Chill_by_U.png' },
+            { id: 'PRJ-05', title: 'Ecological IoT Feeder', cat: 'Ecological Sensing', filterType: 'HARDWARE', status: 'Operational', year: '2023', desc: 'Automated avian monitoring system using weight/light sensors.', tech: ['IoT Sensors', 'Data Logging'], role: 'Hardware Eng', link: null, img: 'Smart_Bird_Feeder.png' },
+            { id: 'PRJ-06', title: 'Spatial Inequality Analysis', cat: 'Data Science (GIS)', filterType: 'DATA_SCI', status: 'Published', year: '2022', desc: 'Quantitative geospatial analysis of US Population Change & Global Coffee Trade.', tech: ['R / RStudio', 'ArcGIS Pro'], role: 'Data Analyst', link: null, img: 'GIS_Map.png' },
             { id: 'PRJ-07', title: 'Pluggy Ecosystem', cat: 'Hardware & Business', filterType: 'HARDWARE', status: 'Proposal', year: '2025', desc: 'The World\'s First 30W Gamified Charger for Digital Detox.', tech: ['GaN Hardware', 'IoT', 'Gamification'], role: 'Co-Founder', link: 'Pluggy.html', img: 'Pluggy.png' },
-            { id: 'PRJ-08', title: 'Agri-Drone HMI', cat: 'HMI & Systems Design', filterType: 'UI_DESIGN', status: 'Concept v3', year: '2025', desc: 'HMI for managing autonomous agricultural drone swarms with gaze-tracking.', tech: ['Adobe XD', 'WebGazer API'], role: 'UX Researcher', link: 'Agri-Drone_HMI.html', img: 'Drone_HMI.png' },
-            { id: 'PRJ-09', title: 'Health Dashboard', cat: 'UI/UX & MedTech', filterType: 'UI_DESIGN', status: 'Ongoing', year: '2025', desc: 'Health Informatics APP for remote patient monitoring.', tech: ['Figma', 'Health Informatics'], role: 'UX Designer', link: 'Health_Dashboard.html', img: 'Health_Informatics.png' }
+            { id: 'PRJ-08', title: 'Agri-Drone HMI', cat: 'HMI & Systems Design', filterType: 'UI_DESIGN', status: 'Concept v3', year: '2025', desc: 'HMI for managing autonomous agricultural drone swarms with gaze-tracking.', tech: ['Adobe XD', 'WebGazer API'], role: 'UX Researcher', link: null, img: 'Drone_HMI.png' },
+            { id: 'PRJ-09', title: 'Health Dashboard', cat: 'UI/UX & MedTech', filterType: 'UI_DESIGN', status: 'Ongoing', year: '2025', desc: 'Health Informatics APP for remote patient monitoring.', tech: ['Figma', 'Health Informatics'], role: 'UX Designer', link: null, img: 'Health_Informatics.png' }
         ];
         const ART_DATA = [
             { id: 'art-01', title: "Altered Landscape", medium: "Digital Photography, 2024", img: "Altered_Landscape_I.jpg", aspect: "aspect-[3/2]", colSpan: "md:col-span-8" },
@@ -503,17 +531,17 @@
                     <ScrollProgress />
                     <div className="max-w-7xl mx-auto px-6 lg:px-8">
                         <div className="flex justify-between items-center h-20">
-                            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}><span className="text-lg font-serif font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-unc transition-colors">Yihan Zhang</span><span className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700"></span><span className="hidden sm:block text-xs font-medium text-unc tracking-wide uppercase">UNC Chapel Hill</span></div>
+                            <button type="button" aria-label="Go to overview" className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveSection('home')}><span className="text-lg font-serif font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-unc transition-colors">Yihan Zhang</span><span className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700"></span><span className="hidden sm:block text-xs font-medium text-unc tracking-wide uppercase">UNC Chapel Hill</span></button>
                             <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-500 dark:text-gray-400">{NAV_ITEMS.map((item) => (<button key={item.id} onClick={() => setActiveSection(item.id)} className={`nav-btn transition-colors hover:text-black dark:hover:text-white relative cursor-pointer ${activeSection === item.id ? 'text-black dark:text-white font-semibold' : ''}`}>{item.label}{activeSection === item.id && <motion.div layoutId="underline" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-unc" />}</button>))}</div>
                             <div className="hidden md:flex items-center gap-3">
-                                <div onClick={() => setSearchOpen(true)} className="group relative flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-300 dark:hover:border-gray-600 w-48">
+                                <button type="button" aria-label="Search portfolio" onClick={() => setSearchOpen(true)} className="group relative flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-300 dark:hover:border-gray-600 w-48">
                                     <i data-lucide="search" className="w-4 h-4 text-gray-500 dark:text-gray-400"></i>
                                     <span className="text-sm text-gray-400 dark:text-gray-500 font-normal">Search...</span>
                                     <div className="absolute right-2 flex items-center gap-1"><span className="text-[10px] font-mono text-gray-400 border border-gray-300 dark:border-gray-600 rounded px-1">⌘K</span></div>
-                                </div>
-                                <button onClick={toggleTheme} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-4 h-4"></i></button><div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div><button onClick={() => setActiveSection('cv')} className="cursor-pointer flex items-center gap-2 text-xs font-medium text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-unc/30 transition shadow-sm"><i data-lucide="file-text" className="w-3 h-3"></i> CV</button>
+                                </button>
+                                <button type="button" aria-label={darkMode ? "Use light theme" : "Use dark theme"} onClick={toggleTheme} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-4 h-4"></i></button><div className="h-4 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div><button type="button" onClick={() => setActiveSection('cv')} className="cursor-pointer flex items-center gap-2 text-xs font-medium text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-unc/30 transition shadow-sm"><i data-lucide="file-text" className="w-3 h-3"></i> CV</button>
                             </div>
-                            <div className="flex md:hidden items-center gap-4"><button onClick={toggleTheme} className="text-gray-600 dark:text-gray-300 cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-5 h-5"></i></button><button className="p-2 text-gray-600 dark:text-gray-300 cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}><i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i></button></div>
+                            <div className="flex md:hidden items-center gap-4"><button type="button" aria-label={darkMode ? "Use light theme" : "Use dark theme"} onClick={toggleTheme} className="text-gray-600 dark:text-gray-300 cursor-pointer"><i data-lucide={darkMode ? "sun" : "moon"} className="w-5 h-5"></i></button><button type="button" aria-label={mobileMenuOpen ? "Close menu" : "Open menu"} aria-expanded={mobileMenuOpen} className="p-2 text-gray-600 dark:text-gray-300 cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}><i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6"></i></button></div>
                         </div>
                     </div>
                     <AnimatePresence>{mobileMenuOpen && (<motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 z-40 pt-24 px-6 mobile-menu-backdrop dark:bg-gray-900/98 md:hidden flex flex-col h-screen"><div className="flex flex-col gap-6 text-center">{NAV_ITEMS.map((item) => (<button key={item.id} onClick={() => { setActiveSection(item.id); setMobileMenuOpen(false); }} className={`text-2xl font-serif cursor-pointer ${activeSection === item.id ? 'text-unc font-bold' : 'text-gray-800 dark:text-gray-200'}`}>{item.label}</button>))}</div></motion.div>)}</AnimatePresence>
@@ -544,7 +572,7 @@
                             <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8">Bridging <strong>Industrial Hardware</strong>, <strong>Full-Stack Prototyping</strong>, and <strong>Behavioral Data Science</strong> to build Human-Centered Intelligent Systems.</motion.p>
                             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                                 <button onClick={() => setActiveSection('projects')} className="cursor-pointer px-8 py-3 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-full hover:bg-unc dark:hover:bg-unc dark:hover:text-white hover:scale-105 transition-all duration-300 shadow-xl w-full sm:w-auto">View Portfolio</button>
-                                <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="cursor-pointer px-8 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-700 rounded-full hover:border-unc dark:hover:border-unc transition-all duration-300 w-full sm:w-auto flex items-center justify-center">Research Statement</a>
+                                <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" rel="noopener noreferrer" className="cursor-pointer px-8 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-700 rounded-full hover:border-unc dark:hover:border-unc transition-all duration-300 w-full sm:w-auto flex items-center justify-center">Research Statement</a>
                             </motion.div>
                         </div>
                         <div className="md:col-span-5 relative hidden md:block">
@@ -655,7 +683,7 @@
                                 </div>
                                 <ul className="space-y-8">
                                     <li className="group">
-                                        <a href="07_Offline Oracle_ A Gamified Framework.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
+                                        <a href="07_Offline Oracle_ A Gamified Framework.pdf" target="_blank" rel="noopener noreferrer" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
                                                 <span className="text-[10px] font-bold text-unc bg-unc/10 px-2 py-1 rounded uppercase tracking-wider">Draft Paper</span>
                                                 <span className="text-xs font-mono text-gray-400">2025</span>
@@ -674,7 +702,7 @@
                                     </li>
 
                                     <li className="group">
-                                        <a href="03_Research-portfolio_Yihan.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
+                                        <a href="03_Research-portfolio_Yihan.pdf" target="_blank" rel="noopener noreferrer" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
                                                 <span className="text-[10px] font-bold text-white bg-black dark:bg-white dark:text-black px-2 py-1 rounded uppercase tracking-wider">Published</span>
                                                 <span className="text-xs font-mono text-gray-400">2022</span>
@@ -692,7 +720,7 @@
                                     </li>
 
                                     <li className="group">
-                                        <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
+                                        <a href="02_Research_Statement_Yihan_Zhang.pdf" target="_blank" rel="noopener noreferrer" className="block hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm p-6 -mx-6 rounded-xl transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-800">
                                             <div className="flex justify-between items-start mb-3">
                                                 <span className="text-[10px] font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded uppercase tracking-wider">Statement</span>
                                                 <span className="text-xs font-mono text-gray-400">2025</span>
@@ -820,7 +848,7 @@
                                             </div>
                                         </div>
 
-                                        <a href={work.link} target="_blank" className="block relative aspect-[16/10] overflow-hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 group-hover:opacity-100 cursor-pointer">
+                                        <a href={work.link || undefined} target={work.link ? "_blank" : undefined} rel={work.link ? "noopener noreferrer" : undefined} aria-disabled={!work.link} className={`block relative aspect-[16/10] overflow-hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 group-hover:opacity-100 ${work.link ? 'cursor-pointer' : 'cursor-default'}`}>
                                             <img
                                                 src={work.img}
                                                 alt={work.title}
@@ -834,7 +862,7 @@
                                             />
                                             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-overlay"></div>
                                             <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur text-white px-6 py-3 text-xs font-mono uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center">
-                                                <span>Access Full Documentation</span>
+                                                <span>{work.link ? 'Access Full Documentation' : 'Case Study In Preparation'}</span>
                                                 <i data-lucide="arrow-right" className="w-3 h-3"></i>
                                             </div>
                                         </a>
@@ -1061,423 +1089,253 @@
 
         const Footer = ({ activeSection }) => { if (activeSection === 'cv' || activeSection === 'contact') return null; return (<footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-black dark:text-white py-24 transition-colors duration-300"><div className="max-w-5xl mx-auto px-6 text-center"><div className="mb-8 flex justify-center text-unc"><i data-lucide="landmark" className="w-8 h-8"></i></div><h2 className="text-3xl md:text-4xl font-serif mb-8 font-bold">Ready to Build.</h2><p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto mb-12 font-light">School of Information and Library Science (SILS)<br />University of North Carolina at Chapel Hill</p><a href="mailto:zhayihan@unc.edu" className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-medium hover:bg-unc dark:hover:bg-gray-200 transition-all cursor-pointer">zhayihan@unc.edu</a></div></footer>); };
         const ChatWidget = () => { const [isOpen, setIsOpen] = useState(false); const [messages, setMessages] = useState([{ role: 'ai', text: "Hi! I'm Yihan's digital assistant. Ask me about his **Research**, **Patents**, or **UNC Background**." }]); const [input, setInput] = useState(''); const [loading, setLoading] = useState(false); const messagesEndRef = useRef(null); useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isOpen]); const handleSend = async (text = input) => { if (!text.trim()) return; setMessages(prev => [...prev, { role: 'user', text }]); setInput(''); setLoading(true); setTimeout(() => { let aiText = "I'm designed to showcase Yihan's work. Please check the CV for more details."; const q = text.toLowerCase(); if (q.includes('patent')) aiText = "I hold two patents. The primary one is **CN209791046U** (First Inventor)."; else if (q.includes('research')) aiText = "My research proposes an **Intelligent Design Framework** for Urban Micro-Interaction Systems."; setMessages(prev => [...prev, { role: 'ai', text: aiText }]); setLoading(false); }, 800); }; return (<div className="fixed bottom-6 right-6 z-50 font-sans"><AnimatePresence>{isOpen && (<motion.div initial={{ opacity: 0, scale: 0.8, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 20 }} className="absolute bottom-20 right-0 w-[300px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden h-[450px]"><div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center"><span className="font-bold text-sm text-gray-900 dark:text-gray-100">AI Assistant</span><button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button></div><div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-gray-800">{messages.map((m, i) => (<div key={i} className={`p-3 rounded-xl text-sm ${m.role === 'ai' ? 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200' : 'bg-unc text-white ml-auto'}`} dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} />))}<div ref={messagesEndRef} /></div><div className="p-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex gap-2"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Type..." className="flex-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:border-unc" /><button onClick={() => handleSend()} className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-full"><i data-lucide="arrow-up" className="w-5 h-5"></i></button></div></motion.div>)}</AnimatePresence><motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsOpen(!isOpen)} className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-full shadow-2xl hover:shadow-xl transition-all border border-gray-800 cursor-pointer"><i data-lucide={isOpen ? "minus" : "sparkles"} className="w-6 h-6"></i></motion.button></div>); };
-        const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span></div><div className="flex items-center gap-3"><a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="04_Yihan Zhang_CV.pdf" target="_blank" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
+        const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span></div><div className="flex items-center gap-3"><a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="04_Yihan Zhang_CV.pdf" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
 
         // --- 3D VISITOR GLOBE COMPONENT ---
         const VisitorGlobe = () => {
+            const sectionRef = useRef(null);
             const mountRef = useRef(null);
-            const pointsGroupRef = useRef(null);
-            const [stats, setStats] = useState({ total: 0, live: 0, top: "Loading..." });
-            const [myVisits, setMyVisits] = useState(1);
-            const scriptStatus = useScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
-            const [globePoints, setGlobePoints] = useState([]); // Added for the new logic
+            const pointsRendererRef = useRef(null);
+            const visitorPointsRef = useRef([]);
+            const providerRequestRef = useRef(null);
+            const [isVisible, setIsVisible] = useState(false);
+            const [reloadKey, setReloadKey] = useState(0);
+            const [mapStatus, setMapStatus] = useState('idle');
+            const [stats, setStats] = useState({ total: null, live: null, top: '—' });
+            const threeStatus = useScript(isVisible ? 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js' : null);
 
-            // Data Fetching & Interception
-            useEffect(() => {
-                // Mock jQuery for the external script
-                window.$ = window.jQuery = (selector) => ({
-                    length: 1,
-                    on: () => { },
-                    velocity: () => { },
-                    css: () => { },
-                    attr: () => { },
-                    parent: () => ({ width: () => window.innerWidth }),
-                    ready: (fn) => fn && fn(),
-                    load: (fn) => fn && fn(),
-                    scroll: () => { },
-                    delegate: () => { }
-                });
-                window.$.ajax = ({ success }) => success && success(); // Mock ajax if needed, though we load script directly
+            const clearProviderRequest = useCallback(() => {
+                const request = providerRequestRef.current;
+                if (!request) return;
+                window.clearTimeout(request.timeoutId);
+                if (request.script.parentNode) request.script.parentNode.removeChild(request.script);
+                if (window.addPoints === request.callback) {
+                    if (request.previousCallback) window.addPoints = request.previousCallback;
+                    else delete window.addPoints;
+                }
+                providerRequestRef.current = null;
+            }, []);
 
-                // Define the callback function that the external script calls
-                window.addPoints = (points) => {
-                    console.log("Visitor Data Received:", points);
+            const loadVisitorData = useCallback(() => {
+                clearProviderRequest();
+                setMapStatus('loading');
+
+                const previousCallback = window.addPoints;
+                const script = document.createElement('script');
+                let receivedData = false;
+                const callback = (points) => {
                     if (!Array.isArray(points)) {
-                        console.warn("Received invalid points data:", points);
+                        setMapStatus('error');
                         return;
                     }
 
-                    // Process points
-                    const processedPoints = points.map(p => ({
-                        lat: p.latLng[0],
-                        lng: p.latLng[1],
-                        count: p.v || 1,
-                        location: p.name || "Unknown"
-                    }));
+                    const processed = points
+                        .map((point) => ({
+                            lat: Number(point?.latLng?.[0]),
+                            lng: Number(point?.latLng?.[1]),
+                            count: Math.max(1, Number(point?.v) || 1),
+                            location: String(point?.name || 'Unknown region')
+                        }))
+                        .filter((point) => Number.isFinite(point.lat) && Number.isFinite(point.lng))
+                        .slice(0, 300);
 
-                    setGlobePoints(processedPoints);
-
-                    // Calculate stats
-                    const total = processedPoints.reduce((acc, curr) => acc + curr.count, 0);
-                    const live = processedPoints.length; // Assuming each point is a recent visitor
-                    // Find top region (simple logic: max count)
-                    const topRegion = processedPoints.reduce((prev, current) => (prev.count > current.count) ? prev : current, { location: "Global" }).location;
-
-                    setStats({ total, live, top: topRegion });
-
-                    // Check for user location (Chapel Hill: 35.9132, -79.0558)
-                    const myLoc = processedPoints.find(p => {
-                        const d = Math.sqrt(Math.pow(p.lat - 35.9132, 2) + Math.pow(p.lng - (-79.0558), 2));
-                        return d < 2; // Within ~2 degrees
-                    });
-
-                    if (myLoc) {
-                        console.log("User location found in data:", myLoc);
-                        setMyVisits(myLoc.count);
-                    } else {
-                        console.log("User location NOT found in data. Using default.");
+                    if (!processed.length) {
+                        setMapStatus('error');
+                        return;
                     }
+
+                    receivedData = true;
+                    window.clearTimeout(providerRequestRef.current?.timeoutId);
+                    visitorPointsRef.current = processed;
+                    pointsRendererRef.current?.(processed);
+                    const top = processed.reduce((leader, point) => point.count > leader.count ? point : leader, processed[0]);
+                    setStats({
+                        total: processed.reduce((sum, point) => sum + point.count, 0),
+                        live: processed.length,
+                        top: top.location
+                    });
+                    setMapStatus('ready');
                 };
 
-                // Load the MapMyVisitors script dynamically
-                const script = document.createElement('script');
-                // Use the user's specific ID for 'd' and Date.now() for cache busting
-                script.src = "//mapmyvisitors.com/globe_call_home.js?d=1KgD_BUlRL7--qUEnYyUv8lwdsd-vt7tOnhdM9S8lkI&w=" + window.innerWidth + "&t=" + Date.now();
+                window.addPoints = callback;
                 script.async = true;
-
-                script.onload = () => {
-                    // Assuming setScriptStatus is a state setter for script loading status
-                    // If not defined, this line might cause an error.
-                    // For now, we'll assume it's meant to be there or can be removed if not needed.
-                    // setScriptStatus("ready"); 
-                    console.log("Visitor data script loaded successfully.");
-                };
-                script.onerror = () => {
-                    console.error("Failed to load visitor data script");
-                    // setScriptStatus("error");
-                };
-
+                script.src = `https://mapmyvisitors.com/globe_call_home.js?d=1KgD_BUlRL7--qUEnYyUv8lwdsd-vt7tOnhdM9S8lkI&w=${Math.max(320, window.innerWidth)}&t=${Date.now()}`;
+                script.onerror = () => setMapStatus('error');
+                const timeoutId = window.setTimeout(() => {
+                    if (!receivedData) setMapStatus('error');
+                }, 10000);
+                providerRequestRef.current = { script, timeoutId, callback, previousCallback };
                 document.body.appendChild(script);
+            }, [clearProviderRequest]);
 
-                return () => {
-                    document.body.removeChild(script);
-                    delete window.addPoints;
-                    delete window.$;
-                    delete window.jQuery;
-                };
+            useEffect(() => {
+                const node = sectionRef.current;
+                if (!node) return;
+                if (!('IntersectionObserver' in window)) {
+                    setIsVisible(true);
+                    return;
+                }
+                const observer = new IntersectionObserver(([entry]) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        observer.disconnect();
+                    }
+                }, { rootMargin: '240px 0px' });
+                observer.observe(node);
+                return () => observer.disconnect();
             }, []);
 
             useEffect(() => {
-                if (scriptStatus !== "ready" || !mountRef.current) return;
+                if (isVisible) loadVisitorData();
+                return clearProviderRequest;
+            }, [isVisible, reloadKey, loadVisitorData, clearProviderRequest]);
 
-                // Scene Setup
+            useEffect(() => {
+                if (threeStatus !== 'ready' || !mountRef.current) return;
+
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(45, mountRef.current.clientWidth / mountRef.current.clientHeight, 0.1, 1000);
-                camera.position.z = 2.9; // Zoomed out to fit better (was 1.8)
-
+                camera.position.z = 2.9;
                 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
                 renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.domElement.setAttribute('aria-hidden', 'true');
                 mountRef.current.appendChild(renderer.domElement);
 
-                // Lighting
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                scene.add(ambientLight);
-                const pointLight = new THREE.PointLight(0xffffff, 0.5);
-                pointLight.position.set(5, 3, 5);
-                scene.add(pointLight);
+                scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+                const keyLight = new THREE.PointLight(0xffffff, 0.6);
+                keyLight.position.set(5, 3, 5);
+                scene.add(keyLight);
 
-                // Globe Geometry (Textured)
-                const geometry = new THREE.SphereGeometry(1, 64, 64);
-                const textureLoader = new THREE.TextureLoader();
-                // Using a reliable dark earth texture
-                const texture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
-
-                const material = new THREE.MeshPhongMaterial({
-                    map: texture,
-                    color: 0xaaaaaa, // Tint to match theme slightly
-                    shininess: 5
-                });
-
-                const globe = new THREE.Mesh(geometry, material);
+                const globeGeometry = new THREE.SphereGeometry(1, 48, 48);
+                const globeMaterial = new THREE.MeshPhongMaterial({ color: 0x5b86a9, shininess: 8 });
+                const globe = new THREE.Mesh(globeGeometry, globeMaterial);
                 scene.add(globe);
 
-                // Atmosphere Glow (Optional, for aesthetics)
-                const atmosphereGeo = new THREE.SphereGeometry(1.1, 64, 64);
-                const atmosphereMat = new THREE.MeshBasicMaterial({
-                    color: 0x4B9CD3,
-                    transparent: true,
-                    opacity: 0.1,
-                    side: THREE.BackSide
-                });
-                const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+                const textureLoader = new THREE.TextureLoader();
+                let earthTexture;
+                textureLoader.load(
+                    'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg',
+                    (texture) => {
+                        earthTexture = texture;
+                        globeMaterial.map = texture;
+                        globeMaterial.needsUpdate = true;
+                    }
+                );
+
+                const atmosphereGeometry = new THREE.SphereGeometry(1.08, 48, 48);
+                const atmosphereMaterial = new THREE.MeshBasicMaterial({ color: 0x4B9CD3, transparent: true, opacity: 0.12, side: THREE.BackSide });
+                const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
                 scene.add(atmosphere);
 
-                // Data Points Group
                 const pointsGroup = new THREE.Group();
                 globe.add(pointsGroup);
-                pointsGroupRef.current = pointsGroup;
+                const pointGeometry = new THREE.SphereGeometry(0.021, 8, 8);
+                const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
+                const renderPoints = (points) => {
+                    while (pointsGroup.children.length) pointsGroup.remove(pointsGroup.children[0]);
+                    points.forEach((point) => {
+                        const phi = (90 - point.lat) * (Math.PI / 180);
+                        const theta = (point.lng + 180) * (Math.PI / 180);
+                        const marker = new THREE.Mesh(pointGeometry, pointMaterial);
+                        marker.position.set(
+                            -(1.025 * Math.sin(phi) * Math.cos(theta)),
+                            1.025 * Math.cos(phi),
+                            1.025 * Math.sin(phi) * Math.sin(theta)
+                        );
+                        pointsGroup.add(marker);
+                    });
+                };
+                pointsRendererRef.current = renderPoints;
+                renderPoints(visitorPointsRef.current);
 
-                // Special Marker for Chapel Hill, NC (User Location)
-                const myLocation = { lat: 35.9132, lng: -79.0558 };
-                const myLocGeo = new THREE.SphereGeometry(0.012, 16, 16); // Smaller size (was 0.025)
-                const myLocMat = new THREE.MeshBasicMaterial({ color: 0x00FF00 }); // Green
-                const myLocMesh = new THREE.Mesh(myLocGeo, myLocMat);
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                let dragging = false;
+                let previousPointer = null;
+                const onPointerDown = (event) => {
+                    dragging = true;
+                    previousPointer = { x: event.clientX, y: event.clientY };
+                    renderer.domElement.setPointerCapture?.(event.pointerId);
+                };
+                const onPointerMove = (event) => {
+                    if (!dragging || !previousPointer) return;
+                    globe.rotation.y += (event.clientX - previousPointer.x) * 0.008;
+                    globe.rotation.x += (event.clientY - previousPointer.y) * 0.004;
+                    previousPointer = { x: event.clientX, y: event.clientY };
+                };
+                const onPointerUp = () => { dragging = false; previousPointer = null; };
+                renderer.domElement.addEventListener('pointerdown', onPointerDown);
+                renderer.domElement.addEventListener('pointermove', onPointerMove);
+                renderer.domElement.addEventListener('pointerup', onPointerUp);
+                renderer.domElement.addEventListener('pointerleave', onPointerUp);
 
-                // Convert Lat/Lng to 3D Coordinates
-                const myPhi = (90 - myLocation.lat) * (Math.PI / 180);
-                const myTheta = (myLocation.lng + 180) * (Math.PI / 180);
-                const myRadius = 1.02;
-
-                const myX = -(myRadius * Math.sin(myPhi) * Math.cos(myTheta));
-                const myZ = (myRadius * Math.sin(myPhi) * Math.sin(myTheta));
-                const myY = (myRadius * Math.cos(myPhi));
-
-                myLocMesh.position.set(myX, myY, myZ);
-                globe.add(myLocMesh);
-
-                // Load OrbitControls and Start Animation
-                let controls;
-                let animationId;
-                const labelDiv = document.getElementById('my-location-label');
-                const tempV = new THREE.Vector3();
-
-                // Interaction State
-                const raycaster = new THREE.Raycaster();
-                const mouse = new THREE.Vector2();
-                let isHovering = false;
-                let isClicked = false;
-                let clickTimeout;
-
-                // Handle Mouse Move for Raycasting
-                const onMouseMove = (event) => {
+                const onResize = () => {
                     if (!mountRef.current) return;
-                    const rect = mountRef.current.getBoundingClientRect();
-                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                    const { clientWidth, clientHeight } = mountRef.current;
+                    renderer.setSize(clientWidth, clientHeight);
+                    camera.aspect = clientWidth / clientHeight;
+                    camera.updateProjectionMatrix();
                 };
+                window.addEventListener('resize', onResize);
 
-                // Handle Click
-                const onClick = (event) => {
-                    if (isHovering) {
-                        isClicked = true;
-                        if (clickTimeout) clearTimeout(clickTimeout);
-                        clickTimeout = setTimeout(() => {
-                            isClicked = false;
-                        }, 2000);
-                    }
-                };
-
-                mountRef.current.addEventListener('mousemove', onMouseMove);
-                mountRef.current.addEventListener('click', onClick);
-
+                let animationFrame;
                 const animate = () => {
-                    animationId = requestAnimationFrame(animate);
-
-                    if (controls) {
-                        controls.update();
-                    } else if (window.THREE && window.THREE.OrbitControls) {
-                        controls = new THREE.OrbitControls(camera, renderer.domElement);
-                        controls.enableDamping = true;
-                        controls.dampingFactor = 0.05;
-                        controls.enableZoom = false;
-                        controls.enablePan = false;
-                        controls.autoRotate = true;
-                        controls.autoRotateSpeed = 1.0;
-                    } else {
-                        // Fallback rotation
-                        globe.rotation.y += 0.001;
-                        atmosphere.rotation.y += 0.001;
-                    }
-
-                    // Raycasting for Interaction
-                    raycaster.setFromCamera(mouse, camera);
-                    const intersects = raycaster.intersectObject(myLocMesh);
-
-                    if (intersects.length > 0) {
-                        if (!isHovering) {
-                            isHovering = true;
-                            mountRef.current.style.cursor = 'pointer';
-                        }
-                    } else {
-                        if (isHovering) {
-                            isHovering = false;
-                            mountRef.current.style.cursor = 'move';
-                        }
-                    }
-
-                    // Label Positioning
-                    if (labelDiv) {
-                        myLocMesh.getWorldPosition(tempV);
-                        tempV.project(camera);
-
-                        // Check dot product to hide label when behind globe
-                        const dot = tempV.z;
-                        const isVisible = dot < 0.99; // Simple check, usually z < 1 is visible in NDC but for globe occlusion we need more. 
-                        // Actually, simple occlusion check:
-                        const rayOrigin = camera.position.clone();
-                        const rayDir = myLocMesh.position.clone().sub(rayOrigin).normalize();
-                        const raycasterOcclusion = new THREE.Raycaster(rayOrigin, rayDir);
-                        const intersectsOcclusion = raycasterOcclusion.intersectObject(globe);
-
-                        // If intersection distance is less than distance to marker, it's occluded
-                        const distToMarker = camera.position.distanceTo(myLocMesh.position);
-                        let isOccluded = false;
-                        if (intersectsOcclusion.length > 0) {
-                            if (intersectsOcclusion[0].distance < distToMarker - 0.1) {
-                                isOccluded = true;
-                            }
-                        }
-
-                        if (!isOccluded && (isHovering || isClicked)) {
-                            const x = (tempV.x * .5 + .5) * mountRef.current.clientWidth;
-                            const y = (tempV.y * -.5 + .5) * mountRef.current.clientHeight;
-                            labelDiv.style.transform = `translate(-50%, -100%) translate(${x}px, ${y}px)`;
-                            labelDiv.style.opacity = '1';
-                        } else {
-                            labelDiv.style.opacity = '0';
-                        }
-                    }
-
+                    animationFrame = requestAnimationFrame(animate);
+                    if (!reduceMotion && !dragging) globe.rotation.y += 0.0015;
                     renderer.render(scene, camera);
                 };
                 animate();
 
-                // Dynamically load OrbitControls
-                const controlsScript = document.createElement('script');
-                controlsScript.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js";
-                controlsScript.onload = () => {
-                    if (window.THREE && window.THREE.OrbitControls) {
-                        controls = new THREE.OrbitControls(camera, renderer.domElement);
-                        controls.enableDamping = true;
-                        controls.dampingFactor = 0.05;
-                        controls.enableZoom = false; // Disable zoom to keep layout stable
-                        controls.enablePan = false;
-                        controls.autoRotate = true;
-                        controls.autoRotateSpeed = 1.0;
-
-                        // Sync atmosphere rotation with globe (if needed, but OrbitControls rotates camera, so objects stay still relative to each other)
-                        // Actually, OrbitControls moves the CAMERA. So we don't need to manually rotate the globe mesh anymore.
-                        // But we need to make sure the atmosphere is part of the scene (it is).
-                    }
-                };
-                document.body.appendChild(controlsScript);
-
-                // Resize Handler
-                const handleResize = () => {
-                    if (!mountRef.current) return;
-                    const width = mountRef.current.clientWidth;
-                    const height = mountRef.current.clientHeight;
-                    renderer.setSize(width, height);
-                    camera.aspect = width / height;
-                    camera.updateProjectionMatrix();
-                };
-                window.addEventListener('resize', handleResize);
-
                 return () => {
-                    cancelAnimationFrame(animationId);
-                    window.removeEventListener('resize', handleResize);
-                    if (mountRef.current) {
-                        mountRef.current.removeEventListener('mousemove', onMouseMove);
-                        mountRef.current.removeEventListener('click', onClick);
-                        if (renderer.domElement && mountRef.current.contains(renderer.domElement)) {
-                            mountRef.current.removeChild(renderer.domElement);
-                        }
-                    }
-                    if (clickTimeout) clearTimeout(clickTimeout);
-                    if (controlsScript.parentNode) controlsScript.parentNode.removeChild(controlsScript);
-                    if (controls) controls.dispose();
-                    geometry.dispose();
-                    material.dispose();
+                    cancelAnimationFrame(animationFrame);
+                    window.removeEventListener('resize', onResize);
+                    renderer.domElement.removeEventListener('pointerdown', onPointerDown);
+                    renderer.domElement.removeEventListener('pointermove', onPointerMove);
+                    renderer.domElement.removeEventListener('pointerup', onPointerUp);
+                    renderer.domElement.removeEventListener('pointerleave', onPointerUp);
+                    pointsRendererRef.current = null;
+                    earthTexture?.dispose();
+                    pointGeometry.dispose();
+                    pointMaterial.dispose();
+                    globeGeometry.dispose();
+                    globeMaterial.dispose();
+                    atmosphereGeometry.dispose();
+                    atmosphereMaterial.dispose();
                     renderer.dispose();
+                    if (mountRef.current?.contains(renderer.domElement)) mountRef.current.removeChild(renderer.domElement);
                 };
-            }, [scriptStatus]);
+            }, [threeStatus]);
 
-            // Effect to update points when data changes
             useEffect(() => {
-                if (!pointsGroupRef.current || globePoints.length === 0) return;
+                if (window.lucide) window.lucide.createIcons();
+            }, [mapStatus, threeStatus]);
 
-                const pointsGroup = pointsGroupRef.current;
-                // Clear existing
-                while (pointsGroup.children.length > 0) {
-                    pointsGroup.remove(pointsGroup.children[0]);
-                }
-
-                const pointGeo = new THREE.SphereGeometry(0.02, 8, 8);
-                const pointMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
-
-                globePoints.forEach(p => {
-                    // Convert Lat/Lng to 3D Coordinates
-                    const phi = (90 - p.lat) * (Math.PI / 180);
-                    const theta = (p.lng + 180) * (Math.PI / 180);
-                    const radius = 1.02;
-
-                    const x = -(radius * Math.sin(phi) * Math.cos(theta));
-                    const z = (radius * Math.sin(phi) * Math.sin(theta));
-                    const y = (radius * Math.cos(phi));
-
-                    const point = new THREE.Mesh(pointGeo, pointMat);
-                    point.position.set(x, y, z);
-                    pointsGroup.add(point);
-                });
-            }, [globePoints]);
+            const statusText = mapStatus === 'ready' ? 'Live data connected' : mapStatus === 'error' ? 'Live data unavailable' : 'Connecting to live data';
+            const statusColor = mapStatus === 'ready' ? 'text-green-400' : mapStatus === 'error' ? 'text-amber-300' : 'text-blue-300';
 
             return (
-                <section className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
+                <section ref={sectionRef} aria-labelledby="visitor-map-title" className="py-24 bg-black text-white border-t border-gray-900 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-                        {/* Left Column: Data & Context */}
                         <div className="space-y-8">
-                            <div className="flex items-center gap-3">
-                                <span className="relative flex h-3 w-3">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                                </span>
-                                <span className="text-xs font-bold uppercase tracking-widest text-green-400">System Online</span>
+                            <div className={`flex items-center gap-3 ${statusColor}`} aria-live="polite">
+                                <span className="relative flex h-3 w-3"><span className={`absolute inline-flex h-full w-full rounded-full ${mapStatus === 'ready' ? 'animate-ping bg-green-400 opacity-75' : 'bg-current opacity-50'}`}></span><span className={`relative inline-flex rounded-full h-3 w-3 ${mapStatus === 'ready' ? 'bg-green-500' : 'bg-current'}`}></span></span>
+                                <span className="text-xs font-bold uppercase tracking-widest">{statusText}</span>
                             </div>
-
                             <div>
-                                <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">Global Reach.</h2>
-                                <p className="text-gray-400 text-lg leading-relaxed max-w-md">
-                                    Real-time visualization of visitor traffic. Connecting ideas across borders through digital presence.
-                                </p>
+                                <h2 id="visitor-map-title" className="text-4xl md:text-5xl font-serif font-bold mb-4">Global Reach.</h2>
+                                <p className="text-gray-400 text-lg leading-relaxed max-w-md">A privacy-conscious, approximate view of recent visitor traffic. Drag the globe to explore the visitor points.</p>
                             </div>
-
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm">
-                                    <div className="text-3xl font-mono font-bold text-white mb-1">{stats.total.toLocaleString()}</div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Total Visits</div>
-                                </div>
-                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm">
-                                    <div className="text-3xl font-mono font-bold text-blue-400 mb-1">{stats.live}</div>
-                                    <div className="text-xs text-gray-500 uppercase tracking-wider">Active Now</div>
-                                </div>
-                                <div className="col-span-2 p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm flex justify-between items-center">
-                                    <div>
-                                        <div className="text-xl font-bold text-white mb-1">{stats.top}</div>
-                                        <div className="text-xs text-gray-500 uppercase tracking-wider">Top Region</div>
-                                    </div>
-                                    <i data-lucide="globe" className="w-8 h-8 text-gray-700"></i>
-                                </div>
+                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm"><div className="text-3xl font-mono font-bold text-white mb-1">{stats.total === null ? '—' : stats.total.toLocaleString()}</div><div className="text-xs text-gray-500 uppercase tracking-wider">Recorded Visits</div></div>
+                                <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm"><div className="text-3xl font-mono font-bold text-blue-400 mb-1">{stats.live === null ? '—' : stats.live}</div><div className="text-xs text-gray-500 uppercase tracking-wider">Regions Shown</div></div>
+                                <div className="col-span-2 p-6 rounded-2xl bg-gray-900/50 border border-gray-800 backdrop-blur-sm flex justify-between items-center"><div><div className="text-xl font-bold text-white mb-1">{stats.top}</div><div className="text-xs text-gray-500 uppercase tracking-wider">Top Region</div></div><i data-lucide="globe" className="w-8 h-8 text-gray-700"></i></div>
                             </div>
+                            {mapStatus === 'error' && <button type="button" onClick={() => setReloadKey((key) => key + 1)} className="inline-flex items-center gap-2 border border-amber-300/50 px-4 py-2 rounded-full text-sm font-medium text-amber-200 hover:bg-amber-300 hover:text-black transition-colors">Retry live map <i data-lucide="refresh-cw" className="w-4 h-4"></i></button>}
                         </div>
-
-                        {/* Right Column: 3D Globe */}
-                        <div className="relative h-[500px] w-full flex items-center justify-center rounded-2xl bg-transparent overflow-hidden">
-                            {scriptStatus === "ready" ? (
-                                <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-move"></div>
-                            ) : (
-                                <div className="flex items-center justify-center text-gray-500 text-xs font-mono">Initializing 3D Engine...</div>
-                            )}
-                            {/* Background Glow for Globe */}
-                            <div className="absolute inset-0 bg-blue-500/5 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
-
-                            {/* Location Label */}
-                            <div id="my-location-label" className="absolute top-0 left-0 z-20 pointer-events-none opacity-0 transition-opacity duration-300 whitespace-nowrap">
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg text-xs text-white shadow-xl transform translate-y-[-10px]">
-                                    <span className="text-sm">🇺🇸</span>
-                                    <span className="font-medium text-gray-300">United States,</span>
-                                    <span className="font-bold text-white">Chapel Hill,</span>
-                                    <span className="font-mono text-blue-400">{myVisits}</span>
-                                </div>
-                                {/* Little triangle pointer */}
-                                <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-black/80 mx-auto"></div>
-                            </div>
-
-                            {/* Legend Overlay */}
-                            <div className="absolute bottom-4 right-4 flex gap-4 text-[10px] text-white/40 bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/5 z-20">
-                                <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-white"></div> Visitor</span>
-                                <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-green-500"></div> Live</span>
-                            </div>
+                        <div className="relative h-[380px] md:h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden border border-white/5 bg-slate-950">
+                            <div className="absolute inset-0 bg-blue-500/10 blur-[100px] rounded-full transform scale-75 pointer-events-none"></div>
+                            {threeStatus === 'ready' ? <div ref={mountRef} className="w-full h-full absolute inset-0 z-10 cursor-grab active:cursor-grabbing" aria-label="Interactive globe showing approximate visitor regions"></div> : <div className="relative z-10 text-gray-400 text-xs font-mono">{isVisible ? 'Initializing visitor map…' : 'Visitor map loads when visible.'}</div>}
+                            <div className="absolute bottom-4 right-4 flex gap-4 text-[10px] text-white/60 bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/5 z-20"><span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-white"></span> Visitor region</span><span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Live data</span></div>
                         </div>
                     </div>
                 </section>
