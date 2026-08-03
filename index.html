@@ -1131,92 +1131,41 @@
             </section>
         );
 
-        const UNCSection = () => (
-            <section className="bg-white pb-24">
-                {/* 1. Hero Banner with Full-Width Blurred Background */}
-                <div className="relative w-full h-[95vh] flex items-center justify-center mb-24 overflow-hidden pt-20">
-                    <div className="absolute inset-0 z-0 overflow-hidden">
-                        {/* Robust Background Fallback */}
-                        <img src="UNC_Landscape.jpg" alt="UNC" loading="lazy" className="w-full h-full object-cover object-top blur-md scale-110" onError={(e) => { e.target.style.display = 'none'; }} />
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-unc/10 to-white"></div>
-                    </div>
-                    <div className="relative z-10 text-center px-6 w-full max-w-4xl mx-auto mt-12">
-                        <div className="mb-8 flex justify-center"><div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden group cursor-pointer relative hover:scale-105 transition-transform duration-500"><img src="UNC_Logo.png" alt="UNC Logo" loading="lazy" className="w-full h-full object-contain p-4" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center text-unc font-serif font-bold">UNC</div>'; }} /></div></div>
-                        <h2 className="text-5xl md:text-8xl font-serif font-bold text-gray-900 mb-6 leading-none tracking-tight drop-shadow-lg">University of North Carolina<br /><span className="text-unc italic relative">at Chapel Hill</span></h2>
-                        <p className="text-lg md:text-2xl text-gray-800 font-light max-w-2xl mx-auto leading-relaxed">A public research university in Chapel Hill, North Carolina.<br />A home for interdisciplinary making and inquiry.</p>
+        const UNCSection = ({ setActiveSection }) => (
+            <section className="bg-[#06111f] text-white overflow-hidden">
+                <div className="relative min-h-[720px] md:min-h-[780px] flex items-end overflow-hidden border-b border-white/10">
+                    <img src="UNC_Landscape.jpg" alt="UNC Chapel Hill campus" loading="eager" className="absolute inset-0 w-full h-full object-cover object-center" onError={(e) => { e.target.style.display = 'none'; }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#06111f] via-[#06111f]/65 to-[#06111f]/35"></div>
+                    <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)', backgroundSize: '72px 72px' }}></div>
+                    <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-14 md:pb-20">
+                        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12">
+                            <div className="max-w-4xl">
+                                <div className="flex items-center gap-3 text-[10px] md:text-xs font-bold tracking-[0.22em] uppercase text-unc-light mb-7"><span className="w-9 h-px bg-unc-light"></span>Academic Chapter / 2022—2026</div>
+                                <div className="flex items-center gap-4 mb-8"><div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/95 border border-white/40 shadow-2xl flex items-center justify-center overflow-hidden"><img src="UNC_Logo.png" alt="UNC logo" loading="lazy" className="w-full h-full object-contain p-2.5" onError={(e) => { e.target.style.display = 'none'; }} /></div><div className="text-xs uppercase tracking-[0.2em] text-white/60 leading-relaxed">Chapel Hill, NC<br /><span className="text-white font-semibold">Carolina Blue</span></div></div>
+                                <h2 className="text-[3.6rem] sm:text-7xl md:text-8xl lg:text-9xl font-serif font-bold leading-[0.82] tracking-[-0.065em]">UNC<br /><span className="text-unc-light italic font-normal tracking-[-0.06em]">Chapel Hill</span></h2>
+                                <p className="mt-8 text-lg md:text-2xl text-white/75 max-w-2xl font-light leading-relaxed">A formative chapter for building at the intersection of hardware, human behavior, and intelligent systems.</p>
+                            </div>
+                            <div className="lg:w-72 border-l border-unc-light/60 pl-5 md:pl-6 pb-1"><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-unc-light mb-3">Field notes</p><p className="font-serif text-2xl leading-snug">Where making became a method for asking better questions.</p></div>
+                        </div>
                     </div>
                 </div>
 
-                {/* 2. Bento Grid Layout (Restored) */}
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Card 1: Heritage (Large) */}
-                        <div className="atlas-card md:col-span-2 bg-gray-50 p-8 rounded-xl border border-gray-100 relative overflow-hidden group hover:border-unc/20 transition-colors">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-unc/5 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
-                            <div className="relative z-10">
-                                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                                    <i data-lucide="history" className="w-5 h-5 text-gray-400"></i> Heritage & Story
-                                </h3>
-                                <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
-                                    Chartered on <strong>December 11, 1789</strong>. The university was founded with a single building called <strong>Old East</strong>. Still used today as a residential building, it is the oldest U.S. public university building.
-                                </p>
-                                <div className="flex gap-8 md:gap-16 border-t border-gray-200 pt-6">
-                                    <div>
-                                        <div className="text-4xl font-serif font-bold text-gray-900">1789</div>
-                                        <div className="text-xs text-gray-400 uppercase tracking-widest mt-1">Chartered</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-4xl font-serif font-bold text-gray-900">1793</div>
-                                        <div className="text-xs text-gray-400 uppercase tracking-widest mt-1">Cornerstone</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 2: Identity (Color) */}
-                        <div className="bg-unc text-white p-8 rounded-xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
-                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
-                            <div>
-                                <h3 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">Identity</h3>
-                                <h4 className="text-3xl font-serif font-bold">Carolina Blue</h4>
-                            </div>
-                            <div className="mt-8">
-                                <div className="font-mono text-lg bg-white/20 inline-block px-3 py-1 rounded backdrop-blur-sm border border-white/10">#4B9CD3</div>
-                                <p className="text-xs mt-2 opacity-80">Official Web Safe Hex</p>
-                            </div>
-                        </div>
-
-                        {/* Card 3: Research Stats */}
-                        <div className="atlas-card bg-gray-900 text-white p-8 rounded-xl flex flex-col justify-center border border-gray-800">
-                            <i data-lucide="book-open" className="w-8 h-8 text-unc mb-6"></i>
-                            <h3 className="text-lg font-bold mb-6">Academic Resources</h3>
-                            <div className="space-y-6">
-                                <div>
-                                    <div className="text-3xl font-mono text-unc font-bold">5.6M+</div>
-                                    <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Library Volumes</div>
-                                </div>
-                                <div className="h-px bg-gray-800 w-full"></div>
-                                <div>
-                                    <div className="text-xl font-mono text-white">ibiblio</div>
-                                    <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Digital Collection Hub</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 4: Spirit (Mascot) */}
-                        <div className="atlas-card md:col-span-2 bg-white border border-gray-200 p-8 rounded-xl flex items-center justify-between group hover:border-unc/30 transition-colors hover:shadow-sm">
-                            <div>
-                                <h3 className="text-xl font-bold mb-2 text-gray-900">Rameses</h3>
-                                <p className="text-gray-500 text-sm mb-4 max-w-xs">The Dorset Horn sheep mascot of the North Carolina Tar Heels.</p>
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-unc uppercase tracking-wider group-hover:translate-x-1 transition-transform">
-                                    School Spirit <i data-lucide="arrow-right" className="w-3 h-3"></i>
-                                </span>
-                            </div>
-                            <div className="w-24 h-24 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center text-5xl shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                🐏
-                            </div>
-                        </div>
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-28">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] gap-14 lg:gap-24 items-start mb-16 md:mb-20">
+                        <div><div className="text-[10px] font-bold uppercase tracking-[0.22em] text-unc-light mb-5">The UNC chapter</div><h3 className="text-4xl md:text-6xl font-serif leading-[1.02] tracking-tight">A campus context for <span className="text-unc-light italic">making</span> ideas tangible.</h3></div>
+                        <p className="text-base md:text-lg leading-relaxed text-slate-300 lg:pt-9">At Carolina, Yihan developed a practice that moves between prototyping, interaction design, and behavioral research—using physical systems to make complex ideas visible, testable, and human.</p>
                     </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 border-y border-white/10 mb-12 md:mb-16">
+                        {[{ value: '4.0', label: 'Recent term GPA' }, { value: '18', label: 'Credit maximum course load' }, { value: 'Top 2', label: 'UNC MakerFest · Creative Prize' }].map((stat, index) => (<div key={stat.label} className={`py-7 md:py-9 ${index < 2 ? 'sm:border-r border-white/10' : ''} ${index ? 'sm:pl-8 lg:pl-10' : ''}`}><div className="text-4xl md:text-5xl font-serif text-white mb-2">{stat.value}</div><div className="text-[10px] uppercase tracking-[0.16em] text-slate-400 font-semibold">{stat.label}</div></div>))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-7 md:p-9 min-h-[280px] transition-all duration-500 hover:-translate-y-1 hover:border-unc-light/60 hover:bg-white/[0.07]"><div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-unc/20 blur-3xl transition-transform duration-500 group-hover:scale-125"></div><div className="relative h-full flex flex-col"><div className="w-11 h-11 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-unc-light mb-10"><i data-lucide="cpu" className="w-5 h-5"></i></div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-unc-light mb-3">01 / Research through making</p><h4 className="text-3xl font-serif mb-4">Systems with a human signal.</h4><p className="text-slate-300 leading-relaxed max-w-md">From behavioral interventions to sensing systems, the work starts with an observable human need and ends in something that can be experienced.</p></div></article>
+                        <article className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-7 md:p-9 min-h-[280px] transition-all duration-500 hover:-translate-y-1 hover:border-unc-light/60 hover:bg-white/[0.07]"><div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-blue-400/10 blur-3xl transition-transform duration-500 group-hover:scale-125"></div><div className="relative h-full flex flex-col"><div className="w-11 h-11 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-unc-light mb-10"><i data-lucide="hammer" className="w-5 h-5"></i></div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-unc-light mb-3">02 / Prototype culture</p><h4 className="text-3xl font-serif mb-4">Ideas earn their shape.</h4><p className="text-slate-300 leading-relaxed max-w-md">A studio mindset—iterating through artifacts, feedback, and technical constraints—anchors an interdisciplinary approach to design engineering.</p></div></article>
+                    </div>
+
+                    <div className="mt-5 rounded-2xl border border-unc-light/30 bg-unc/10 p-7 md:p-9 flex flex-col md:flex-row md:items-center md:justify-between gap-7"><div className="flex items-start gap-4"><div className="w-11 h-11 shrink-0 rounded-full bg-unc-light text-[#06111f] flex items-center justify-center"><i data-lucide="heart-pulse" className="w-5 h-5"></i></div><div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-unc-light mb-2">The next chapter</p><p className="text-xl md:text-2xl font-serif">Carolina foundations, now extending into Medical AI at NTU LKCMedicine.</p></div></div><button type="button" onClick={() => setActiveSection('projects')} className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-medium hover:bg-white hover:text-[#06111f] transition-colors cursor-pointer">Explore selected work <i data-lucide="arrow-up-right" className="w-4 h-4"></i></button></div>
                 </div>
             </section>
         );
@@ -1547,7 +1496,7 @@
                             {activeSection === 'news' && <motion.div key="news" variants={pageVariants} initial="initial" animate="animate" exit="exit"><NewsSection /></motion.div>}
                             {activeSection === 'research' && <motion.div key="research" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Research /></motion.div>}
                             {activeSection === 'projects' && <motion.div key="projects" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Projects /></motion.div>}
-                            {activeSection === 'unc' && <motion.div key="unc" variants={pageVariants} initial="initial" animate="animate" exit="exit"><UNCSection /></motion.div>}
+                            {activeSection === 'unc' && <motion.div key="unc" variants={pageVariants} initial="initial" animate="animate" exit="exit"><UNCSection setActiveSection={setActiveSection} /></motion.div>}
                             {activeSection === 'art' && <motion.div key="art" variants={pageVariants} initial="initial" animate="animate" exit="exit"><ArtGallery /></motion.div>}
                             {activeSection === 'contact' && <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit"><Contact triggerToast={triggerToast} /></motion.div>}
                             {activeSection === 'cv' && <CVViewer setActiveSection={setActiveSection} />}
