@@ -524,6 +524,47 @@
             return status;
         };
 
+        // Render Lucide icons after both React and the CDN script are ready.
+        // The CDN can finish loading after the first React paint, so a single
+        // initialization attempt makes icons appear only after a later re-render.
+        const useLucideIcons = (activeSection, darkMode, searchOpen, toastVisible) => {
+            useEffect(() => {
+                let cancelled = false;
+                let retryId;
+                let renderId;
+                let attempts = 0;
+                const lucideScript = document.querySelector('script[src*="lucide"]');
+                const renderIcons = () => {
+                    if (cancelled) return;
+                    if (window.lucide?.createIcons) {
+                        window.lucide.createIcons();
+                        return;
+                    }
+                    if (attempts < 100) {
+                        attempts += 1;
+                        retryId = window.setTimeout(renderIcons, 50);
+                    }
+                };
+                const scheduleRender = () => {
+                    window.clearTimeout(renderId);
+                    renderId = window.setTimeout(renderIcons, 0);
+                };
+                const observer = new MutationObserver(() => {
+                    if (document.querySelector('i[data-lucide]')) scheduleRender();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+                scheduleRender();
+                lucideScript?.addEventListener('load', renderIcons);
+                return () => {
+                    cancelled = true;
+                    window.clearTimeout(retryId);
+                    window.clearTimeout(renderId);
+                    observer.disconnect();
+                    lucideScript?.removeEventListener('load', renderIcons);
+                };
+            }, [activeSection, darkMode, searchOpen, toastVisible]);
+        };
+
         // Component to defer rendering until visible or after initial load
         const DeferredSection = ({ children }) => {
             const [shouldRender, setShouldRender] = useState(false);
@@ -1189,7 +1230,7 @@
 
         const Footer = ({ activeSection }) => { if (activeSection === 'cv' || activeSection === 'contact') return null; return (<footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-black dark:text-white py-24 transition-colors duration-300"><div className="max-w-5xl mx-auto px-6 text-center"><div className="mb-8 flex justify-center text-unc"><i data-lucide="landmark" className="w-8 h-8"></i></div><h2 className="text-3xl md:text-4xl font-serif mb-8 font-bold">Ready to Build.</h2><p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto mb-12 font-light">Admitted to the Medical Artificial Intelligence programme<br />NTU Lee Kong Chian School of Medicine</p><div className="flex flex-col sm:flex-row items-center justify-center gap-3"><a href="mailto:yihan012@e.ntu.edu.sg" className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-medium hover:bg-unc dark:hover:bg-gray-200 transition-all cursor-pointer">yihan012@e.ntu.edu.sg</a><a href="mailto:zhayihan@unc.edu" className="inline-flex items-center gap-2 border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-full font-medium hover:border-unc hover:text-unc transition-all cursor-pointer">zhayihan@unc.edu</a></div></div></footer>); };
         const ChatWidget = () => { const [isOpen, setIsOpen] = useState(false); const [messages, setMessages] = useState([{ role: 'ai', text: "Hi! I'm Yihan's digital assistant. Ask me about his **Research**, **Patents**, or **UNC Background**." }]); const [input, setInput] = useState(''); const [loading, setLoading] = useState(false); const messagesEndRef = useRef(null); useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isOpen]); const handleSend = async (text = input) => { if (!text.trim()) return; setMessages(prev => [...prev, { role: 'user', text }]); setInput(''); setLoading(true); setTimeout(() => { let aiText = "I'm designed to showcase Yihan's work. Please check the CV for more details."; const q = text.toLowerCase(); if (q.includes('patent')) aiText = "I hold two patents. The primary one is **CN209791046U** (First Inventor)."; else if (q.includes('research')) aiText = "My research proposes an **Intelligent Design Framework** for Urban Micro-Interaction Systems."; setMessages(prev => [...prev, { role: 'ai', text: aiText }]); setLoading(false); }, 800); }; return (<div className="fixed bottom-6 right-6 z-50 font-sans"><AnimatePresence>{isOpen && (<motion.div initial={{ opacity: 0, scale: 0.8, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 20 }} className="absolute bottom-20 right-0 w-[300px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden h-[450px]"><div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center"><span className="font-bold text-sm text-gray-900 dark:text-gray-100">AI Assistant</span><button onClick={() => setIsOpen(false)}><i data-lucide="x" className="w-4 h-4 text-gray-400"></i></button></div><div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white dark:bg-gray-800">{messages.map((m, i) => (<div key={i} className={`p-3 rounded-xl text-sm ${m.role === 'ai' ? 'bg-gray-100 dark:bg-gray-700 dark:text-gray-200' : 'bg-unc text-white ml-auto'}`} dangerouslySetInnerHTML={{ __html: marked.parse(m.text) }} />))}<div ref={messagesEndRef} /></div><div className="p-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex gap-2"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Type..." className="flex-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:border-unc" /><button onClick={() => handleSend()} className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-full"><i data-lucide="arrow-up" className="w-5 h-5"></i></button></div></motion.div>)}</AnimatePresence><motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsOpen(!isOpen)} className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-full shadow-2xl hover:shadow-xl transition-all border border-gray-800 cursor-pointer"><i data-lucide={isOpen ? "minus" : "sparkles"} className="w-6 h-6"></i></motion.button></div>); };
-        const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV.pdf</span></div><div className="flex items-center gap-3"><a href="04_Yihan Zhang_CV.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="04_Yihan Zhang_CV.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="04_Yihan Zhang_CV.pdf" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
+        const CVViewer = ({ setActiveSection }) => (<motion.div className="fixed inset-0 z-[100] bg-[#1a1a1a] text-white flex flex-col" initial={{ opacity: 0, y: '100%' }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: '100%' }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}><div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0"><div className="flex items-center gap-4"><button onClick={() => setActiveSection('home')} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"><i data-lucide="arrow-left" className="w-5 h-5"></i> <span className="hidden sm:inline text-sm font-medium">Back</span></button><div className="hidden sm:block h-6 w-px bg-gray-700 mx-2"></div><span className="font-mono text-xs sm:text-sm text-gray-300 truncate max-w-[150px] sm:max-w-none">Yihan Zhang_CV_1216.pdf</span></div><div className="flex items-center gap-3"><a href="Yihan Zhang_CV_1216.pdf" download className="bg-unc hover:bg-unc-light text-white px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-unc/20 cursor-pointer"><i data-lucide="download" className="w-4 h-4"></i> <span className="hidden sm:inline">Download</span></a></div></div><div className="flex-grow bg-[#2a2a2a] overflow-hidden relative w-full flex items-center justify-center"><iframe src="Yihan Zhang_CV_1216.pdf" className="hidden md:block pdf-frame" title="CV"></iframe><div className="md:hidden flex flex-col items-center justify-center text-center p-8"><i data-lucide="file-text" className="w-16 h-16 text-gray-600 mb-4"></i><h3 className="text-xl font-bold mb-2">View PDF</h3><p className="text-gray-400 mb-6 text-sm">For the best experience on mobile, please open the CV directly.</p><a href="Yihan Zhang_CV_1216.pdf" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-full font-bold cursor-pointer">Tap to Open PDF</a></div></div></motion.div>);
 
         // --- 3D VISITOR GLOBE COMPONENT ---
         const VisitorGlobe = () => {
@@ -1448,6 +1489,7 @@
             const [darkMode, setDarkMode] = useState(() => { const saved = localStorage.getItem('theme'); if (saved) return saved === 'dark'; const h = new Date().getHours(); return h >= 19 || h < 6; });
             const [searchOpen, setSearchOpen] = useState(false);
             const [toast, setToast] = useState({ message: '', isVisible: false });
+            useLucideIcons(activeSection, darkMode, searchOpen, toast.isVisible);
 
             useEffect(() => {
                 const metaThemeColor = document.querySelector("meta[name=theme-color]");
@@ -1462,15 +1504,6 @@
                 }
             }, [darkMode]);
             useEffect(() => { const handleK = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(p => !p); } }; window.addEventListener('keydown', handleK); return () => window.removeEventListener('keydown', handleK); }, []);
-
-            // --- FIXED ICON INITIALIZATION ---
-            useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-                const timer = setTimeout(() => {
-                    if (window.lucide) window.lucide.createIcons();
-                }, 100);
-                return () => clearTimeout(timer);
-            }, [activeSection, darkMode, searchOpen]);
 
             const toggleTheme = () => setDarkMode(!darkMode);
             const triggerToast = (msg) => { setToast({ message: msg, isVisible: true }); setTimeout(() => setToast(p => ({ ...p, isVisible: false })), 3000); };
