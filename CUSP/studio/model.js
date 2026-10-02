@@ -135,5 +135,5 @@ renderer.domElement.addEventListener('keydown',event=>{const key=event.key;if(![
 new ResizeObserver(()=>{const {width,height}=stage.getBoundingClientRect();renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();}).observe(stage);
 let last=performance.now();function animate(now){if(automatic)phi+=Math.min(now-last,100)*.00013;last=now;render();}renderer.setAnimationLoop(animate);
 function setVisible(visible){renderer.setAnimationLoop(visible?animate:null);if(visible){last=performance.now();render();}}
-setFamily('air');document.querySelector('#loading').hidden=true;
+setFamily('air');automatic=true;document.querySelector('#rotate').textContent='自动旋转 · 开';document.querySelector('#loading').hidden=true;
 window.cusp={closureSpec,getClosure:()=>closureState,setPeel:v=>{peel=v;buildBand();view('adjustment');document.querySelector('#peel').value=Math.round(v*100);document.querySelector('#peelValue').textContent=Math.round(v*100)+'%'},setForm,setFamily,setColor,getEdition:()=>tone,setVisible,view,explode,exportGLB,render,renderer,scene,product,parts,ready:true};
