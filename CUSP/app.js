@@ -21,11 +21,11 @@
     $$('[data-en][data-zh]').forEach(el=>el.textContent=el.dataset[language]);
     $('#language').innerHTML=language==='en'?'EN <span>/</span> 中文':'中文 <span>/</span> EN';
     $('#language').setAttribute('aria-label',language==='en'?'EN / 中文: switch to Chinese':'中文 / EN：切换为英文');
-    $('#material-label').textContent=labels[material][language];renderMode();
+    $('#material-label').textContent=labels[material][language];renderMode();syncProduct3D();
   }
   $('#language').addEventListener('click',()=>{language=language==='en'?'zh':'en';applyLanguage();try{localStorage.setItem('cusp-site-language',language)}catch{}});
   $$('[data-material]').forEach(button=>button.addEventListener('click',()=>{
-    material=button.dataset.material;$('#hardware-image').src='assets/'+material+'.jpg';$('#hardware-image').alt=labels[material].alt;$('#material-label').textContent=labels[material][language];
+    material=button.dataset.material;$('#material-label').textContent=labels[material][language];syncProduct3D();
     $$('[data-material]').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
   }));
   $$('[data-mode]').forEach(button=>button.addEventListener('click',()=>{mode=button.dataset.mode;renderMode()}));
@@ -44,11 +44,11 @@
   function openMedia(kind){
     returnFocus=document.activeElement;content.replaceChildren();$('#dialog-title').textContent=strings[language][kind];
     if(kind==='film'){const video=document.createElement('video');video.src='assets/cusp-brand-v6.mp4';video.controls=true;video.playsInline=true;video.preload='metadata';video.setAttribute('aria-label',strings[language].film);content.append(video);const note=document.createElement('p');note.className='dialog-note';note.textContent=strings[language].filmNote;content.append(note)}
-    if(kind==='studio'){const frame=document.createElement('iframe');frame.src='studio/index.html?lang='+language;frame.title='CUSP 3D Product Studio';content.append(frame);const note=document.createElement('p');note.className='dialog-note';note.textContent=strings[language].studioNote;content.append(note)}
+    if(kind==='studio'){const frame=document.createElement('iframe');frame.src='studio/index.html?lang='+language+'&material='+material+'&theme='+document.documentElement.dataset.theme;frame.title='CUSP 3D Product Studio';content.append(frame);const note=document.createElement('p');note.className='dialog-note';note.textContent=strings[language].studioNote;content.append(note)}
     if(kind==='image'){const image=document.createElement('img');image.src='assets/'+material+'.jpg';image.alt=labels[material].alt;content.append(image)}
     dialog.showModal();$('#dialog-close').focus();
   }
-  $$('[data-video]').forEach(button=>button.addEventListener('click',()=>openMedia('film')));$$('[data-studio]').forEach(button=>button.addEventListener('click',()=>openMedia('studio')));$('#expand-hardware').addEventListener('click',()=>openMedia('image'));
+  $$('[data-video]').forEach(button=>button.addEventListener('click',()=>openMedia('film')));$$('[data-studio]').forEach(button=>button.addEventListener('click',()=>openMedia('studio')));$('#expand-hardware').addEventListener('click',()=>openMedia('studio'));
   $('#dialog-close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()}});
   dialog.addEventListener('close',()=>{const video=$('video',content);if(video){video.pause();video.removeAttribute('src');video.load()}content.replaceChildren();returnFocus?.focus()});
   $('#menu').addEventListener('click',()=>{const expanded=$('#menu').getAttribute('aria-expanded')==='true';$('#menu').setAttribute('aria-expanded',String(!expanded));$('#mobile-menu').hidden=expanded});
@@ -66,5 +66,15 @@
   if('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){const reveal=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');reveal.unobserve(e.target)}})},{threshold:.12});$$('.section-heading,.story-grid,.hardware-gallery,.app-layout,.core-diagram,.community-grid,.business-cards,.roadmap-list,.team-grid').forEach(el=>{el.classList.add('reveal-ready');reveal.observe(el)})}
   $$('img').forEach(img=>img.addEventListener('error',()=>{if(img.closest('#cusp-landscape-23'))return;const note=document.createElement('p');note.className='media-error';note.textContent=language==='en'?'Image unavailable. Please refresh the page.':'图片暂不可用，请刷新页面。';img.after(note);img.hidden=true},{once:true}));
   $$('.embed-shell iframe').forEach(frame=>{const shell=frame.closest('.embed-shell');shell.classList.add('is-loading');shell.setAttribute('aria-busy','true');const finish=()=>{shell.classList.remove('is-loading');shell.setAttribute('aria-busy','false')};frame.addEventListener('load',finish,{once:true});frame.addEventListener('error',finish,{once:true});setTimeout(finish,12000)});
+  const productFrame=$('#product-3d'), productStatus=$('#product-3d-status'), productError=$('#product-3d-error');
+  let productVisible=false, productTimeout;
+  function syncProduct3D(){if(productFrame.dataset.loaded)productFrame.contentWindow?.postMessage({type:'cusp:configure',material,language,theme:document.documentElement.dataset.theme,visible:productVisible&&!document.hidden&&!dialog.open},location.origin)}
+  function loadProduct3D(){clearTimeout(productTimeout);productStatus.hidden=false;productError.hidden=true;productFrame.dataset.loaded='true';productFrame.src=productFrame.dataset.src+'&lang='+language+'&material='+material+'&theme='+document.documentElement.dataset.theme+'&v=20261002-3d';productTimeout=setTimeout(()=>{productStatus.hidden=true;productError.hidden=false},30000)}
+  window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==productFrame.contentWindow)return;if(event.data?.type==='cusp:ready'){clearTimeout(productTimeout);productStatus.hidden=true;productError.hidden=true;syncProduct3D()}else if(event.data?.type==='cusp:error'){clearTimeout(productTimeout);productStatus.hidden=true;productError.hidden=false}});
+  $('#retry-product-3d').addEventListener('click',loadProduct3D);
+  if('IntersectionObserver'in window){new IntersectionObserver(entries=>{productVisible=entries[0].isIntersecting;if(productVisible&&!productFrame.dataset.loaded)loadProduct3D();syncProduct3D()},{rootMargin:'200px 0px'}).observe(productFrame)}else{productVisible=true;loadProduct3D()}
+  new MutationObserver(syncProduct3D).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  new MutationObserver(syncProduct3D).observe(dialog,{attributes:true,attributeFilter:['open']});
+  document.addEventListener('visibilitychange',syncProduct3D);
   renderSlide();applyLanguage();
 })();
