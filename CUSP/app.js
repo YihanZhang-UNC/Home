@@ -32,7 +32,7 @@
   $('.mode-tabs').addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();mode=event.key==='Home'?'basic':event.key==='End'?'enhanced':mode==='basic'?'enhanced':'basic';renderMode();$('#tab-'+mode).focus()}});
   function setApp(button){
     $$('[data-app]').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1});
-    $('#app-image').src='assets/app-'+button.dataset.app+'.png';$('#app-image').alt=button.querySelector('strong').textContent+'  -  CUSP app prototype';$('#app-panel').setAttribute('aria-labelledby',button.id);
+    $('#app-image').src=button.dataset.appImage||'assets/app-'+button.dataset.app+'.png';$('#app-panel').dataset.activeApp=button.dataset.app;$('#app-description').hidden=button.dataset.app!=='assistant';$('#app-image').alt=button.querySelector('strong').textContent+'  -  CUSP app prototype';$('#app-panel').setAttribute('aria-labelledby',button.id);
   }
   $$('[data-app]').forEach(button=>button.addEventListener('click',()=>setApp(button)));
   $('.app-selector').addEventListener('keydown',event=>{

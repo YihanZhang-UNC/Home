@@ -34,6 +34,7 @@ window.CUSP_CONTENT = {
         "title": "Add glucose. Keep your story.",
         "description": "Measured CGM adds a high-resolution glucose channel to your existing history. Relate meals and activity to glucose observations, with bounded short-term research forecasts.",
         "items": [
+          "User-authorized connection to a separate CGM source",
           "Measured CGM traces in personal context",
           "Meal-response and historical comparisons",
           "Short-term forecasting within the documented scope"
@@ -47,6 +48,7 @@ window.CUSP_CONTENT = {
         "title": "增加葡萄糖信息，延续个人历史。",
         "description": "实测 CGM 为既有个人历史增加高分辨率葡萄糖通道。关联饮食、活动与葡萄糖观察，并在研究范围内提供短时预测。",
         "items": [
+          "经用户授权连接独立 CGM 数据来源",
           "放在个人情境中的实测 CGM 曲线",
           "饮食响应与历史比较",
           "在已记录范围内的短时技术预测"
