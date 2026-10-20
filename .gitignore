@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+.audit/
+tmp/
+output/
+__pycache__/
+profile/*.docx

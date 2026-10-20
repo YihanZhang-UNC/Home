@@ -1,0 +1,1 @@
+{"name":"yihan-zhang-portfolio","version":"2026.10.20","private":true,"scripts":{"build":"node tools/build_site.cjs && tailwindcss -c tools/tailwind.config.cjs -i tools/input.css -o profile/styles.css --minify","preview":"python3 -m http.server 8766 --bind 127.0.0.1"},"devDependencies":{"@babel/standalone":"7.26.10","tailwindcss":"3.4.17"}}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "motion",
+    "title": "MOTION_AUDIT",
+    "area": "Vision-based motion measurement",
+    "question": "What can a correct final number hide?",
+    "desc": "I compare the world reference, its image projection, and predicted keypoints under the same counting or angle rule. This makes projection failures and hidden intermediate discrepancies visible.",
+    "finding": "Controlled equipment renderings reveal task-dependent effects. Separate processing objectives for angles and counts improve complete measurement success on 12 new synthetic bodies.",
+    "status": "Manuscript in preparation",
+    "tags": [
+      "Computer vision",
+      "Measurement audit",
+      "Temporal operators"
+    ]
+  },
+  {
+    "id": "reference",
+    "title": "Finite-Population Reference Audits for Model Comparison",
+    "area": "Statistical evaluation",
+    "question": "Does the comparison survive a change of reference?",
+    "desc": "A finite-population audit checks model-comparison stability when only part of a second reference can be inspected and some answers remain unavailable.",
+    "finding": "The audit covers all legal comparison outcomes. In the constructed-margin study, it improves correct determinations by 27.34 percentage points over the tested direct empirical-Bernstein adaptation at 30% disclosure.",
+    "status": "Submitted to AISTATS 2027",
+    "tags": [
+      "Finite-population inference",
+      "Partial identification",
+      "Reference uncertainty"
+    ],
+    "shortTitle": "Reference audits"
+  },
+  {
+    "id": "concept-audit",
+    "title": "From Recorded Corrections to Oracle Claims",
+    "shortTitle": "Concept intervention audits",
+    "area": "EHR concept measurement",
+    "question": "What does a recorded correction actually establish?",
+    "desc": "I distinguish a model\u2019s response to a recorded clinical reference from the effect of replacing a concept with study-defined truth.",
+    "finding": "The work formalizes this identification gap and constructs finite-sample certificates using independent error calibration and signed worst-case loss allocation.",
+    "status": "Submitted to IEEE ICHI 2027",
+    "tags": [
+      "Concept interventions",
+      "Measurement validity",
+      "Finite-sample certificates"
+    ]
+  },
+  {
+    "id": "c3b",
+    "title": "C3B \u00b7 Longitudinal concepts",
+    "area": "Interpretable clinical time series",
+    "question": "What do the concepts measure over time?",
+    "desc": "C3B studies irregular clinical time series through a risk logit that decomposes exactly into eight named clinical concept contributions.",
+    "finding": "The work connects longitudinal modeling with source-traced evaluation, separating concept measurement, risk prediction, and concept correction.",
+    "status": "iAIM 2026 \u00b7 Poster accepted",
+    "tags": [
+      "Concept bottlenecks",
+      "Longitudinal data",
+      "Interpretable AI"
+    ]
+  },
+  {
+    "id": "ecg",
+    "title": "ECG concept measurement",
+    "area": "Source-aware calibration",
+    "question": "How does the reference procedure change a concept?",
+    "desc": "This work examines interpretable ECG measurements across reference procedures and calibration choices.",
+    "finding": "A completed course research study investigates source-specific readouts and the distinction between reproducing a measurement and establishing a clinical reference.",
+    "status": "Course research project",
+    "tags": [
+      "ECG",
+      "Calibration",
+      "Measurement validity"
+    ]
+  }
+]
