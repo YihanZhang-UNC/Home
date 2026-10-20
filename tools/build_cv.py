@@ -17,7 +17,7 @@ def build(template):
  body=root.find('w:body',NS);p=body.findall('w:p',NS)
  def text(el):return ''.join(el.itertext()) if False else ''.join(el.xpath('.//w:t/text()',namespaces=NS))
  def rewrite(el,segments):
-  seed=el.find('w:r',NS);props=deepcopy(seed.find('w:rPr',NS)) if seed is not None and seed.find('w:rPr',NS) is not None else etree.Element(q('rPr'))
+  runs=el.findall('w:r',NS);seed=next((r for r in runs if ''.join(r.xpath('.//w:t/text()',namespaces=NS)).strip()),runs[0] if runs else None);props=deepcopy(seed.find('w:rPr',NS)) if seed is not None and seed.find('w:rPr',NS) is not None else etree.Element(q('rPr'))
   for c in list(el):
    if c.tag!=q('pPr'):el.remove(c)
   for value,bold,italic in segments:

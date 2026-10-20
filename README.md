@@ -7,7 +7,7 @@ The homepage presents current health-AI research alongside hardware, design, and
 ## Edit and build
 
 - Application source: `profile/app.jsx`
-- Research summaries shared by the application build and public CV: `profile/research.json`
+- Research summaries used by the application build: `profile/research.json`
 - Page metadata, theme styles, and no-JavaScript fallback: `index.html`
 - Public CV: `profile/Yihan_Zhang_CV.pdf`; editable text: `profile/Yihan_Zhang_CV.md`
 
