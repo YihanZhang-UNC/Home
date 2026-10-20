@@ -8,7 +8,7 @@
     <script>/* Apply the saved/system appearance before first paint. */
     (()=>{let mode;try{mode=localStorage.getItem('theme')}catch{}if(mode?mode==='dark':matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.classList.add('dark')})();</script>
     <!-- SEO & Social Sharing -->
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Yihan Zhang","url":"https://yihanzhang-unc.github.io/Home/","image":"https://yihanzhang-unc.github.io/Home/Yihan.png","jobTitle":"MSc student in Artificial Intelligence in Medicine","affiliation":{"@type":"CollegeOrUniversity","name":"Nanyang Technological University"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of North Carolina at Chapel Hill"},"knowsAbout":["Health AI","Measurement auditing","Human-centered systems"],"sameAs":["https://github.com/YihanZhang-UNC"]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Yihan Zhang","url":"https://yihanzhang-unc.github.io/Home/","image":"https://yihanzhang-unc.github.io/Home/profile/portrait.png","jobTitle":"MSc student in Artificial Intelligence in Medicine","affiliation":{"@type":"CollegeOrUniversity","name":"Nanyang Technological University"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of North Carolina at Chapel Hill"},"knowsAbout":["Health AI","Measurement auditing","Human-centered systems"],"sameAs":["https://github.com/YihanZhang-UNC"]}</script>
     <title>Yihan Zhang | Trustworthy Health AI & Human-Centered Systems</title>
     <meta name="description"
         content="Yihan Zhang, MSc student in AI in Medicine at NTU LKCMedicine and UNC Information Science graduate. Research on measurement auditing, interpretable health AI, and human-centered care workflows.">
@@ -24,7 +24,7 @@
     <meta property="og:title" content="Yihan Zhang | Health AI Research & Design">
     <meta property="og:description"
         content="Measurement auditing, interpretable health AI, and human-centered care workflows. Explore current research, systems, and CV.">
-    <meta property="og:image" content="https://yihanzhang-unc.github.io/Home/Yihan.png">
+    <meta property="og:image" content="https://yihanzhang-unc.github.io/Home/profile/portrait.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -32,7 +32,7 @@
     <meta property="twitter:title" content="Yihan Zhang | Health AI Research & Design">
     <meta property="twitter:description"
         content="Measurement auditing, interpretable health AI, and human-centered care workflows. Explore current research, systems, and CV.">
-    <meta property="twitter:image" content="https://yihanzhang-unc.github.io/Home/Yihan.png">
+    <meta property="twitter:image" content="https://yihanzhang-unc.github.io/Home/profile/portrait.png">
 
     <!-- React & ReactDOM -->
     <script crossorigin src="vendor/react-18.3.1.min.js"></script>
@@ -64,7 +64,7 @@
     </script>
 
     <!-- Preload Hero Image -->
-    <link rel="preload" as="image" href="Yihan.png">
+    <link rel="preload" as="image" href="profile/portrait.png">
 
     <!-- Fonts -->
 
@@ -344,6 +344,12 @@
         .brief-label { font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:#3977a3; }
         .dark .brief-label { color:#7BAFD4; }
         .research-row { border-top:1px solid rgba(123,175,212,.25); }
+        @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+            html.custom-cursor-active, html.custom-cursor-active * { cursor:none !important; }
+        }
+        @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+            .custom-cursor-container { display:none !important; }
+        }
         :focus-visible { outline:3px solid #4B9CD3; outline-offset:5px; }
         .skip-link { position:fixed;top:8px;left:16px;z-index:200;padding:12px;background:#13294B;color:white;transform:translateY(-160%); }
         .skip-link:focus { transform:translateY(0); }
@@ -352,9 +358,9 @@
 </head>
 
 <body>
-    <div id="root"></div><noscript><main style="max-width:700px;margin:80px auto;padding:24px;font-family:system-ui"><h1>Yihan Zhang</h1><p>MSc student in Artificial Intelligence in Medicine, NTU LKCMedicine; BS in Information Science, UNC Chapel Hill.</p><p>I study measurement auditing, interpretable health AI, and human-centered care workflows.</p><p><a href="profile/Yihan_Zhang_CV.pdf">Download CV</a> · <a href="mailto:yihan012@e.ntu.edu.sg">Email Yihan</a> · <a href="CUSP/">CUSP project</a></p><p>Enable JavaScript to explore the interactive portfolio.</p></main></noscript>
+    <div id="root"></div><noscript><main style="max-width:700px;margin:80px auto;padding:24px;font-family:system-ui"><h1>Yihan Zhang</h1><p>MSc student in Artificial Intelligence in Medicine, NTU LKCMedicine; BS in Information Science, UNC Chapel Hill.</p><p>I study measurement auditing, interpretable health AI, and human-centered care workflows.</p><p><a href="profile/Yihan_Zhang_CV.pdf?v=20261020-cusp">Download CV</a> · <a href="mailto:yihan012@e.ntu.edu.sg">Email Yihan</a> · <a href="CUSP/">CUSP project</a></p><p>Enable JavaScript to explore the interactive portfolio.</p></main></noscript>
 
-    <script src="profile/app.js" defer></script>
+    <script src="profile/app.js?v=c64ae0c4c886" defer></script>
 </body>
 
 </html>

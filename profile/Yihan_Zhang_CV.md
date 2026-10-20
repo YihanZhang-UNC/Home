@@ -70,7 +70,7 @@ Measurement-Chain Evaluation | Manuscript in Preparation
 
 CUSP: Integrated Health Information and Care Workflows | NTU Healthcare AI Innovation Project · 2026
 
-Project Lead & System Architect | 17-member cross-functional team
+Project Lead & System Architect | iAIM 2026 Accepted | 17-member cross-functional team
 
 •  Leading a 17-member team spanning clinical/user research, data/ML, product/UX, and regulatory/business work.
 

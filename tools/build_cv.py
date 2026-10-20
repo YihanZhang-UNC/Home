@@ -34,6 +34,7 @@ def build(template):
  plain(p[3],'Email: yihan012@e.ntu.edu.sg | zhayihan@unc.edu')
  plain(p[27],'NTU LKCMedicine Research Project | iAIM 2026 Poster Accepted | Sole Author',italic=True)
  rewrite(p[31],[('CUSP: Integrated Health Information and Care Workflows',True,False),(' | NTU Healthcare AI Innovation Project · 2026',False,False)])
+ plain(p[32],'Project Lead & System Architect | iAIM 2026 Accepted | 17-member cross-functional team',italic=True)
  plain(p[33],'•  Leading a 17-member team spanning clinical/user research, data/ML, product/UX, and regulatory/business work.')
  plain(p[34],'•  Defined low-burden wearable and optional CGM-enhanced monitoring with longitudinal personal baselines, AI interpretation, and bounded assistance.')
  plain(p[35],'•  Building source-aware drafts, review, and correction workflows across personal insight and professional handoffs.')
